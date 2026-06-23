@@ -987,6 +987,72 @@ transparent. Sprites can shade their edges with the mid tones for depth."
                        scale scale
                        (claylib::c-ptr (make-color 255 255 255 alpha))))))
 
+;;; Optional image sprites: assets/sprites/jrpg/<kind>.png, a white figure on a
+;;; transparent ground. When one exists it is drawn instead of the char-grid
+;;; sprite; otherwise the char-grid is the fallback. The cache is dropped on
+;;; every minigame transition, so textures reload while the GL context is live
+;;; (a window reopen for a fullscreen or resolution change invalidates them).
+
+(defvar *jrpg-sprite-textures* (make-hash-table :test #'equal))
+
+(defun clear-jrpg-sprite-textures ()
+  (clrhash *jrpg-sprite-textures*))
+
+(register-minigame-reset-hook 'clear-jrpg-sprite-textures)
+
+(defun jrpg-enemy-sprite-texture (kind)
+  "(list texture-object width height) for KIND's PNG, or nil if there is none.
+:none caches a known-absent sprite so the file system is probed only once."
+  (let* ((key (string-downcase (or kind "slime")))
+         (cached (gethash key *jrpg-sprite-textures*)))
+    (cond
+      ((eq cached :none) nil)
+      (cached cached)
+      (t
+       (let ((path (project-pathname
+                    (format nil "assets/sprites/jrpg/~a.png" key))))
+         (handler-case
+             (if (probe-file path)
+                 (let* ((asset (make-texture-asset path :load-now t))
+                        (tw (width asset))
+                        (th (height asset))
+                        (obj (make-texture asset 0.0 0.0
+                                           :width (float (max 1 tw) 1.0)
+                                           :height (float (max 1 th) 1.0)
+                                           :tint (make-color 255 255 255 255)))
+                        (entry (list obj tw th)))
+                   (setf (gethash key *jrpg-sprite-textures*) entry)
+                   entry)
+                 (progn
+                   (setf (gethash key *jrpg-sprite-textures*) :none)
+                   nil))
+           (error (condition)
+             (runtime-warn "Could not load sprite ~a: ~a" path condition)
+             (setf (gethash key *jrpg-sprite-textures*) :none)
+             nil)))))))
+
+(defun jrpg-sprite-texture-dimensions (entry max-w target-h)
+  "On-screen (values width height): the sprite at TARGET-H, but scaled down to
+fit MAX-W so a wide sprite (the bat) does not sprawl. Aspect kept."
+  (destructuring-bind (obj tw th) entry
+    (declare (ignore obj))
+    (if (and (plusp tw) (plusp th))
+        (let* ((aspect (/ tw (float th 1.0)))
+               (h (float target-h 1.0))
+               (w (* h aspect)))
+          (when (> w max-w)
+            (setf w (float max-w 1.0)
+                  h (/ w aspect)))
+          (values (round w) (round h)))
+        (values target-h target-h))))
+
+(defun jrpg-draw-enemy-texture (entry x y w h)
+  (let ((obj (first entry)))
+    (setf (dest obj) (make-instance 'rl-rectangle
+                                    :x (float x 1.0) :y (float y 1.0)
+                                    :width (float w 1.0) :height (float h 1.0)))
+    (draw-object obj)))
+
 (defun draw-jrpg-windup (cx cy reach elapsed)
   "Corner brackets that pulse around a foe winding up a heavy blow - the
 player's cue to GUARD."
@@ -1031,19 +1097,26 @@ comes up when guarding, and the whole body flares white on a hit."
            (x (+ ax ox lunge (jrpg-combat-enemy-recoil game)))
            (y (+ ay oy))
            (e (jrpg-combat-elapsed game))
-           (scale 6) ; sprites are 24x20; 24*6 keeps the old on-screen width
-           (sprite (jrpg-enemy-sprite (jrpg-combat-enemy-kind game)))
-           (rows (length sprite))
-           (cols (length (aref sprite 0)))
-           (sw (* cols scale))
-           (sh (* rows scale))
-           (top (- y (/ sh 2))))
+           (kind (jrpg-combat-enemy-kind game))
+           (tex (jrpg-enemy-sprite-texture kind))
+           (scale 6) ; char-grid sprites are 24x20; 24*6 keeps the old width
+           (sprite (unless tex (jrpg-enemy-sprite kind)))
+           (bounce (round (* 4.0 (sin (* e 3.0)))))
+           (sw 0) (sh 0) (top 0))
+      (if tex
+          (multiple-value-setq (sw sh)
+            (jrpg-sprite-texture-dimensions tex 300 188))
+          (setf sw (* (length (aref sprite 0)) scale)
+                sh (* (length sprite) scale)))
+      (setf top (- y (/ sh 2)))
       (draw-centered-text (jrpg-combat-enemy-name game) x (- y (/ sh 2) 18) 20
                           (make-color 255 255 255 232))
       (when (jrpg-combat-enemy-winding game)
         (draw-jrpg-windup x y sw e))
       (draw-jrpg-slime-shadow x (+ y (/ sh 2) 6) e)
-      (draw-jrpg-enemy-sprite sprite x top scale e)
+      (if tex
+          (jrpg-draw-enemy-texture tex (- x (/ sw 2)) (+ top bounce) sw sh)
+          (draw-jrpg-enemy-sprite sprite x top scale e))
       (when (plusp (jrpg-combat-flash-enemy game))
         (jrpg-fill-rect (- x (/ sw 2)) top sw sh
                         (make-color 255 255 255
