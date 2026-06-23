@@ -56,65 +56,61 @@ truly random."
           lo))))
 
 (defun jrpg-gen-city (w h interior-glyphs exit-glyphs seed)
-  "Returns (values rows start-x start-y) for a town of rectangular blocks on a
-near-regular street grid: a central plaza, lamps at the crossings, district
-doors set on building faces that front a street, and EXIT gates on the top rim.
-Deterministic in SEED (see jrpg-city-rng); each door's position depends only on
-SEED and its glyph, so finishing one story never moves the others."
-  (let* ((grid (make-array (list h w) :initial-element #\#))
+  "Returns (values rows start-x start-y) for a town of large, separated houses.
+The interior is divided into plots; most plots hold one big building set back
+from wide streets (a few are left open). District doors are carved into building
+faces, EXIT gates sit on the top rim. Deterministic in SEED, and each door
+probes from its own seed so finishing one story never moves the others."
+  (let* ((grid (make-array (list h w) :initial-element #\.)) ; all street first
          (rng (jrpg-city-rng seed))
-         (cols nil) (rows nil))
+         (buildings nil))
     (flet ((rnd (lo hi) (funcall rng lo hi))
            (street-p (x y)
              (and (<= 0 x) (< x w) (<= 0 y) (< y h)
                   (member (aref grid y x) '(#\. #\+) :test #'char=))))
-      ;; rim street
-      (dotimes (i w) (setf (aref grid 0 i) #\. (aref grid (1- h) i) #\.))
-      (dotimes (i h) (setf (aref grid i 0) #\. (aref grid i (1- w)) #\.))
-      ;; avenue grid: streets at near-regular spacing, so blocks are tidy
-      ;; rectangles of connected houses rather than noise
-      (let ((x (rnd 3 4)))
-        (loop while (< x (1- w))
-              do (push x cols)
-                 (dotimes (yy h) (setf (aref grid yy x) #\.))
-                 (incf x (rnd 4 5))))
-      (let ((y (rnd 2 3)))
-        (loop while (< y (1- h))
-              do (push y rows)
-                 (dotimes (xx w) (setf (aref grid y xx) #\.))
-                 (incf y (rnd 3 4))))
-      ;; a central plaza: open a small square at the middle crossing
-      (let* ((cs (sort (copy-list cols) #'<))
-             (rs (sort (copy-list rows) #'<))
-             (px (if cs (nth (floor (length cs) 2) cs) (floor w 2)))
-             (py (if rs (nth (floor (length rs) 2) rs) (floor h 2))))
-        (loop for yy from (max 1 (1- py)) to (min (- h 2) (1+ py))
-              do (loop for xx from (max 1 (- px 2)) to (min (- w 2) (+ px 2))
-                       do (setf (aref grid yy xx) #\.))))
-      ;; lamps at about half the street crossings (a lit corner, not scatter)
-      (dolist (cx cols)
-        (dolist (ry rows)
-          (when (and (char= (aref grid ry cx) #\.) (zerop (rnd 0 1)))
-            (setf (aref grid ry cx) #\+))))
+      ;; plots: a coarse grid; most hold one big house, inset from the streets so
+      ;; wide lanes run between them (no cramped one-cell alleys)
+      (let ((plot-w 9) (plot-h 8))
+        (loop for py from 1 by plot-h while (< py (- h 4))
+              do (loop for px from 1 by plot-w while (< px (- w 4))
+                       do (let* ((avail-w (min plot-w (- (1- w) px)))
+                                 (avail-h (min plot-h (- (1- h) py)))
+                                 (bw (min (- avail-w 2) (rnd 4 6)))
+                                 (bh (min (- avail-h 2) (rnd 3 5))))
+                            (when (and (>= bw 3) (>= bh 3) (> (rnd 0 9) 1))
+                              (let* ((bx (+ px 1 (rnd 0 (max 0 (- avail-w 2 bw)))))
+                                     (by (+ py 1 (rnd 0 (max 0 (- avail-h 2 bh)))))
+                                     (right (+ bx bw -1))
+                                     (bottom (+ by bh -1)))
+                                (when (and (< right (1- w)) (< bottom (1- h)))
+                                  (loop for yy from by to bottom
+                                        do (loop for xx from bx to right
+                                                 do (setf (aref grid yy xx) #\#)))
+                                  (push (list bx by right bottom) buildings))))))))
+      ;; sparse street lamps
+      (dotimes (i (max 4 (floor (* w h) 80)))
+        (let ((lx (rnd 1 (- w 2))) (ly (rnd 1 (- h 2))))
+          (when (char= (aref grid ly lx) #\.)
+            (setf (aref grid ly lx) #\+))))
       ;; exit gates spread along the top rim - the way out
       (let ((k (length exit-glyphs)))
         (loop for g in exit-glyphs
               for i from 1
               for ex = (max 1 (min (- w 2) (floor (* i w) (1+ k))))
               do (setf (aref grid 0 ex) g)))
-      ;; interior doors: each glyph probes from its OWN seed, so it always lands
-      ;; in the same place no matter which other doors are open this visit
+      ;; district doors: each glyph probes building faces from its own seed, so
+      ;; its spot is stable no matter which other doors are open this visit
       (dolist (g interior-glyphs)
         (let ((grng (jrpg-city-rng (logxor (logand seed #xffffffff)
-                                           (* 2246822519 (char-code g))))))
-          (loop repeat 600
+                                           (* 2246822519 (char-code g)))))
+              (placed nil))
+          (loop repeat 800 until placed
                 do (let ((x (funcall grng 1 (- w 2)))
                          (y (funcall grng 1 (- h 2))))
                      (when (and (char= (aref grid y x) #\#)
                                 (or (street-p (1- x) y) (street-p (1+ x) y)
                                     (street-p x (1- y)) (street-p x (1+ y))))
-                       (setf (aref grid y x) g)
-                       (return))))))
+                       (setf (aref grid y x) g placed t))))))
       ;; start: a street cell low and left
       (let ((sx 1) (sy (- h 2)))
         (block found
@@ -170,50 +166,43 @@ SEED and its glyph, so finishing one story never moves the others."
 (defun jrpg-city-building-p (game x y)
   (char= (jrpg-overworld-cell game x y) #\#))
 
-;;; Tile indices (col . row) into the Kenney 1-bit atlas, verified by preview.
-(defparameter +city-tile-floor+ '(8 . 1))    ; cobble ground
-(defparameter +city-tile-wall+ '(8 . 0))      ; brick wall
-(defparameter +city-tile-eave+ '(11 . 6))     ; brick wall with a capped top
-(defparameter +city-tile-window+ '(43 . 4))   ; framed window
-(defparameter +city-tile-doorway+ '(10 . 6))  ; wall with an arched doorway
-(defparameter +city-tile-gate+ '(39 . 4))     ; tall door, used as a city gate
-(defparameter +city-tile-lamp+ '(42 . 3))     ; torch / street lamp
-
 ;; streets stay near-black so the white buildings and the traveller pop; the
 ;; cobble is laid faintly underneath for paved texture, not a white wash
 (defvar *jrpg-city-floor-tint* (make-color 255 255 255 38))
 
-(defun jrpg-city-tile (atlas spec sx sy &optional tint)
-  (jrpg-draw-tile atlas (car spec) (cdr spec) sx sy
-                  +jrpg-overworld-tile-size+ tint))
+(defun jrpg-city-tile (atlas role sx sy &optional tint)
+  "Draw the tile bound to ROLE (see *jrpg-tile-map* in jrpg/tiles.lisp) into the
+cell at SX,SY. Editing the tile map repoints these without touching code."
+  (multiple-value-bind (col row) (jrpg-tile-coords role)
+    (jrpg-draw-tile atlas col row sx sy +jrpg-overworld-tile-size+ tint)))
 
 (defun draw-jrpg-city-building-tile (game atlas sx sy mx my)
-  "A building cell: a capped eave on the top edge, a window on a cell whose front
-faces the street, otherwise plain brick - a light neighbour-aware variation."
+  "A building cell: a capped top on the top edge, a window on a cell whose front
+faces the street, otherwise plain wall - a light neighbour-aware variation."
   (cond
     ((not (jrpg-city-building-p game mx (1- my)))
-     (jrpg-city-tile atlas +city-tile-eave+ sx sy))
+     (jrpg-city-tile atlas :wall-top sx sy))
     ((not (jrpg-city-building-p game mx (1+ my)))
-     (jrpg-city-tile atlas +city-tile-window+ sx sy))
-    (t (jrpg-city-tile atlas +city-tile-wall+ sx sy))))
+     (jrpg-city-tile atlas :window sx sy))
+    (t (jrpg-city-tile atlas :wall sx sy))))
 
 (defun draw-jrpg-city-cell-tile (game atlas cell sx sy mx my)
   (cond
     ((char= cell #\#) (draw-jrpg-city-building-tile game atlas sx sy mx my))
     ((char= cell #\+)
-     (jrpg-city-tile atlas +city-tile-floor+ sx sy *jrpg-city-floor-tint*)
-     (jrpg-city-tile atlas +city-tile-lamp+ sx sy))
+     (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*)
+     (jrpg-city-tile atlas :lamp sx sy))
     ((char= cell #\.)
-     (jrpg-city-tile atlas +city-tile-floor+ sx sy *jrpg-city-floor-tint*))
+     (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*))
     (t                                                  ; a door glyph
      (let ((edge (or (= mx 0) (= my 0)
                      (= mx (1- (jrpg-overworld-width game)))
                      (= my (1- (jrpg-overworld-height game))))))
        (if edge
            (progn
-             (jrpg-city-tile atlas +city-tile-floor+ sx sy *jrpg-city-floor-tint*)
-             (jrpg-city-tile atlas +city-tile-gate+ sx sy))
-           (jrpg-city-tile atlas +city-tile-doorway+ sx sy))))))
+             (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*)
+             (jrpg-city-tile atlas :gate sx sy))
+           (jrpg-city-tile atlas :doorway sx sy))))))
 
 (defun draw-jrpg-city-house-cell (game sx sy mx my)
   "Part of a house: a dark wall, with a lit roof eave and walls drawn only on

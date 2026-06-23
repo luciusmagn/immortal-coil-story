@@ -16,6 +16,7 @@
            "war/audit.lisp"
            "forest/hide.lisp"
            "jrpg/state.lisp"
+           "jrpg/tiles.lisp"
            "jrpg/rpg.lisp"
            "jrpg/combat.lisp"
            "jrpg/overworld.lisp"

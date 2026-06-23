@@ -512,7 +512,12 @@ clamped to the map edges."
                  (setf (source obj)
                        (make-instance 'rl-rectangle
                                       :x 0.0 :y 0.0 :width 16.0 :height 16.0))
-                 (ignore-errors (setf (filter obj) +texture-filter-point+))
+                 ;; point sampling on the actual Texture2D (texture-objects have
+                 ;; no filter slot); without this the atlas is bilinear and every
+                 ;; 16px tile bleeds its neighbours at the edges
+                 (ignore-errors
+                  (claylib/ll:set-texture-filter (claylib::c-asset obj)
+                                                 +texture-filter-point+))
                  (setf *jrpg-tile-atlas* obj))
                (progn (setf *jrpg-tile-atlas* :none) nil))
          (error (condition)
@@ -595,7 +600,8 @@ rectangles with a short arm in the heading so the facing reads at a glance."
   (let ((atlas (jrpg-tile-atlas))
         (s +jrpg-overworld-tile-size+))
     (when atlas
-      (jrpg-draw-tile atlas 29 9 (- cx (/ s 2)) (- cy (/ s 2)) s)
+      (multiple-value-bind (col row) (jrpg-tile-coords :player)
+        (jrpg-draw-tile atlas col row (- cx (/ s 2)) (- cy (/ s 2)) s))
       (return-from jrpg-draw-overworld-figure)))
   (flet ((fill-rect (x y w h)
            (claylib/ll:draw-rectangle (round x) (round y)
