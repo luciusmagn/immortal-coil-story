@@ -729,7 +729,7 @@
     ( 0 14 "gravestone (style 1)")
     ( 1 14 "gravestone (style 2)")
     ( 2 14 "gravestone (style 3)")
-    ( 3 14 "gravestone (style 4?)")
+    ( 3 14 "oubliette (barred hole in the ground)")
     ( 4 14 "")
     ( 5 14 "")
     ( 6 14 "")
