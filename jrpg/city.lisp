@@ -170,6 +170,51 @@ SEED and its glyph, so finishing one story never moves the others."
 (defun jrpg-city-building-p (game x y)
   (char= (jrpg-overworld-cell game x y) #\#))
 
+;;; Tile indices (col . row) into the Kenney 1-bit atlas, verified by preview.
+(defparameter +city-tile-floor+ '(8 . 1))    ; cobble ground
+(defparameter +city-tile-wall+ '(8 . 0))      ; brick wall
+(defparameter +city-tile-eave+ '(11 . 6))     ; brick wall with a capped top
+(defparameter +city-tile-window+ '(43 . 4))   ; framed window
+(defparameter +city-tile-doorway+ '(10 . 6))  ; wall with an arched doorway
+(defparameter +city-tile-gate+ '(39 . 4))     ; tall door, used as a city gate
+(defparameter +city-tile-lamp+ '(42 . 3))     ; torch / street lamp
+
+;; streets stay near-black so the white buildings and the traveller pop; the
+;; cobble is laid faintly underneath for paved texture, not a white wash
+(defvar *jrpg-city-floor-tint* (make-color 255 255 255 38))
+
+(defun jrpg-city-tile (atlas spec sx sy &optional tint)
+  (jrpg-draw-tile atlas (car spec) (cdr spec) sx sy
+                  +jrpg-overworld-tile-size+ tint))
+
+(defun draw-jrpg-city-building-tile (game atlas sx sy mx my)
+  "A building cell: a capped eave on the top edge, a window on a cell whose front
+faces the street, otherwise plain brick - a light neighbour-aware variation."
+  (cond
+    ((not (jrpg-city-building-p game mx (1- my)))
+     (jrpg-city-tile atlas +city-tile-eave+ sx sy))
+    ((not (jrpg-city-building-p game mx (1+ my)))
+     (jrpg-city-tile atlas +city-tile-window+ sx sy))
+    (t (jrpg-city-tile atlas +city-tile-wall+ sx sy))))
+
+(defun draw-jrpg-city-cell-tile (game atlas cell sx sy mx my)
+  (cond
+    ((char= cell #\#) (draw-jrpg-city-building-tile game atlas sx sy mx my))
+    ((char= cell #\+)
+     (jrpg-city-tile atlas +city-tile-floor+ sx sy *jrpg-city-floor-tint*)
+     (jrpg-city-tile atlas +city-tile-lamp+ sx sy))
+    ((char= cell #\.)
+     (jrpg-city-tile atlas +city-tile-floor+ sx sy *jrpg-city-floor-tint*))
+    (t                                                  ; a door glyph
+     (let ((edge (or (= mx 0) (= my 0)
+                     (= mx (1- (jrpg-overworld-width game)))
+                     (= my (1- (jrpg-overworld-height game))))))
+       (if edge
+           (progn
+             (jrpg-city-tile atlas +city-tile-floor+ sx sy *jrpg-city-floor-tint*)
+             (jrpg-city-tile atlas +city-tile-gate+ sx sy))
+           (jrpg-city-tile atlas +city-tile-doorway+ sx sy))))))
+
 (defun draw-jrpg-city-house-cell (game sx sy mx my)
   "Part of a house: a dark wall, with a lit roof eave and walls drawn only on
 sides that face the street - so a whole block reads as one building, and the
@@ -252,21 +297,29 @@ the house behind it (the bug where a dodged sign read as bare text on a roof)."
                      do (funcall fn col row mx my
                                  (jrpg-overworld-cell game mx my))))))
 
+(defun draw-jrpg-city-cell-shape (game cell sx sy mx my)
+  "The fallback renderer (no tile atlas): the original drawn rectangles."
+  (let ((cx (+ sx (/ +jrpg-overworld-tile-size+ 2)))
+        (cy (+ sy (/ +jrpg-overworld-tile-size+ 2))))
+    (cond
+      ((char= cell #\#) (draw-jrpg-city-house-cell game sx sy mx my))
+      ((char= cell #\+) (draw-jrpg-city-lamp cx cy))
+      ((char= cell #\.) nil)
+      (t (draw-jrpg-city-door game sx sy mx my)))))
+
 (defun draw-jrpg-city-map (game)
   (multiple-value-bind (cam-x cam-y) (jrpg-overworld-camera game)
     (jrpg-overworld-draw-trail game cam-x cam-y))
-  (let ((s +jrpg-overworld-tile-size+))
-    ;; pass 1: the ground - houses, lamps, and door bodies
+  (let ((atlas (jrpg-tile-atlas)))
+    ;; pass 1: the ground - streets, buildings, lamps, doors (tiles if the atlas
+    ;; loaded, else the drawn shapes)
     (jrpg-city-visible-cells
      game
      (lambda (col row mx my cell)
        (multiple-value-bind (sx sy) (jrpg-overworld-cell-screen col row)
-         (let ((cx (+ sx (/ s 2))) (cy (+ sy (/ s 2))))
-           (cond
-             ((char= cell #\#) (draw-jrpg-city-house-cell game sx sy mx my))
-             ((char= cell #\+) (draw-jrpg-city-lamp cx cy))
-             ((char= cell #\.) nil)
-             (t (draw-jrpg-city-door game sx sy mx my)))))))
+         (if atlas
+             (draw-jrpg-city-cell-tile game atlas cell sx sy mx my)
+             (draw-jrpg-city-cell-shape game cell sx sy mx my)))))
     ;; pass 2: the name plates, on top of every tile so a dodged sign keeps its
     ;; solid background
     (jrpg-city-visible-cells

@@ -483,6 +483,61 @@ clamped to the map edges."
   (values (+ +jrpg-overworld-left+ (* col +jrpg-overworld-tile-size+))
           (+ +jrpg-overworld-top+ (* row +jrpg-overworld-tile-size+))))
 
+;;; --- tile atlas (Kenney 1-bit, CC0): a 48x22 grid of 16x16 white-on-
+;;; transparent tiles. One reusable texture-object whose source/dest rects are
+;;; mutated per tile, so a whole map costs no per-tile allocation. nil if the
+;;; PNG is absent, so callers fall back to drawn shapes.
+
+(defconstant +jrpg-tile-px+ 16)
+
+(defvar *jrpg-tile-atlas* nil)
+
+(defun clear-jrpg-tile-atlas ()
+  (setf *jrpg-tile-atlas* nil))
+
+(register-minigame-reset-hook 'clear-jrpg-tile-atlas)
+
+(defun jrpg-tile-atlas ()
+  (cond
+    ((eq *jrpg-tile-atlas* :none) nil)
+    (*jrpg-tile-atlas* *jrpg-tile-atlas*)
+    (t
+     (let ((path (project-pathname "assets/tiles/kenney-1bit-mono.png")))
+       (handler-case
+           (if (probe-file path)
+               (let* ((asset (make-texture-asset path :load-now t))
+                      (obj (make-texture asset 0.0 0.0
+                                         :width 16.0 :height 16.0
+                                         :tint (make-color 255 255 255 255))))
+                 (setf (source obj)
+                       (make-instance 'rl-rectangle
+                                      :x 0.0 :y 0.0 :width 16.0 :height 16.0))
+                 (ignore-errors (setf (filter obj) +texture-filter-point+))
+                 (setf *jrpg-tile-atlas* obj))
+               (progn (setf *jrpg-tile-atlas* :none) nil))
+         (error (condition)
+           (runtime-warn "Could not load tile atlas: ~a" condition)
+           (setf *jrpg-tile-atlas* :none)
+           nil))))))
+
+(defvar *jrpg-tile-white* (make-color 255 255 255 255))
+
+(defun jrpg-draw-tile (atlas col row sx sy size &optional tint)
+  "Blit the (COL,ROW) 16x16 atlas tile into a SIZE-square cell at SX,SY.
+TINT defaults to solid white; pass a cached colour to avoid per-tile allocation."
+  (let ((src (source atlas))
+        (dst (dest atlas)))
+    (setf (x src) (float (* col +jrpg-tile-px+) 1.0)
+          (y src) (float (* row +jrpg-tile-px+) 1.0)
+          (width src) (float +jrpg-tile-px+ 1.0)
+          (height src) (float +jrpg-tile-px+ 1.0)
+          (x dst) (float sx 1.0)
+          (y dst) (float sy 1.0)
+          (width dst) (float size 1.0)
+          (height dst) (float size 1.0))
+    (setf (tint atlas) (or tint *jrpg-tile-white*))
+    (draw-object atlas)))
+
 (defun jrpg-overworld-draw-grid ()
   "Faint guide lines, so the walk reads as a grid and not floating specks."
   (let ((w (* +jrpg-overworld-view-cols+ +jrpg-overworld-tile-size+))
@@ -535,8 +590,13 @@ mountains peaks, forest little trees, water a glinting pool; landmarks bold."
                            cx cy 20 (make-color 255 255 255 235))))))
 
 (defun jrpg-draw-overworld-figure (cx cy &optional (facing 1))
-  "The traveller, drawn from rectangles, with a short arm in the heading so
-the way they face reads at a glance."
+  "The traveller. A tile from the atlas when one is loaded, else drawn from
+rectangles with a short arm in the heading so the facing reads at a glance."
+  (let ((atlas (jrpg-tile-atlas))
+        (s +jrpg-overworld-tile-size+))
+    (when atlas
+      (jrpg-draw-tile atlas 29 9 (- cx (/ s 2)) (- cy (/ s 2)) s)
+      (return-from jrpg-draw-overworld-figure)))
   (flet ((fill-rect (x y w h)
            (claylib/ll:draw-rectangle (round x) (round y)
                                       (max 1 (round w)) (max 1 (round h))
