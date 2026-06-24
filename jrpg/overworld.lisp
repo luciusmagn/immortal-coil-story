@@ -489,6 +489,7 @@ clamped to the map edges."
 ;;; PNG is absent, so callers fall back to drawn shapes.
 
 (defconstant +jrpg-tile-px+ 16)
+(defconstant +jrpg-tile-crop+ 1) ; match Scene Builder: drop atlas border pixels
 
 (defvar *jrpg-tile-atlas* nil)
 
@@ -528,14 +529,15 @@ clamped to the map edges."
 (defvar *jrpg-tile-white* (make-color 255 255 255 255))
 
 (defun jrpg-draw-tile (atlas col row sx sy size &optional tint)
-  "Blit the (COL,ROW) 16x16 atlas tile into a SIZE-square cell at SX,SY.
+  "Blit the (COL,ROW) atlas tile into a SIZE-square cell at SX,SY.
 TINT defaults to solid white; pass a cached colour to avoid per-tile allocation."
-  (let ((src (source atlas))
-        (dst (dest atlas)))
-    (setf (x src) (float (* col +jrpg-tile-px+) 1.0)
-          (y src) (float (* row +jrpg-tile-px+) 1.0)
-          (width src) (float +jrpg-tile-px+ 1.0)
-          (height src) (float +jrpg-tile-px+ 1.0)
+  (let* ((src (source atlas))
+         (dst (dest atlas))
+         (inner (- +jrpg-tile-px+ (* 2 +jrpg-tile-crop+))))
+    (setf (x src) (float (+ (* col +jrpg-tile-px+) +jrpg-tile-crop+) 1.0)
+          (y src) (float (+ (* row +jrpg-tile-px+) +jrpg-tile-crop+) 1.0)
+          (width src) (float inner 1.0)
+          (height src) (float inner 1.0)
           (x dst) (float sx 1.0)
           (y dst) (float sy 1.0)
           (width dst) (float size 1.0)
