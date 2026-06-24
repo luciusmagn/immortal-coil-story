@@ -43,6 +43,11 @@ rim gates."
           (when (jrpg-city-door-exit-p spec) (push g exits)))))
     (values (nreverse targets) (nreverse names) (nreverse glyphs) (nreverse exits))))
 
+(defun jrpg-city-glyphs-by-kind (specs exit-p)
+  (loop for spec in specs
+        when (eq (jrpg-city-door-exit-p spec) exit-p)
+          collect (jrpg-city-door-glyph spec)))
+
 (defun jrpg-city-rng (seed)
   "A small deterministic PRNG (an LCG). Generation draws only from this, never
 the global RNG, so a city regenerates identically for a given SEED - the layout
@@ -55,71 +60,111 @@ truly random."
           (+ lo (mod (ash state -15) (1+ (- hi lo))))
           lo))))
 
-(defun jrpg-gen-city (w h interior-glyphs exit-glyphs seed)
-  "Returns (values rows start-x start-y) for a town of large, separated houses.
-The interior is divided into plots; most plots hold one big building set back
-from wide streets (a few are left open). District doors are carved into building
-faces, EXIT gates sit on the top rim. Deterministic in SEED, and each door
-probes from its own seed so finishing one story never moves the others."
-  (let* ((grid (make-array (list h w) :initial-element #\.)) ; all street first
-         (rng (jrpg-city-rng seed))
-         (buildings nil))
-    (flet ((rnd (lo hi) (funcall rng lo hi))
-           (street-p (x y)
-             (and (<= 0 x) (< x w) (<= 0 y) (< y h)
-                  (member (aref grid y x) '(#\. #\+) :test #'char=))))
-      ;; plots: a coarse grid; most hold one big house, inset from the streets so
-      ;; wide lanes run between them (no cramped one-cell alleys)
-      (let ((plot-w 9) (plot-h 8))
-        (loop for py from 1 by plot-h while (< py (- h 4))
-              do (loop for px from 1 by plot-w while (< px (- w 4))
-                       do (let* ((avail-w (min plot-w (- (1- w) px)))
-                                 (avail-h (min plot-h (- (1- h) py)))
-                                 (bw (min (- avail-w 2) (rnd 4 6)))
-                                 (bh (min (- avail-h 2) (rnd 3 5))))
-                            (when (and (>= bw 3) (>= bh 3) (> (rnd 0 9) 1))
-                              (let* ((bx (+ px 1 (rnd 0 (max 0 (- avail-w 2 bw)))))
-                                     (by (+ py 1 (rnd 0 (max 0 (- avail-h 2 bh)))))
-                                     (right (+ bx bw -1))
-                                     (bottom (+ by bh -1)))
-                                (when (and (< right (1- w)) (< bottom (1- h)))
-                                  (loop for yy from by to bottom
-                                        do (loop for xx from bx to right
-                                                 do (setf (aref grid yy xx) #\#)))
-                                  (push (list bx by right bottom) buildings))))))))
-      ;; sparse street lamps
-      (dotimes (i (max 4 (floor (* w h) 80)))
-        (let ((lx (rnd 1 (- w 2))) (ly (rnd 1 (- h 2))))
-          (when (char= (aref grid ly lx) #\.)
-            (setf (aref grid ly lx) #\+))))
-      ;; exit gates spread along the top rim - the way out
-      (let ((k (length exit-glyphs)))
-        (loop for g in exit-glyphs
-              for i from 1
-              for ex = (max 1 (min (- w 2) (floor (* i w) (1+ k))))
-              do (setf (aref grid 0 ex) g)))
-      ;; district doors: each glyph probes building faces from its own seed, so
-      ;; its spot is stable no matter which other doors are open this visit
-      (dolist (g interior-glyphs)
-        (let ((grng (jrpg-city-rng (logxor (logand seed #xffffffff)
-                                           (* 2246822519 (char-code g)))))
-              (placed nil))
-          (loop repeat 800 until placed
-                do (let ((x (funcall grng 1 (- w 2)))
-                         (y (funcall grng 1 (- h 2))))
-                     (when (and (char= (aref grid y x) #\#)
-                                (or (street-p (1- x) y) (street-p (1+ x) y)
-                                    (street-p x (1- y)) (street-p x (1+ y))))
-                       (setf (aref grid y x) g placed t))))))
-      ;; start: a street cell low and left
-      (let ((sx 1) (sy (- h 2)))
-        (block found
-          (loop for y from (- h 2) downto 1
-                do (loop for x from 1 below (1- w)
-                         do (when (char= (aref grid y x) #\.)
-                              (setf sx x sy y)
-                              (return-from found)))))
-        (values (jrpg-gen-rows grid) sx sy)))))
+(defun jrpg-city-fill-rect (grid left top right bottom glyph)
+  (loop for y from top to bottom
+        do (loop for x from left to right
+                 do (setf (aref grid y x) glyph))))
+
+(defun jrpg-city-clamp-x (w x)
+  (max 1 (min (- w 2) x)))
+
+(defun jrpg-city-clamp-y (h y)
+  (max 1 (min (- h 2) y)))
+
+(defun jrpg-city-door-slots (w h)
+  (let ((north-front (jrpg-city-clamp-y h (floor h 3)))
+        (south-front (jrpg-city-clamp-y h (- h 3)))
+        (left-x (jrpg-city-clamp-x w (floor w 5)))
+        (mid-x (jrpg-city-clamp-x w (floor w 2)))
+        (right-x (jrpg-city-clamp-x w (- w (floor w 5) 1))))
+    (list (list left-x south-front)
+          (list right-x north-front)
+          (list left-x north-front)
+          (list right-x south-front)
+          (list (jrpg-city-clamp-x w (- mid-x 3)) south-front)
+          (list (jrpg-city-clamp-x w (+ mid-x 3)) south-front)
+          (list (jrpg-city-clamp-x w (- mid-x 3)) north-front)
+          (list (jrpg-city-clamp-x w (+ mid-x 3)) north-front))))
+
+(defun jrpg-city-extra-door-slots (grid w h used)
+  (let ((slots nil))
+    (loop for y from 1 below (1- h)
+          do (loop for x from 1 below (1- w)
+                   when (and (char= (aref grid y x) #\#)
+                             (not (member (list x y) used :test #'equal))
+                             (or (char= (aref grid (1+ y) x) #\.)
+                                 (char= (aref grid (1- y) x) #\.)
+                                 (char= (aref grid y (1+ x)) #\.)
+                                 (char= (aref grid y (1- x)) #\.)))
+                     do (push (list x y) slots)))
+    (nreverse slots)))
+
+(defun jrpg-city-gate-x (w count index)
+  (let ((center (floor w 2))
+        (spacing 4)
+        (offset (- index (/ (1- count) 2.0))))
+    (max 1 (min (- w 2) (round (+ center (* offset spacing)))))))
+
+(defun jrpg-city-place-open-doors (grid w h open-glyphs planned-glyphs)
+  (let* ((slots (jrpg-city-door-slots w h))
+         (used nil)
+         (extras nil))
+    (loop for glyph in planned-glyphs
+          for index from 0
+          for slot = (or (nth index slots)
+                         (pop extras)
+                         (progn
+                           (setf extras (jrpg-city-extra-door-slots grid w h used))
+                           (pop extras)))
+          when slot
+            do (progn
+                 (push slot used)
+                 (when (member glyph open-glyphs :test #'char=)
+                   (destructuring-bind (x y) slot
+                     (setf (aref grid y x) glyph)))))))
+
+(defun jrpg-gen-city (w h interior-glyphs exit-glyphs seed
+                      &optional all-interior-glyphs all-exit-glyphs)
+  "Returns (values rows start-x start-y) for a small RPG town: a north gate,
+main street, square, and fixed building fronts. Door slots are planned from all
+configured doors so a completed district does not move the others."
+  (declare (ignore seed))
+  (let* ((grid (make-array (list h w) :initial-element #\.))
+         (mid (jrpg-city-clamp-x w (floor w 2)))
+         (left-x (jrpg-city-clamp-x w (floor w 5)))
+         (right-x (jrpg-city-clamp-x w (- w (floor w 5) 1)))
+         (north-front (jrpg-city-clamp-y h (floor h 3)))
+         (south-top (jrpg-city-clamp-y h (max (1+ north-front) (- h 6))))
+         (south-front (jrpg-city-clamp-y h (- h 3)))
+         (planned-interior (or all-interior-glyphs interior-glyphs))
+         (planned-exits (or all-exit-glyphs exit-glyphs)))
+    (loop for x below w do (setf (aref grid 0 x) #\#))
+    (jrpg-city-fill-rect grid 2 1 (max 3 (- mid 6)) north-front #\#)
+    (jrpg-city-fill-rect grid (min (- w 4) (+ mid 6)) 1 (- w 3) north-front #\#)
+    (jrpg-city-fill-rect grid 2 south-top (max 3 (- mid 6)) south-front #\#)
+    (jrpg-city-fill-rect grid (min (- w 4) (+ mid 6)) south-top (- w 3) south-front #\#)
+    (jrpg-city-fill-rect grid (max 2 (- mid 4)) (- h 4)
+                         (max 3 (- mid 2)) south-front #\#)
+    (jrpg-city-fill-rect grid (min (- w 4) (+ mid 2)) (- h 4)
+                         (min (- w 3) (+ mid 4)) south-front #\#)
+    (loop for y from 1 below (1- h)
+          do (setf (aref grid y mid) #\.))
+    (loop for x from (max 1 (- mid 5)) to (min (- w 2) (+ mid 5))
+          do (setf (aref grid (jrpg-city-clamp-y h (floor h 2)) x) #\.))
+    (dolist (lamp (list (list left-x (floor h 2))
+                        (list right-x (floor h 2))
+                        (list (max 1 (- mid 3)) (jrpg-city-clamp-y h (1+ north-front)))
+                        (list (min (- w 2) (+ mid 3)) (jrpg-city-clamp-y h (1+ north-front)))))
+      (destructuring-bind (x y) lamp
+        (when (char= (aref grid y x) #\.)
+          (setf (aref grid y x) #\+))))
+    (let ((count (max 1 (length planned-exits))))
+      (loop for glyph in planned-exits
+            for index from 0
+            when (member glyph exit-glyphs :test #'char=)
+              do (setf (aref grid 0 (jrpg-city-gate-x w count index)) glyph)))
+    (jrpg-city-place-open-doors grid w h interior-glyphs planned-interior)
+    (values (jrpg-gen-rows grid) mid (- h 2))))
 
 (defun make-fresh-jrpg-city (node)
   (jrpg-init-state)
@@ -137,8 +182,11 @@ probes from its own seed so finishing one story never moves the others."
          (specs (let ((v (minigame-config-value node :doors)))
                   (if (listp v) v nil))))
     (multiple-value-bind (targets names glyphs exits) (jrpg-city-parse-doors specs)
-      (let ((interior (remove-if (lambda (g) (member g exits)) glyphs)))
-        (multiple-value-bind (rows sx sy) (jrpg-gen-city w h interior exits seed)
+      (let ((interior (remove-if (lambda (g) (member g exits)) glyphs))
+            (all-interior (jrpg-city-glyphs-by-kind specs nil))
+            (all-exits (jrpg-city-glyphs-by-kind specs t)))
+        (multiple-value-bind (rows sx sy)
+            (jrpg-gen-city w h interior exits seed all-interior all-exits)
           (make-jrpg-overworld
            :node-id (node-id node)
            :map (coerce rows 'vector)
