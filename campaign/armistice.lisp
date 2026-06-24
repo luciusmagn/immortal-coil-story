@@ -4,7 +4,7 @@
 ;;; day; exits through waking.
 
 (dialog-text "armistice/offer"
-             "the dream has one more morning in it, sometimes. you can feel it past the day's edge, the way you feel a room past a door: lit, and quiet, and further on."
+             "sometimes the dream gives you one more morning. eight o'clock is still ahead."
              :next "armistice/offer-choice")
 
 (dialog-pick "armistice/offer-choice"
@@ -25,11 +25,11 @@
              :next "armistice/corridor-s2")
 
 (dialog-text "armistice/corridor-s2"
-             "somebody laughs once, high and frightened, and claps a hand over it. the silence goes on being silence. it holds."
+             "somebody laughs once, high and frightened, and claps a hand over it. nobody tells them to stop."
              :next "armistice/second-minute")
 
 (dialog-text "armistice/second-minute"
-             "in the second minute, somewhere down the stairwell, a door opens that has been closed for four years, by sound alone: swollen wood, a shoulder, then daylight where daylight has not been."
+             "in the second minute, somewhere down the stairwell, a door opens that has been closed for four years. swollen wood, a shoulder, then daylight."
              :next "armistice/second-minute-s2")
 
 (dialog-text "armistice/second-minute-s2"
@@ -41,7 +41,11 @@
              :next "armistice/tape-2")
 
 (dialog-text "armistice/tape-2"
-             "it leaves its crosses behind in gum and dust, pale Xs over every view, and the clerks polish at them with their sleeves, laughing now, properly, because the crosses come away and the city is behind them. it was behind them the whole time."
+             "it leaves pale Xs in gum and dust over every view. the clerks polish them with their sleeves."
+             :next "armistice/tape-3")
+
+(dialog-text "armistice/tape-3"
+             "the crosses come away. the city is behind them."
              :next "armistice/map-room")
 
 (dialog-text "armistice/map-room"
@@ -54,7 +58,12 @@
 
 (dialog-say "armistice/sorel-line"
             "Sorel"
-            "i have ruled a line under the casualty column. there is nothing to enter after it. chancellor, i have kept books for thirty years and i have never once ruled a line that stayed ruled."
+            "i have ruled a line under the casualty column. there is nothing to enter after it."
+            :next "armistice/sorel-line-b")
+
+(dialog-say "armistice/sorel-line-b"
+            "Sorel"
+            "chancellor, i have kept books for thirty years and i have never once ruled a line that stayed ruled."
             :next "armistice/sorel-line-2")
 
 (dialog-say "armistice/sorel-line-2"
@@ -64,21 +73,21 @@
 
 (dialog-say "armistice/sorel-line-3"
             "Sorel"
-            "the column is closed. let some other ledger worry about staying. today the figure is final, and the figure has stopped growing, and i am going to sit down for a moment on the good chair."
+            "the column is closed. today the figure is final. i am going to sit down for a moment on the good chair."
             :next "armistice/sorel-questions")
 
 (dialog-interrogation "armistice/sorel-questions"
-                      "Sorel has not sat down yet. he stands by the closed column with the pen still in his hand, willing to be kept a moment longer."
+                      "Sorel has not sat down yet. he stands by the closed column with the pen still in his hand."
                       (:next "armistice/brandt")
                       (:continue-label "let him sit down")
                       ("ask what the final figure is"
                        :id "figure"
                        :speaker "Sorel"
-                       "i will not say it aloud on the day it stopped growing. you signed for most of it. read it tonight, alone, once, and then let the line hold it for you.")
-                      ("ask if he has closed a column like this before"
+                       "i will not say it aloud today. you signed for most of it. read it tonight, alone, once.")
+                      ("ask if he has closed such a column before"
                        :id "before"
                        :speaker "Sorel"
-                       "harvests, debts, one bank. never a war. a war does not close, chancellor. it is the first time i have ruled a line and dared it to mean what it says.")
+                       "harvests, debts, one bank. never a war. a war does not close, chancellor. this is the first line i have dared to trust.")
                       ("ask how a person closes the war inside"
                        :id "inside"
                        :speaker "Sorel"
@@ -96,7 +105,7 @@
 
 (dialog-say "armistice/brandt-3"
             "Brandt"
-            "i was wrong. i have never been so happy to file an error in my life. i am going to be wrong about more things. i am going to take it up as a discipline."
+            "i was wrong. i have never been so happy to file an error. i am going to be wrong about more things."
             :next "armistice/brandt-laugh")
 
 (dialog-text "armistice/brandt-laugh"
@@ -104,11 +113,19 @@
              :next "armistice/brandt-laugh-2")
 
 (dialog-text "armistice/brandt-laugh-2"
-             "nine years in this building and you have never once heard it, and it is terrible, honking, entirely without administrative value, and the clerks in the corridor catch it and pass it on, and it goes down the stairwell ahead of him, opening doors."
+             "nine years in this building and you have never heard it. it is terrible, honking, and of no administrative use."
+             :next "armistice/brandt-laugh-3")
+
+(dialog-text "armistice/brandt-laugh-3"
+             "the clerks in the corridor hear it and pass it on. it reaches the stairwell ahead of him."
              :next "armistice/radio")
 
 (dialog-text "armistice/radio"
-             "in the night office the radio is on, tuned to the clear band out of four years of habit. the numbers are being read, group after group, the exhausted voice keeping its protocol. then, mid-group, it stops."
+             "in the night office the radio is on, tuned to the clear band out of four years of habit."
+             :next "armistice/radio-2")
+
+(dialog-text "armistice/radio-2"
+             "the numbers are being read, group after group, the exhausted voice keeping its protocol. then, mid-group, it stops."
              :next "armistice/dead-air")
 
 (dialog-text "armistice/dead-air"
@@ -130,7 +147,7 @@
 
 (dialog-say "armistice/olen-map-2"
             "you"
-            "by the window, Olen. it is the new map. everything on it is ours to lose slowly."
+            "by the window, Olen. it is the new map. there is no tape on the river."
             :next "armistice/olen-map-3")
 
 (dialog-say "armistice/olen-map-3"
@@ -142,24 +159,29 @@
                       "Olen has not moved to the window yet. he stands where the map was, hands half-raised toward a thing that is no longer there."
                       (:next "armistice/vey")
                       (:continue-label "leave him to the window")
-                      ("ask what it is like to leave the map"
+                      ("ask about leaving the map"
                        :id "map"
                        :speaker "Olen"
-                       "like setting down a weight you forgot was yours. my hands keep reaching for it. i am told that fades. i am told a great many things fade, starting today.")
+                       "the weight is gone. my hands keep reaching for it. i am told that fades. i am told a great many things fade, starting today.")
                       ("ask whether the window worries him"
                        :id "window"
                        :speaker "Olen"
-                       "for four years a window was where a shell came through. i must learn it as where light comes through. the river will help. it is patient about being only a river.")
+                       "for four years a window was where a shell came through. i must learn it as where light comes through. the river has no orders on it.")
                       ("ask what new habits he will need"
                        :id "habits"
                        :speaker "Olen"
-                       "to stand without a map. to plan a week instead of a front. to call the river a river. small habits, chancellor. i was only ever good at the large terrible ones."))
+                       "to stand without a map. to plan a week instead of a front. to call the river a river."
+                       "small habits, chancellor. i was only ever good at the large terrible ones."))
 
 (dialog-text "armistice/vey"
-             "you pass Vey's office. he is at his desk, composing, in his even hand, a memorandum on the orderly administration of peacetime, dated today, addressed to whom it may concern."
+             "you pass Vey's office. he is at his desk, writing in his even hand."
              :next "armistice/vey-2")
 
 (dialog-text "armistice/vey-2"
+             "the memorandum concerns the orderly administration of peacetime. it is dated today and addressed to whom it may concern."
+             :next "armistice/vey-3")
+
+(dialog-text "armistice/vey-3"
              "Vey has already begun the next administration. you leave him to it."
              :next "armistice/coat")
 
@@ -172,11 +194,15 @@
              :next "armistice/sentry-cap")
 
 (dialog-text "armistice/sentry-cap"
-             "the older sentry, the one still helmeted, catches your eye and very slowly, with full ceremony, takes the helmet off, holds it out at arm's length, and drops it. it rolls. neither of you picks it up."
+             "the older sentry, the one still helmeted, catches your eye. with full ceremony, he takes the helmet off."
              :next "armistice/sentry-cap-2")
 
 (dialog-text "armistice/sentry-cap-2"
-             "it is the most insubordinate thing you have ever been glad to witness, and you return his salute, which he has not given."
+             "he holds it at arm's length and drops it. it rolls. neither of you picks it up."
+             :next "armistice/sentry-cap-3")
+
+(dialog-text "armistice/sentry-cap-3"
+             "you return the salute he has not given."
              :next "armistice/street")
 
 (dialog-text "armistice/street"
@@ -188,15 +214,19 @@
              :next "armistice/unrecognized")
 
 (dialog-text "armistice/unrecognized"
-             "nobody knows you without the coat. you stand in your own capital holding a borrowed cup, one face in the crowd. for one morning, no one asks your name. you know better than to trust it. you drink."
+             "nobody knows you without the coat. you stand in your own capital holding a borrowed cup, one face in the crowd. no one asks your name. you drink."
              :next "armistice/bells-other")
 
 (dialog-text "armistice/bread-queue"
-             "outside the baker's, the queue still holds its line, but nobody is quiet. people pass bread backward over their shoulders and sing the same two lines badly."
+             "outside the baker's, the queue still holds its line, but nobody is quiet."
+             :next "armistice/bread-queue-s2")
+
+(dialog-text "armistice/bread-queue-s2"
+             "people pass bread backward over their shoulders and sing the same two lines off key."
              :next "armistice/bread-queue-2")
 
 (dialog-text "armistice/bread-queue-2"
-             "the baker is giving the morning's second batch away, loudly, over his wife's arithmetic, and his wife is letting him, doing the arithmetic anyway out of love, and laughing at the total."
+             "the baker is giving the morning's second batch away over his wife's arithmetic. she does the arithmetic anyway and laughs at the total."
              :next "armistice/cups")
 
 (dialog-text "armistice/bells-other"
@@ -204,7 +234,7 @@
              :next "armistice/bells-other-2")
 
 (dialog-text "armistice/bells-other-2"
-             "struck fast, bright, in relays, and you can hear the relays changing: children, taking turns, lifted to the rope by grown hands, ringing nothing into the record at all."
+             "struck fast, in relays. children take turns at the rope, lifted by grown hands."
              :next "armistice/bells-other-3")
 
 (dialog-text "armistice/bells-other-3"
@@ -212,11 +242,19 @@
              :next "armistice/bread-queue")
 
 (dialog-text "armistice/cups"
-             "the borrowed cup, when you finally look at it, is good china, somebody's sunday best, brought out into the street with its eleven brothers and handed to strangers."
+             "the borrowed cup, when you look at it, is good china. somebody's sunday best."
+             :next "armistice/cups-s2")
+
+(dialog-text "armistice/cups-s2"
+             "it came out into the street with eleven others and was handed to strangers."
              :next "armistice/cups-2")
 
 (dialog-text "armistice/cups-2"
-             "all over the city the kept things are coming out. the good plates, the saved sugar, the bottle at the back of the cupboard that someone was saving for a day. nothing is being saved now. saving is over."
+             "all over the city the kept things are coming out. the good plates. the saved sugar. the bottle at the back of the cupboard."
+             :next "armistice/cups-3")
+
+(dialog-text "armistice/cups-3"
+             "nothing is being saved now."
              :next "armistice/table")
 
 (dialog-text "armistice/table"
@@ -224,7 +262,11 @@
              :next "armistice/table-2")
 
 (dialog-text "armistice/table-2"
-             "it takes four people and it folds badly, the way maps do, and under it the table is just a table: wood, scarred, a century of pencil marks and cup rings, the ordinary furniture of an ordinary room, returned to service."
+             "it takes four people. the folds buckle. under it the table is just a table: wood, scars, pencil marks, cup rings."
+             :next "armistice/table-3")
+
+(dialog-text "armistice/table-3"
+             "ordinary furniture, returned to service."
              :next "armistice/first-choice")
 
 (dialog-pick "armistice/first-choice"
@@ -241,22 +283,26 @@
              :next "armistice/windows-2")
 
 (dialog-text "armistice/windows-2"
-             "the building exhales four years of paper and blackout cloth and kept breath. the drafts run the corridors. by the top floor the two of you are racing, and he wins, and you contest the result, and lose the appeal."
+             "drafts run the corridors, carrying dust and paper smell. by the top floor the two of you are racing. Brandt wins."
              :next "armistice/evening")
 
 (dialog-on-enter "armistice/walk-district"
                  '(setf (dialog-value "armistice-first") "district"))
 
 (dialog-text "armistice/walk-district"
-             "you walk to the third district in your shirtsleeves, across the canal, against the remembered grain of every night you did it in a borrowed coat. the lists are coming down off the doors."
+             "you walk to the third district in your shirtsleeves, across the canal. every night you came here before, you wore a borrowed coat."
              :next "armistice/walk-district-2")
 
 (dialog-text "armistice/walk-district-2"
+             "the lists are coming down off the doors."
+             :next "armistice/walk-district-3")
+
+(dialog-text "armistice/walk-district-3"
              "not torn: taken down, folded, kept in neat stacks."
              :next "armistice/district-bell")
 
 (dialog-text "armistice/district-bell"
-             "at the parish hall they are still ringing, relay after relay, and the ringer with the fingerless gloves stands aside from the rope entirely, resting his arm forever, supervising joy."
+             "at the parish hall they are still ringing, relay after relay. the ringer with the fingerless gloves stands aside from the rope."
              :next "armistice/district-bell-2")
 
 (dialog-text "armistice/district-bell-2"
@@ -267,15 +313,19 @@
                  '(setf (dialog-value "armistice-first") "slept"))
 
 (dialog-text "armistice/bed"
-             "you go home, to the flat that has technically been yours all along, and sleep in a bed, in daylight, with the window open and the street noise coming in."
+             "you go home, to the flat that has been yours all along, and sleep in a bed, in daylight, with the window open and the street noise coming in."
              :next "armistice/bed-2")
 
 (dialog-text "armistice/bed-2"
-             "nobody wakes you. there is nothing that cannot wait. for four years there was always something that could not wait. today there is nothing."
+             "nobody wakes you. for four years there was always something that could not wait. today there is nothing."
              :next "armistice/evening")
 
 (dialog-text "armistice/evening"
-             "the evening comes on slow and gold, and the city lights itself early, every window, four years of saved light spent in one night. no bell rings at dusk. the bells are spent too, rung out, resting in their towers."
+             "evening comes on, and the city lights itself early. every window. four years of saved light spent in one night."
+             :next "armistice/evening-2")
+
+(dialog-text "armistice/evening-2"
+             "no bell rings at dusk. the bells are rung out, resting in their towers."
              :next "armistice/last")
 
 (dialog-text "armistice/last"
@@ -283,9 +333,9 @@
              :next "armistice/last-2")
 
 (dialog-text "armistice/last-2"
-             "somewhere below, faint, Brandt is still laughing about something, and the sound carries in the open air, because everything does now."
+             "somewhere below, faint, Brandt is still laughing about something. the sound carries in the open air."
              :next "armistice/wake")
 
 (dialog-text "armistice/wake"
-             "sleep, when it comes, comes easy, the first easy sleep of the whole long dream, and it carries you up and out with the windows open the whole way."
+             "sleep is easy, the first easy sleep of the whole long dream. the windows stay open."
              :next "sys/reboot")
