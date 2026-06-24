@@ -8,11 +8,15 @@
              :next "tribunal/keep-2")
 
 (dialog-text "tribunal/keep-2"
-             "that evening you buy a tin box from a hardware stall with your own coins, the first thing you have paid for in months, and the pencil copies go into it, and the box goes where boxes go that must be found by the right people and no others."
+             "that evening you buy a tin box from a hardware stall with your own coins. it is the first thing you have paid for in months."
+             :next "tribunal/keep-2-s2")
+
+(dialog-text "tribunal/keep-2-s2"
+             "the pencil copies go into it. the box goes where boxes go when the right people must find them."
              :next "tribunal/keep-3")
 
 (dialog-text "tribunal/keep-3"
-             "keeping the record becomes the part of the day you do with your whole attention."
+             "keeping the record is the part of the day you do with your whole attention."
              :next "tribunal/seasons")
 
 (dialog-text "tribunal/seasons"
@@ -20,7 +24,7 @@
              :next "tribunal/seasons-2")
 
 (dialog-text "tribunal/seasons-2"
-             "one morning the eight o'clock bell does not ring, and that is the armistice: not a treaty, an absence of bell, and people standing in the corridor listening to it."
+             "one morning the eight o'clock bell does not ring. the armistice is no treaty, no bell, people standing in the corridor."
              :next "tribunal/years")
 
 (dialog-scene "tribunal/years"
@@ -28,7 +32,11 @@
               :next "tribunal/letter")
 
 (dialog-text "tribunal/letter"
-             "the letter comes on good paper, from the commission for the clarification of wartime administration, which is what the victors have named the room where your war is being reread."
+             "the letter comes on good paper. it is from the commission for the clarification of wartime administration."
+             :next "tribunal/letter-s2")
+
+(dialog-text "tribunal/letter-s2"
+             "the victors gave that name to the room where your war is being reread."
              :next "tribunal/letter-2")
 
 (dialog-text "tribunal/letter-2"
@@ -40,12 +48,21 @@
              :next "tribunal/arrival-2")
 
 (dialog-text "tribunal/arrival-2"
-             "the lines of old ball games are still painted on the floor, and the commission's tables are arranged inside them, neatly, as if the rules of some earlier game still applied and everyone had agreed not to step out of bounds."
+             "the lines of old ball games are still painted on the floor. the commission's tables sit inside them."
+             :next "tribunal/arrival-3")
+
+(dialog-text "tribunal/arrival-3"
+             "clerks step around the painted lines. nobody has told them to. nobody needs to."
              :next "tribunal/oath")
 
 (dialog-say "tribunal/oath"
             "the presiding judge"
-            "you were chancellor from the spring of the second year. you held the seals. you will be heard as a witness. whether you remain a witness is a matter for the evidence, not for me, and not for you. do you understand this?"
+            "you were chancellor from the spring of the second year. you held the seals. you will be heard as a witness."
+            :next "tribunal/oath-s2")
+
+(dialog-say "tribunal/oath-s2"
+            "the presiding judge"
+            "whether you remain a witness is a matter for the evidence, not for me, and not for you. do you understand this?"
             :next "tribunal/oath-2")
 
 (dialog-say "tribunal/oath-2"
@@ -64,15 +81,27 @@
       "tribunal/gallery-strangers"))
 
 (dialog-text "tribunal/gallery-look"
-             "you sit. behind the rail, the gallery: sixty faces, coats over their arms because the gymnasium is warm, and every face is from the districts, and every face is here for the lists."
+             "you sit. behind the rail: sixty faces. coats hang over their arms because the gymnasium is warm."
+             :next "tribunal/gallery-look-2")
+
+(dialog-text "tribunal/gallery-look-2"
+             "every face is from the districts. every face is here for the lists."
              :next #'tribunal-gallery-target)
 
 (dialog-text "tribunal/gallery-strangers"
-             "you know none of them. that is its own verdict, delivered before the first exhibit: you governed these faces for two years from behind glass and tape, and there is not one you can put a street to."
+             "you know none of them. for two years you governed these faces from behind glass and tape."
+             :next "tribunal/gallery-strangers-2")
+
+(dialog-text "tribunal/gallery-strangers-2"
+             "there is not one face you can put to a street."
              :next "tribunal/charge")
 
 (dialog-text "tribunal/gallery-known"
-             "in the second row sits an old woman with her hands folded on a folded paper, and you know her. the canal district, the bell, the candle. Vasik, with one s. she does not look away when you find her."
+             "in the second row sits an old woman with her hands folded on a folded paper. you know her."
+             :next "tribunal/gallery-known-s2")
+
+(dialog-text "tribunal/gallery-known-s2"
+             "the canal district. the bell. the candle. Vasik, with one s. she does not look away when you find her."
              :next "tribunal/gallery-known-2")
 
 (dialog-text "tribunal/gallery-known-2"
@@ -81,7 +110,12 @@
 
 (dialog-say "tribunal/charge"
             "the prosecutor"
-            "exhibit one. a rerouting order, dated tuesday, oh two hundred, moving the third district's winter allocation to kilometer nine. the commission will hear that nothing about this order is what it says. for now, one question. is this your signature?"
+            "exhibit one. a rerouting order, dated tuesday, oh two hundred, moving the third district's winter allocation to kilometer nine."
+            :next "tribunal/charge-s2")
+
+(dialog-say "tribunal/charge-s2"
+            "the prosecutor"
+            "the commission will hear that nothing about this order is what it says. for now, one question. is this your signature?"
             :next "tribunal/charge-2")
 
 (dialog-say "tribunal/charge-2"
@@ -99,11 +133,11 @@
              :next "tribunal/signature-look-2")
 
 (dialog-text "tribunal/signature-look-2"
-             "you signed a decree once and were glad of the shaking because the shaking looked like you. this does not shake anywhere."
+             "you signed a decree once and were glad of the shaking because the shaking proved the hand was yours. this does not shake anywhere."
              :next "tribunal/signature-look-3")
 
 (dialog-text "tribunal/signature-look-3"
-             "it is the best signature you have ever seen. it is yours, the way a portrait is yours."
+             "the signature is the best you have ever seen. it is yours. it is not your hand."
              :next "tribunal/signature-choice")
 
 (dialog-pick "tribunal/signature-choice"
@@ -120,34 +154,55 @@
              :next "tribunal/claimed-2")
 
 (dialog-text "tribunal/claimed-2"
-             "the prosecutor blinks once. he had been prepared to force the answer and did not have to. behind you the gallery makes no sound at all, which from sixty people is a sound."
+             "the prosecutor blinks once. he had been prepared to force the answer and did not have to."
+             :next "tribunal/claimed-2-s2")
+
+(dialog-text "tribunal/claimed-2-s2"
+             "behind you, sixty people make no sound."
              :next "tribunal/vey")
 
 (dialog-on-enter "tribunal/denied"
                  '(setf (dialog-value "tribunal-signature") "denied"))
 
 (dialog-text "tribunal/denied"
-             "the hand is not mine, you say, and it is true, and it sounds like a lie, because it is what every man in every gymnasium like this one has said since the bells stopped."
+             "the hand is not mine, you say. it is true. it sounds false."
+             :next "tribunal/denied-s2")
+
+(dialog-text "tribunal/denied-s2"
+             "every man in every gymnasium has said it since the bells stopped."
              :next "tribunal/denied-2")
 
 (dialog-text "tribunal/denied-2"
-             "the prosecutor nods as if you have answered a different and more useful question, and asks the clerk to mark that the witness disputes exhibit one."
+             "the prosecutor nods. you have answered a different and more useful question. he asks the clerk to mark that the witness disputes exhibit one."
              :next "tribunal/vey")
 
 (dialog-on-enter "tribunal/unknown"
                  '(setf (dialog-value "tribunal-signature") "unknown"))
 
 (dialog-text "tribunal/unknown"
-             "i no longer know, you say. i signed so much. they brought the folders at eight and took them at six, and somewhere in the third winter i stopped being able to tell my hand from the war's."
+             "i no longer know, you say. i signed so much. they brought the folders at eight and took them at six."
+             :next "tribunal/unknown-s2")
+
+(dialog-text "tribunal/unknown-s2"
+             "somewhere in the third winter i stopped being able to tell my hand from the war's."
              :next "tribunal/unknown-2")
 
 (dialog-text "tribunal/unknown-2"
-             "it is the truest thing said in the gymnasium all morning. you watch it land as the worst possible answer. the commission has a column for guilt and a column for innocence. it has no column for this."
+             "it is true. you watch it land as the worst possible answer."
+             :next "tribunal/unknown-3")
+
+(dialog-text "tribunal/unknown-3"
+             "the commission has a column for guilt and a column for innocence. it has no column for this."
              :next "tribunal/vey")
 
 (dialog-say "tribunal/vey"
             "Vey"
-            "the chancellor was thorough. i wish to be exact about this. nothing moved in that building without the chancellor's office. i served the office. the office served the chancellor. the commission may draw the arrows itself."
+            "the chancellor was thorough. i wish to be exact about this. nothing moved in that building without the chancellor's office."
+            :next "tribunal/vey-s2")
+
+(dialog-say "tribunal/vey-s2"
+            "Vey"
+            "i served the office. the office served the chancellor. the commission may draw the arrows itself."
             :next "tribunal/vey-2")
 
 (dialog-say "tribunal/vey-2"
@@ -157,7 +212,12 @@
 
 (dialog-say "tribunal/vey-3"
             "Vey"
-            "i drafted many documents. drafting is a clerk's act. signing is a sovereign's. the commission has the signature. i am only here to confirm the office was orderly, and it was. it was the most orderly office i ever served."
+            "i drafted many documents. drafting is a clerk's act. signing is a sovereign's. the commission has the signature."
+            :next "tribunal/vey-3-s2")
+
+(dialog-say "tribunal/vey-3-s2"
+            "Vey"
+            "i am only here to confirm the office was orderly, and it was. it was the most orderly office i ever served."
             :next "tribunal/vey-press")
 
 (dialog-choice-path "tribunal/vey-press"
@@ -192,15 +252,23 @@
              :next "tribunal/transcripts-2")
 
 (dialog-text "tribunal/transcripts-2"
-             "a clerk stands at a lectern with three years of intercept flimsies and reads the numbers aloud, in groups, hour after hour. the rules of evidence say the record must contain what the exhibit contains. the exhibit is the numbers."
+             "a clerk stands at a lectern with three years of intercept flimsies. he reads the numbers aloud, in groups, hour after hour."
+             :next "tribunal/transcripts-3")
+
+(dialog-text "tribunal/transcripts-3"
+             "the rules of evidence say the record must contain what the exhibit contains. the exhibit is the numbers."
              :next "tribunal/transcripts-listen")
 
 (dialog-text "tribunal/transcripts-listen"
-             "by the second hour the gymnasium has learned to read them the way you learned at the night office: this group the car weights, this group the departures, this group the heads."
+             "by the second hour the gymnasium has learned to read them. this group is car weights. this group is departures. this group is heads."
              :next "tribunal/transcripts-listen-2")
 
 (dialog-text "tribunal/transcripts-listen-2"
-             "when the clerk reads the head counts the gallery goes still, and in the second row the old woman counts along with her lips moving, waiting for the night her number went by."
+             "when the clerk reads the head counts the gallery goes still. in the second row, the old woman counts along with him."
+             :next "tribunal/transcripts-listen-3")
+
+(dialog-text "tribunal/transcripts-listen-3"
+             "her lips move. she is waiting for the night her number went by."
              :next "tribunal/clerk-voice")
 
 (dialog-text "tribunal/clerk-voice"
@@ -208,7 +276,11 @@
              :next "tribunal/clerk-voice-2")
 
 (dialog-text "tribunal/clerk-voice-2"
-             "he stands holding the flimsy, mouth working, and nothing comes, and a second clerk rises from the recording table, takes the page, finds the four, and reads on from it without a seam."
+             "he stands holding the flimsy. his mouth works. nothing comes."
+             :next "tribunal/clerk-voice-2-s2")
+
+(dialog-text "tribunal/clerk-voice-2-s2"
+             "a second clerk rises from the recording table, takes the page, finds the four, and reads on."
              :next "tribunal/clerk-voice-3")
 
 (dialog-text "tribunal/clerk-voice-3"
@@ -216,7 +288,11 @@
              :next "tribunal/clerk-voice-4")
 
 (dialog-text "tribunal/clerk-voice-4"
-             "the station read these same numbers to the empty air for three years because a protocol asked it, and here is the same obedience, wearing the victors' coat, and you understand that the numbers have outlived the war and may outlive everyone in this room."
+             "the station read these same numbers to the empty air for three years because a protocol asked it."
+             :next "tribunal/clerk-voice-5")
+
+(dialog-text "tribunal/clerk-voice-5"
+             "now the same obedience wears the victors' coat. the numbers have outlived the war."
              :next "tribunal/recess")
 
 (dialog-scene "tribunal/recess"
@@ -225,7 +301,12 @@
 
 (dialog-say "tribunal/sorel"
             "Sorel"
-            "they have had my ledgers since the spring. both sets. the ink for the building and the pencil for the truth. i am told i am a witness for the prosecution, a witness for the defense, and an unindicted question, depending on the day."
+            "they have had my ledgers since the spring. both sets. the ink for the building and the pencil for the truth."
+            :next "tribunal/sorel-s2")
+
+(dialog-say "tribunal/sorel-s2"
+            "Sorel"
+            "i am told i am a witness for the prosecution, a witness for the defense, and an unindicted question, depending on the day."
             :next "tribunal/sorel-2")
 
 (dialog-say "tribunal/sorel-2"
@@ -239,7 +320,7 @@
             :next "tribunal/sorel-questions")
 
 (dialog-interrogation "tribunal/sorel-questions"
-                      "the recess has its own quiet. Sorel folds his hands on the rail and waits, the way he always could."
+                      "the recess has its own quiet. Sorel folds his hands on the rail and waits."
                       (:next "tribunal/audit-ask")
                       (:continue-label "let the recess end")
                       ("ask about the two sets of books"
@@ -256,11 +337,15 @@
                        "it wants a number it can sentence. truth is harder to imprison. they are trying, chancellor, and they are quicker students than we ever were."))
 
 (dialog-text "tribunal/audit-ask"
-             "after the recess the prosecutor places the kilometer nine manifests on the witness table, loading figures and arrival figures, and asks whether the witness, given his celebrated thoroughness, would be good enough to reconcile them for the commission."
+             "after the recess the prosecutor places the kilometer nine manifests on the witness table."
+             :next "tribunal/audit-ask-s2")
+
+(dialog-text "tribunal/audit-ask-s2"
+             "loading figures. arrival figures. he asks whether the witness will reconcile them for the commission."
              :next "tribunal/audit-ask-2")
 
 (dialog-text "tribunal/audit-ask-2"
-             "now. aloud. in his own time. the gallery leans again. they know exactly what is being done to you, and most of them approve of it."
+             "now. aloud. in his own time. the gallery leans again. most of them approve."
              :next "tribunal/audit")
 
 (dialog-minigame "tribunal/audit"
@@ -274,7 +359,11 @@
              :next "tribunal/audit-found-2")
 
 (dialog-text "tribunal/audit-found-2"
-             "you find it in under a minute, in front of everyone, the way you found it the first time, and your fluency is the exhibit: the commission watches the chancellor read the inventory of the third district like a man reading his own accounts."
+             "you find it in under a minute, in front of everyone. you found it this fast the first time."
+             :next "tribunal/audit-found-2-s2")
+
+(dialog-text "tribunal/audit-found-2-s2"
+             "your fluency is the exhibit. the commission watches the chancellor read the inventory of the third district."
              :next "tribunal/audit-found-3")
 
 (dialog-text "tribunal/audit-found-3"
@@ -286,7 +375,11 @@
              :next "tribunal/audit-lost-2")
 
 (dialog-text "tribunal/audit-lost-2"
-             "in the silence, Sorel rises from the witness bench, crosses the painted lines, and sets one finger on car four without being asked, exactly the way Brandt did, and the commission watches the chancellor be helped, and that is an exhibit too."
+             "in the silence, Sorel rises from the witness bench and crosses the painted lines."
+             :next "tribunal/audit-lost-2-s2")
+
+(dialog-text "tribunal/audit-lost-2-s2"
+             "he sets one finger on car four without being asked. the commission watches the chancellor be helped."
              :next "tribunal/brandt")
 
 (dialog-text "tribunal/brandt"
@@ -294,11 +387,15 @@
              :next "tribunal/brandt-2")
 
 (dialog-text "tribunal/brandt-2"
-             "Brandt is a deposition, read by a clerk with a cold, because Brandt went back for the bottom drawer in the last winter and the building was no longer his to walk through."
+             "Brandt is a deposition, read by a clerk with a cold."
+             :next "tribunal/brandt-2-s2")
+
+(dialog-text "tribunal/brandt-2-s2"
+             "Brandt went back for the bottom drawer in the last winter. the building was no longer his to walk through."
              :next "tribunal/brandt-3")
 
 (dialog-text "tribunal/brandt-3"
-             "the deposition ends: the pencil copy is filed where things are found again. signed, dated, and found, exactly as filed. he was right about the cabinet."
+             "the deposition ends: the pencil copy is filed where things are found again. signed, dated, and found as filed."
              :next "tribunal/brandt-4")
 
 (dialog-text "tribunal/brandt-4"
@@ -327,7 +424,11 @@
                  '(setf (dialog-value "tribunal-statement") "names"))
 
 (dialog-text "tribunal/statement-names"
-             "you open the tin box, which is an exhibit now and is lent back to you for this, and you read the pencil pages aloud: dates, car weights, head counts, and where you matched a count to a list, the names."
+             "you open the tin box. it is an exhibit now, lent back to you for this."
+             :next "tribunal/statement-names-s2")
+
+(dialog-text "tribunal/statement-names-s2"
+             "you read the pencil pages aloud: dates, car weights, head counts, and the names you matched to counts."
              :next "tribunal/statement-names-2")
 
 (dialog-text "tribunal/statement-names-2"
@@ -335,29 +436,41 @@
              :next "tribunal/statement-names-3")
 
 (dialog-text "tribunal/statement-names-3"
-             "it is a bell, rung the other way, by the man who let it ring the first way, and the gymnasium hears it as exactly that."
+             "it is a bell rung the other way by the man who let it ring the first way."
              :next "tribunal/verdict-scene")
 
 (dialog-on-enter "tribunal/statement-asked"
                  '(setf (dialog-value "tribunal-statement") "asked"))
 
 (dialog-text "tribunal/statement-asked"
-             "you say: the war was there every morning. the most anyone could do was lose it slowly. i was the one they asked to do it. i thought if i stayed, the asking would at least pass through a man who hated the answer."
+             "you say: the war was there every morning. the most anyone could do was lose it slowly. i was the one they asked."
+             :next "tribunal/statement-asked-s2")
+
+(dialog-text "tribunal/statement-asked-s2"
+             "i thought if i stayed, the asking would at least pass through a man who hated the answer."
              :next "tribunal/statement-asked-2")
 
 (dialog-text "tribunal/statement-asked-2"
-             "i have had three years to consider whether that belief was a service or an alibi, and i have not finished, and i do not expect to. the judge writes one line. the gallery does not move."
+             "i have had three years to consider whether that belief was a service or an alibi. i have not finished."
+             :next "tribunal/statement-asked-3")
+
+(dialog-text "tribunal/statement-asked-3"
+             "the judge writes one line. the gallery does not move."
              :next "tribunal/verdict-scene")
 
 (dialog-on-enter "tribunal/statement-none"
                  '(setf (dialog-value "tribunal-statement") "none"))
 
 (dialog-text "tribunal/statement-none"
-             "no statement, you say. the words have all been used. every one of them was used in that building, on good paper, to move what was moved, and you will not ask the same words to move you back."
+             "no statement, you say. the words have all been used."
+             :next "tribunal/statement-none-s2")
+
+(dialog-text "tribunal/statement-none-s2"
+             "every one of them was used in that building, on good paper, to move what was moved. you will not ask them to move you back."
              :next "tribunal/statement-none-2")
 
 (dialog-text "tribunal/statement-none-2"
-             "the judge looks at you for a long moment with something that is not sympathy and is not contempt, and is possibly recognition."
+             "the judge studies you. it is not sympathy. it is not contempt."
              :next "tribunal/verdict-scene")
 
 (defun tribunal-verdict-target ()
@@ -376,7 +489,11 @@
              :next "tribunal/verdict-claimed-2")
 
 (dialog-text "tribunal/verdict-claimed-2"
-             "the sentence is read slowly, in the gymnasium, inside the painted lines: custody of years, forfeiture of honors, and the entry of his name, in ink, on the consolidated list, in order of street and not of rank."
+             "the sentence is read slowly, in the gymnasium, inside the painted lines."
+             :next "tribunal/verdict-claimed-3")
+
+(dialog-text "tribunal/verdict-claimed-3"
+             "custody of years. forfeiture of honors. his name entered in ink on the consolidated list, by street and not by rank."
              :next "tribunal/verdict-claimed-2-s2")
 
 (dialog-text "tribunal/verdict-claimed-2-s2"
@@ -384,11 +501,23 @@
              :next "tribunal/after")
 
 (dialog-text "tribunal/verdict-denied"
-             "the commission finds that the hand on exhibit one cannot be established, the only man who could have drafted it being heard elsewhere, in the smaller room, where his memory is excellent. you are released as a witness, with thanks."
+             "the commission finds that the hand on exhibit one cannot be established."
+             :next "tribunal/verdict-denied-s2")
+
+(dialog-text "tribunal/verdict-denied-s2"
+             "the only man who could have drafted it is being heard elsewhere, in the smaller room, where his memory is excellent."
+             :next "tribunal/verdict-denied-s3")
+
+(dialog-text "tribunal/verdict-denied-s3"
+             "you are released as a witness, with thanks."
              :next "tribunal/verdict-denied-2")
 
 (dialog-text "tribunal/verdict-denied-2"
-             "outside the gymnasium the gallery files past you on the steps, and nobody touches you, and nobody speaks to you, and you understand that you have been acquitted into a city that has reached its own verdict and owns no gymnasium to read it in."
+             "outside the gymnasium the gallery files past you on the steps. nobody touches you. nobody speaks to you."
+             :next "tribunal/verdict-denied-3")
+
+(dialog-text "tribunal/verdict-denied-3"
+             "you have been acquitted into a city that has reached its own verdict."
              :next "tribunal/after")
 
 (dialog-text "tribunal/verdict-unknown"
@@ -400,7 +529,11 @@
              :next "tribunal/verdict-unknown-3")
 
 (dialog-text "tribunal/verdict-unknown-3"
-             "you will sign your name once a week for the rest of your life while a clerk watches your hand. it is the gentlest sentence the regulations contain. it may also be the most exact. the commission closes its folder and does not say which."
+             "you will sign your name once a week for the rest of your life while a clerk watches your hand."
+             :next "tribunal/verdict-unknown-4")
+
+(dialog-text "tribunal/verdict-unknown-4"
+             "it is the gentlest sentence the regulations contain. the commission closes its folder."
              :next "tribunal/after")
 
 (dialog-text "tribunal/after"
@@ -408,5 +541,5 @@
              :next "tribunal/after-2")
 
 (dialog-text "tribunal/after-2"
-             "you lie listening with your eyes open, keeping your own count, and somewhere between one name and the next the counting becomes the old counting, backward, from ten."
+             "you lie listening with your eyes open, keeping your own count. between one name and the next, the count turns backward from ten."
              :next "sys/reboot")
