@@ -32,7 +32,11 @@
                  '(jrpg-init-state))
 
 (dialog-text "jrpg/inn"
-             "a rented room, the lamp low: one window on a courtyard, your coat over the back of the chair, and on the table a slim book in pale cloth. you have kept to it for days, and seen no one."
+             "a rented room, the lamp low: one window on a courtyard, your coat over the back of the chair."
+             :next "jrpg/inn-s2")
+
+(dialog-text "jrpg/inn-s2"
+             "on the table is a slim book in pale cloth. you have kept to it for days, and seen no one."
              :next "jrpg/the-book")
 
 (dialog-on-enter "jrpg/the-book"
@@ -41,7 +45,11 @@
                  '(jrpg-start-quest :sign))
 
 (dialog-text "jrpg/the-book"
-             "the book is THE KING IN YELLOW. you have read its first act - only the first; you set it down at the second, as everyone does. inside the cover a small sign is stamped in yellow, the one colour in the room."
+             "the book is THE KING IN YELLOW. you have read its first act only. you set it down at the second, as everyone does."
+             :next "jrpg/the-book-s2")
+
+(dialog-text "jrpg/the-book-s2"
+             "inside the cover a small sign is stamped in yellow, the one colour in the room."
              :next "jrpg/name")
 
 (dialog-string "jrpg/name"
@@ -51,7 +59,11 @@
                :target "jrpg/window")
 
 (dialog-text "jrpg/window"
-             "{player-name}. you put the book in your coat. across the courtyard a studio skylight is lit; a man paints late and someone poses for him. in the churchyard below them a figure stands very still, its face turned up."
+             "{player-name}. you put the book in your coat. across the courtyard a studio skylight is lit."
+             :next "jrpg/window-s2")
+
+(dialog-text "jrpg/window-s2"
+             "a man paints late and someone poses for him. in the churchyard below them a figure stands very still, its face turned up."
              :next "jrpg/street")
 
 
@@ -110,7 +122,11 @@
 (dialog-on-enter "jrpg/studio" '(jrpg-lean-class :painter 1))
 
 (dialog-text "jrpg/studio-door"
-             "the stair smells of turpentine and cold stone. at the top, a studio: a man at an easel, a woman in a robe on the model stand, a stove gone out. the man is scraping at his own canvas with a knife."
+             "the stair smells of turpentine and cold stone. at the top, a studio: a man at an easel, a woman in a robe on the model stand."
+             :next "jrpg/studio-door-s2")
+
+(dialog-text "jrpg/studio-door-s2"
+             "the stove is out. the man is scraping at his own canvas with a knife."
              :next "jrpg/studio")
 
 (dialog-say "jrpg/studio"
@@ -139,7 +155,8 @@
                       ("ask Tessie about the watchman"
                        :id "watchman"
                        :speaker "Tessie"
-                       "i dreamed a hearse went by, and the driver turned and looked up at me. his face was white, and soft; it looked dead, like it had been dead a long time. that man in the churchyard has his face.")
+                       "i dreamed a hearse went by, and the driver turned and looked up at me. his face was white, and soft."
+                       "it looked long dead. that man in the churchyard has his face.")
                       ("ask about the book on the shelf"
                        :id "play"
                        :speaker "Scott"
@@ -150,7 +167,11 @@
                  '(jrpg-add-item :sign-clasp))
 
 (dialog-text "jrpg/clasp"
-             "Tessie unpins it from her robe and presses it on you: a clasp of black onyx, a symbol inlaid in gold. it is neither Arabic nor Chinese, nor does it belong to any human script. it is colder than metal should be, and she wants it out of the room."
+             "Tessie unpins it from her robe and presses it on you: a clasp of black onyx, a symbol inlaid in gold."
+             :next "jrpg/clasp-s2")
+
+(dialog-text "jrpg/clasp-s2"
+             "it is neither Arabic nor Chinese, nor does it belong to any human script. it is colder than metal should be, and she wants it out of the room."
              :next "jrpg/read-choice")
 
 (dialog-pick "jrpg/read-choice"
@@ -165,11 +186,19 @@
                  '(jrpg-lean-class :reader 2))
 
 (dialog-text "jrpg/read-second"
-             "you read a few lines of the second act before Scott takes the book from your hands. he is too late for you. the words are clear as crystal, limpid and musical. they stay in your mouth after the book closes. the stove has gone cold."
+             "you read a few lines of the second act before Scott takes the book from your hands. he is too late for you."
+             :next "jrpg/read-second-s2")
+
+(dialog-text "jrpg/read-second-s2"
+             "the words are clear as crystal, limpid and musical. they stay in your mouth after the book closes. the stove has gone cold."
              :next "jrpg/watchman-comes")
 
 (dialog-text "jrpg/watchman-comes"
-             "a step on the stair. then another, wet and heavy. the door, which Scott bolted, is opening. the smell that comes up is churchyard. Tessie grips the stove rail and does not scream."
+             "a step on the stair. then another, wet and heavy. the door, which Scott bolted, is opening."
+             :next "jrpg/watchman-comes-s2")
+
+(dialog-text "jrpg/watchman-comes-s2"
+             "the smell that comes up is churchyard. Tessie grips the stove rail and does not scream."
              :next "jrpg/watchman-combat")
 
 (dialog-minigame "jrpg/watchman-combat"
@@ -189,11 +218,23 @@
 (dialog-on-enter "jrpg/after-watchman" '(jrpg-lean-class :watchman 1))
 
 (dialog-text "jrpg/after-watchman"
-             "the watchman drops to the boards. the coat splits at the seams. inside are wet cloth, churchyard mud, and one soft white finger. Scott is down with the Play shut under his hand. Tessie holds your sleeve and says nothing. you keep the clasp; you did not mean to."
+             "the watchman drops to the boards. the coat splits at the seams. inside are wet cloth, churchyard mud, and one soft white finger."
+             :next "jrpg/after-watchman-s2")
+
+(dialog-text "jrpg/after-watchman-s2"
+             "Scott is down with the Play shut under his hand. Tessie holds your sleeve and says nothing."
+             :next "jrpg/after-watchman-s3")
+
+(dialog-text "jrpg/after-watchman-s3"
+             "you keep the clasp. you did not mean to."
              :next "jrpg/leave-studio")
 
 (dialog-text "jrpg/watchman-takes"
-             "the watchman is stronger than you. when you can stand, he is gone, and so is Tessie. Scott says she has gone to find the Yellow Sign, and will not say it again. you still have the clasp. it is warm now."
+             "the watchman is stronger than you. when you can stand, he is gone, and so is Tessie."
+             :next "jrpg/watchman-takes-s2")
+
+(dialog-text "jrpg/watchman-takes-s2"
+             "Scott says she has gone to find the Yellow Sign, and will not say it again. you still have the clasp. it is warm now."
              :next "jrpg/leave-studio")
 
 (dialog-on-enter "jrpg/leave-studio" '(jrpg-add-item :palette-knife))
@@ -257,13 +298,25 @@
 
 (dialog-say "jrpg/hawberk-3"
             "Constance"
-            "like you have read something you cannot put down. go up, then. Mr. Wilde is expecting you. he is always expecting everyone."
+            "you have not slept. go up, then. Mr. Wilde is expecting you. he expects everyone."
             :next "jrpg/wilde")
 
 (dialog-on-enter "jrpg/wilde" '(jrpg-lean-class :repairer 2))
 
 (dialog-text "jrpg/wilde"
-             "up the stair, a low room. a small scarred man, no higher than a child, in a chair too high for him; his ears are wax and painted shell-pink, for he has none of his own, and his left hand has no fingers. a cat in his lap, a ledger on his knee, a locked cabinet behind. he repairs reputations, he says - makes names and unmakes them, for a fee. he has been expecting you, which he says of everyone, and means."
+             "up the stair, a low room. a small scarred man sits in a chair too high for him."
+             :next "jrpg/wilde-s2")
+
+(dialog-text "jrpg/wilde-s2"
+             "his ears are wax and painted shell-pink, for he has none of his own. his left hand has no fingers."
+             :next "jrpg/wilde-s3")
+
+(dialog-text "jrpg/wilde-s3"
+             "a cat in his lap, a ledger on his knee, a locked cabinet behind."
+             :next "jrpg/wilde-s4")
+
+(dialog-text "jrpg/wilde-s4"
+             "he repairs reputations, he says. makes names and unmakes them, for a fee. he has been expecting you."
              :next "jrpg/wilde-questions")
 
 (dialog-interrogation "jrpg/wilde-questions"
@@ -273,15 +326,18 @@
                       ("ask about the ledger of names"
                        :id "register"
                        :speaker "Mr. Wilde"
-                       "every man whose name is in it has received the Yellow Sign, which no living soul dares disregard. yours is here. it is here twice. the second entry is dated after today. the handwriting matches yours.")
+                       "every man whose name is in it has received the Yellow Sign, which no living soul dares disregard. yours is here."
+                       "it is here twice. the second entry is dated after today. the handwriting matches yours.")
                       ("ask about the locked cabinet"
                        :id "crown"
                        :speaker "Mr. Wilde"
-                       "a crown: a diadem fit for a king among kings. the scalloped tatters of the King in Yellow hide Yhtill forever. you may try it on; they all do. woe to you who are crowned with the crown of the King in Yellow.")
+                       "a crown: a diadem fit for a king among kings. the scalloped tatters of the King in Yellow hide Yhtill forever."
+                       "you may try it on; they all do. woe to you who are crowned with the crown of the King in Yellow.")
                       ("ask who the King is"
                        :id "king"
                        :speaker "Mr. Wilde"
-                       "the son of Hastur. in Carcosa black stars hang in the heavens; the shadows of men's thoughts lengthen when the twin suns sink into the lake of Hali. he was a man once, the manuscript holds. now there is the Pallid Mask."))
+                       "the son of Hastur. in Carcosa black stars hang in the heavens; the shadows of men's thoughts lengthen when the twin suns sink into the lake of Hali."
+                       "he was a man once, the manuscript holds. now there is the Pallid Mask."))
 
 (dialog-pick "jrpg/register-choice"
              "Mr. Wilde turns the ledger to a blank line beneath your name. the second entry is yours to write, in a hand you have not used yet."
@@ -289,7 +345,15 @@
              (dialog-option "leave the ledger as it lies" "jrpg/castaigne"))
 
 (dialog-text "jrpg/castaigne"
-             "a man rises from a dark corner you had not searched. he gives his name as Hildred and his title as Rex, says the crown is promised to him and a rival claimant must be exiled or die. he has read further than you. he comes for the Sign with a clean razor and a writ already signed."
+             "a man rises from a dark corner you had not searched. he gives his name as Hildred and his title as Rex."
+             :next "jrpg/castaigne-s2")
+
+(dialog-text "jrpg/castaigne-s2"
+             "the crown is promised to him, he says, and a rival claimant must be exiled or die."
+             :next "jrpg/castaigne-s3")
+
+(dialog-text "jrpg/castaigne-s3"
+             "he has read further than you. he comes for the Sign with a clean razor and a writ already signed."
              :next "jrpg/castaigne-combat")
 
 (dialog-minigame "jrpg/castaigne-combat"
@@ -311,7 +375,15 @@
                  '(jrpg-lean-class :watchman 1))
 
 (dialog-text "jrpg/after-castaigne"
-             "Hildred sits down hard and cries that the cat has got Mr. Wilde. the cat has: the small scarred man bleeds from the throat in his high chair, the ledger fallen open at your name, twice. you go before the noise brings anyone. the cabinet you leave shut, this time."
+             "Hildred sits down hard and cries that the cat has got Mr. Wilde."
+             :next "jrpg/after-castaigne-s2")
+
+(dialog-text "jrpg/after-castaigne-s2"
+             "the cat has. the small scarred man bleeds from the throat in his high chair. the ledger lies open at your name, twice."
+             :next "jrpg/after-castaigne-s3")
+
+(dialog-text "jrpg/after-castaigne-s3"
+             "you go before the noise brings anyone. the cabinet you leave shut, this time."
              :next "jrpg/city-hub")
 
 (dialog-on-enter "jrpg/castaigne-down"
@@ -320,7 +392,11 @@
                  '(jrpg-lean-class :watchman 1))
 
 (dialog-text "jrpg/castaigne-down"
-             "he has your collar and the razor at it when the cat takes Mr. Wilde's throat instead. Hildred lets go of you and turns on the man who promised him a crown. you leave them to it. the ledger lies open at your name, twice."
+             "he has your collar and the razor at it when the cat takes Mr. Wilde's throat instead."
+             :next "jrpg/castaigne-down-s2")
+
+(dialog-text "jrpg/castaigne-down-s2"
+             "Hildred lets go of you and turns on the man who promised him a crown. you leave them to it. the ledger lies open at your name, twice."
              :next "jrpg/city-hub")
 
 
@@ -359,7 +435,8 @@
                       ("ask about Geneviève"
                        :id "genevieve"
                        :speaker "Boris"
-                       "she loved another man, and could not bear it, and she is in the pool now. they tell me she will soften and step out again, in time. i would like to believe them.")
+                       "she loved another man, and could not bear it, and she is in the pool now."
+                       "they tell me she will soften and step out again, in time. i would like to believe them.")
                       ("ask why he is telling you"
                        :id "why"
                        :speaker "Boris"
@@ -399,7 +476,15 @@
 ;;; IN THE COURT OF THE DRAGON - the pursuit and the crossing
 
 (dialog-text "jrpg/church"
-             "inside, vespers are over. the organist comes down from behind his pipes - a slender man, his face as white as his coat is black - and as he passes he turns and sends straight into your eyes a look of hate, intense and deadly. when you leave, he leaves. when you stop, he stops, nearer."
+             "inside, vespers are over. the organist comes down from behind his pipes."
+             :next "jrpg/church-s2")
+
+(dialog-text "jrpg/church-s2"
+             "a slender man, his face as white as his coat is black. as he passes, he sends a look of hate straight into your eyes."
+             :next "jrpg/church-s3")
+
+(dialog-text "jrpg/church-s3"
+             "when you leave, he leaves. when you stop, he stops, nearer."
              :next "jrpg/organ-game")
 
 (dialog-minigame "jrpg/flight"
@@ -421,7 +506,11 @@
                                  (#\. . "slick stones and your own breath."))))
 
 (dialog-text "jrpg/threshold"
-             "you pass under the covered arch. black stars hang in the heavens. wet wind comes off the lake of Hali. beyond it, the towers of Carcosa rise behind the moon. the organ has stopped."
+             "you pass under the covered arch. black stars hang in the heavens. wet wind comes off the lake of Hali."
+             :next "jrpg/threshold-s2")
+
+(dialog-text "jrpg/threshold-s2"
+             "beyond it, the towers of Carcosa rise behind the moon. the organ has stopped."
              :next "carcosa/title")
 
 
@@ -469,11 +558,19 @@
 (dialog-particles "jrpg/dys-meet" :motes :fade-seconds 3.0)
 
 (dialog-text "jrpg/dys-lane"
-             "the lane gives out onto open moor at sundown. gorse and heath cover the valleys. granite boulders stand in the grass. you carry a fowling-piece, and the sea-wind is in your face."
+             "the lane gives out onto open moor at sundown. gorse and heath cover the valleys. granite boulders stand in the grass."
+             :next "jrpg/dys-lane-s2")
+
+(dialog-text "jrpg/dys-lane-s2"
+             "you carry a fowling-piece, and the sea-wind is in your face."
              :next "jrpg/dys-meet")
 
 (dialog-text "jrpg/dys-meet"
-             "out of the gorse come falconers in old dress, hooded hawks on their wrists. a girl rides at their head, gloved, grave, young. she asks whether you came from Kerselec. she is the Demoiselle Jeanne d'Ys."
+             "out of the gorse come falconers in old dress, hooded hawks on their wrists. a girl rides at their head, gloved, grave, young."
+             :next "jrpg/dys-meet-s2")
+
+(dialog-text "jrpg/dys-meet-s2"
+             "she asks whether you came from Kerselec. she is the Demoiselle Jeanne d'Ys."
              :next "jrpg/dys-questions")
 
 (dialog-interrogation "jrpg/dys-questions"
@@ -487,7 +584,8 @@
                       ("ask after the falconer Hastur"
                        :id "hastur"
                        :speaker "Jeanne"
-                       "her master of hawks; incomparable, she says, on the green. you heard the name once tonight from a scarred man, said of a god. she has never left this moor to hear it said so.")
+                       "her master of hawks; incomparable, she says, on the green. you heard the name once tonight from a scarred man, said of a god."
+                       "she has never left this moor to hear it said so.")
                       ("ask how far Kerselec is"
                        :id "expected"
                        :speaker "Jeanne"
@@ -502,11 +600,23 @@
                  '(jrpg-lean-class :mourner 2))
 
 (dialog-text "jrpg/dys-viper"
-             "by the stream the hawks scream. a grey snake on the warm rock, a black V on its neck. she clings to your arm - don't, i am afraid. for me? for you, she says. i love you. then a sting at the ankle. your legs fail, and the stream fills your ear."
+             "by the stream the hawks scream. a grey snake lies on the warm rock, a black V on its neck."
+             :next "jrpg/dys-viper-s2")
+
+(dialog-text "jrpg/dys-viper-s2"
+             "she clings to your arm. don't, i am afraid. for me? for you, she says. i love you."
+             :next "jrpg/dys-viper-s3")
+
+(dialog-text "jrpg/dys-viper-s3"
+             "then a sting at the ankle. your legs fail, and the stream fills your ear."
              :next "jrpg/dys-wake")
 
 (dialog-text "jrpg/dys-wake"
-             "you wake among ivied ruins, great trees grown through the floor, a falcon climbing the sky in narrowing circles until it is gone. where the manor stood, a crumbling shrine to our Lady of Sorrows."
+             "you wake among ivied ruins, great trees grown through the floor."
+             :next "jrpg/dys-wake-s2")
+
+(dialog-text "jrpg/dys-wake-s2"
+             "a falcon climbs the sky in narrowing circles until it is gone. where the manor stood, a crumbling shrine to our Lady of Sorrows."
              :next "jrpg/dys-tomb")
 
 (dialog-on-enter "jrpg/dys-tomb"
@@ -515,19 +625,27 @@
                  '(jrpg-add-item :dys-glove))
 
 (dialog-text "jrpg/dys-tomb"
-             "carved beneath her: PRAY FOR THE SOUL OF JEANNE D'YS, WHO DIED IN HER YOUTH FOR LOVE OF {player-name}, A STRANGER. A.D. 1573. and upon the icy slab lies a woman's glove, still warm and fragrant."
+             "carved beneath her: PRAY FOR THE SOUL OF JEANNE D'YS, WHO DIED IN HER YOUTH FOR LOVE OF {player-name}, A STRANGER."
+             :next "jrpg/dys-tomb-s2")
+
+(dialog-text "jrpg/dys-tomb-s2"
+             "A.D. 1573. and upon the icy slab lies a woman's glove, still warm and fragrant."
              :next "jrpg/dys-out")
 
 (dialog-on-enter "jrpg/dys-out"
                  '(setf (jrpg-value "kiy-did-dys") t))
 
 (dialog-text "jrpg/dys-out"
-             "you leave the shrine by a stone path. it ends in the city square, with the lit doors ahead. your foot still drags from the bite. the glove is in your coat now, warm as the Sign."
+             "you leave the shrine by a stone path. it ends in the city square, with the lit doors ahead."
+             :next "jrpg/dys-out-s2")
+
+(dialog-text "jrpg/dys-out-s2"
+             "your foot still drags from the bite. the glove is in your coat now, warm as the Sign."
              :next "jrpg/city-hub")
 
 
 ;;; THE FOUR PARIS STREETS - an old quarter the Sign has reached the way it
-;;; reaches everything: by keeping it. Four small human stories, each stopped
+;;; reaches the city: by keeping it. Four small human stories, each stopped
 ;;; before loss. Discoverable, then left alone.
 
 (dialog-particles "jrpg/old-quarter" :snow :fade-seconds 3.0)
@@ -536,7 +654,11 @@
                  '(jrpg-spend-composure 1))
 
 (dialog-text "jrpg/old-quarter"
-             "the old quarter, where the gas still burns warm and yellow. students crowd the cafes. lovers stand under doors. four streets repeat the hour before loss; you walk them."
+             "the old quarter, where the gas still burns warm and yellow. students crowd the cafes. lovers stand under doors."
+             :next "jrpg/old-quarter-s2")
+
+(dialog-text "jrpg/old-quarter-s2"
+             "four streets repeat the hour before loss; you walk them."
              :next "jrpg/old-quarter-streets")
 
 (dialog-interrogation "jrpg/old-quarter-streets"
@@ -546,7 +668,8 @@
                       ("the Street of the Four Winds"
                        :id "winds"
                        :speaker "the quarter"
-                       "a grey cat brings a dead woman's ribbon up the stair to the painter Severn. he finds Sylvia cold, kisses her; the cat purrs on his knee toward a dawn that never comes.")
+                       "a grey cat brings a dead woman's ribbon up the stair to the painter Severn."
+                       "he finds Sylvia cold, kisses her; the cat purrs on his knee toward a dawn that never comes.")
                       ("the Street of the First Shell"
                        :id "shell"
                        :speaker "the quarter"
@@ -558,7 +681,8 @@
                       ("Rue Barree"
                        :id "rue"
                        :speaker "the quarter"
-                       "the students named a girl Rue Barree - street closed - because none could reach her. Selby loves her and never says it. she passes with a cold smile. he opens his mouth and stops."))
+                       "the students named a girl Rue Barree - street closed - because none could reach her."
+                       "Selby loves her and never says it. she passes with a cold smile. he opens his mouth and stops."))
 
 (dialog-on-enter "jrpg/old-quarter-out"
                  '(setf (jrpg-value "kiy-did-quarter") t))
@@ -568,9 +692,9 @@
              :next "jrpg/city-hub")
 
 
-;;; THE PROPHETS' PARADISE - the Play's looping middle pages, between the acts.
-;;; Eight short visions, each a snake that eats its tail; the loop is the King's
-;;; time-shatter in miniature, and the Green Room's white mask is his.
+;;; THE PROPHETS' PARADISE - the Play's middle pages, between the acts.
+;;; Eight short visions that return to their first image. The Green Room's white
+;;; mask is his.
 
 (dialog-particles "jrpg/prophets" :ash :fade-seconds 2.5)
 
@@ -580,38 +704,46 @@
                  '(jrpg-lean-class :reader 1))
 
 (dialog-interrogation "jrpg/prophets"
-                      "the middle pages - not the first act, not the second. eight short visions, each a snake that eats its tail. you read until the same page returns."
+                      "the middle pages - not the first act, not the second. eight short visions. you read until the same page returns."
                       (:next "jrpg/read-choice")
                       (:continue-label "shut the middle pages")
                       ("The Studio"
                        :id "p-studio"
                        :speaker "the Play"
-                       "a man waits in his studio for a woman he will know when she comes. seek her throughout the world, says Death. my world is here, he answers. the footsteps in the street below have already passed.")
+                       "a man waits in his studio for a woman he will know when she comes. seek her throughout the world, says Death."
+                       "my world is here, he answers. the footsteps in the street below have already passed.")
                       ("The Phantom"
                        :id "p-phantom"
                        :speaker "the Play"
-                       "the Phantom of the Past will go no further. if you find in me a friend, let us turn back together, she sighs. he seizes her, white with anger; she resists. she will always resist.")
+                       "the Phantom of the Past will go no further. if you find in me a friend, let us turn back together, she sighs."
+                       "he seizes her, white with anger; she resists. she will always resist.")
                       ("The Sacrifice"
                        :id "p-sacrifice"
                        :speaker "the Play"
-                       "a field of flowers whiter than snow. a woman pours blood on them from a jar marked with a thousand names. i have killed him i loved, she cries. the world's athirst; now let it drink.")
+                       "a field of flowers whiter than snow. a woman pours blood on them from a jar marked with a thousand names."
+                       "i have killed him i loved, she cries. the world's athirst; now let it drink.")
                       ("Destiny"
                        :id "p-destiny"
                        :speaker "the Play"
-                       "the bridge which few may pass. pass! cries the keeper. there is time, you laugh - and he smiles and shuts the gates. young and old are refused. you laugh: there is time.")
+                       "the bridge which few may pass. pass! cries the keeper. there is time, you laugh - and he smiles and shuts the gates."
+                       "young and old are refused. you laugh: there is time.")
                       ("The Throng"
                        :id "p-throng"
                        :speaker "the Play"
-                       "you stand with Pierrot in the thick of the crowd; all eyes on you. he has robbed your purse! Truth holds up a mirror. arrest Truth, you cry, forgetting what it was you lost.")
+                       "you stand with Pierrot in the thick of the crowd; all eyes on you. he has robbed your purse!"
+                       "Truth holds up a mirror. arrest Truth, you cry, forgetting what it was you lost.")
                       ("The Jester"
                        :id "p-jester"
                        :speaker "the Play"
-                       "was she fair? you ask. the jester only listens to his cap-bells. stabbed, he titters. she kissed him at the gate; in the hall, his brother's welcome touched his heart.")
+                       "was she fair? you ask. the jester only listens to his cap-bells. stabbed, he titters."
+                       "she kissed him at the gate; in the hall, his brother's welcome touched his heart.")
                       ("The Green Room"
                        :id "p-green"
                        :speaker "the Play"
-                       "the Clown turns his powdered face to the mirror. who can compare with me in my white mask? who can compare? you ask Death beside you. i am paler still, says Death.")
+                       "the Clown turns his powdered face to the mirror. who can compare with me in my white mask?"
+                       "who can compare? you ask Death beside you. i am paler still, says Death.")
                       ("The Love Test"
                        :id "p-love"
                        :speaker "the Play"
-                       "if you love, wait no longer, says Love; give her these jewels that would dishonour her. she treads them down, sobbing: teach me to wait - i love you. then wait, says Love."))
+                       "if you love, wait no longer, says Love; give her these jewels that would dishonour her."
+                       "she treads them down, sobbing: teach me to wait - i love you. then wait, says Love."))
