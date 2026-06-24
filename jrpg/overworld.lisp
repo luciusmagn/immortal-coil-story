@@ -227,6 +227,11 @@ road, and terrain regions that read as geography instead of noise."
         do (loop for x from (- cx radius-x) to (+ cx radius-x)
                  do (jrpg-gen-street-open grid w h x y))))
 
+(defun jrpg-gen-street-open-rect (grid w h left top right bottom)
+  (loop for y from top to bottom
+        do (loop for x from left to right
+                 do (jrpg-gen-street-open grid w h x y))))
+
 (defun jrpg-gen-street-segment (grid w h x1 y1 x2 y2 &optional (radius 1))
   (let ((x x1)
         (y y1)
@@ -284,73 +289,95 @@ road, and terrain regions that read as geography instead of noise."
                        (if (zerop (get-random-value 0 1)) #\$ #\o))
                  (incf placed))))))
 
+(defun jrpg-gen-street-route-points (w h sx sy fx fy)
+  "Control points for a readable old-RPG district route."
+  (let* ((west-x (jrpg-gen-street-clamp-x w (max 7 (floor w 4))))
+         (mid-x (jrpg-gen-street-clamp-x w (floor w 2)))
+         (east-x (jrpg-gen-street-clamp-x w (min (- w 8) (floor (* 3 w) 4))))
+         (market-y (jrpg-gen-street-clamp-y h (floor h 2)))
+         (upper-y fy)
+         (lower-y sy))
+    (values (list (list sx lower-y)
+                  (list west-x lower-y)
+                  (list west-x market-y)
+                  (list mid-x market-y)
+                  (list mid-x upper-y)
+                  (list east-x upper-y)
+                  (list fx upper-y))
+            west-x mid-x east-x market-y upper-y lower-y)))
+
+(defun jrpg-gen-street-carve-district (grid w h west-x mid-x east-x
+                                       market-y upper-y lower-y fx fy)
+  "Cut broad streets and courts out of solid building mass."
+  (let ((south-y lower-y)
+        (middle-y market-y)
+        (north-y upper-y))
+    ;; Main old-RPG street bands. Three cells wide is enough to read as a street
+    ;; in the 24px tile renderer without turning the district into open floor.
+    (jrpg-gen-street-open-rect grid w h 1 (1- south-y) (- w 2) (1+ south-y))
+    (jrpg-gen-street-open-rect grid w h 1 (1- middle-y) (- w 2) (1+ middle-y))
+    (jrpg-gen-street-open-rect grid w h west-x (1- north-y) (- w 2) (1+ north-y))
+    (dolist (x (list west-x mid-x east-x))
+      (jrpg-gen-street-open-rect grid w h (1- x) north-y (1+ x) south-y))
+    ;; Courts and shop fronts keep the route from being a featureless grid.
+    (jrpg-gen-street-square grid w h west-x south-y 3 2)
+    (jrpg-gen-street-square grid w h west-x middle-y 3 2)
+    (jrpg-gen-street-square grid w h mid-x middle-y 4 3)
+    (jrpg-gen-street-square grid w h mid-x north-y 3 2)
+    (jrpg-gen-street-square grid w h east-x north-y 3 2)
+    (jrpg-gen-street-square grid w h fx fy 4 2)
+    ;; A few short side alleys, but no maze.
+    (jrpg-gen-street-open-rect grid w h
+                               (max 1 (- mid-x 6)) 2
+                               (min (- w 2) (- mid-x 2)) (1+ north-y))
+    (jrpg-gen-street-open-rect grid w h
+                               (max 1 (+ mid-x 3)) (+ middle-y 2)
+                               (min (- w 2) (+ mid-x 8)) (- south-y 2))))
+
+(defun jrpg-gen-street-place-landmarks (grid route waypoints)
+  (let ((n (length route))
+        (k (length waypoints)))
+    (loop for wp in waypoints
+          for i from 1
+          for idx = (min (1- n) (max 1 (floor (* i n) (1+ k))))
+          do (destructuring-bind (wx wy) (nth idx route)
+               (when (char= (aref grid wy wx) #\.)
+                 (setf (aref grid wy wx) wp))))))
+
+(defun jrpg-gen-street-place-lamps (grid lamps)
+  (dolist (lamp lamps)
+    (destructuring-bind (x y) lamp
+      (when (char= (aref grid y x) #\.)
+        (setf (aref grid y x) #\+)))))
+
 (defun jrpg-gen-streets (w h finish-glyph waypoints)
   "Returns (values rows start-x start-y). A generated night-city walk: building
-blocks, an old-RPG street grid, a central court, side lanes, sparse lamps, and
+blocks, broad old-RPG streets, a central court, side lanes, sparse lamps, and
 one guaranteed route from the lower west side to the destination."
   (let* ((grid (make-array (list h w) :initial-element #\#))
          (sx 1)
          (sy (max 2 (- h 3)))
          (fx (max 2 (- w 2)))
-         (fy (max 2 (min (- h 3) (get-random-value 2 (max 2 (floor h 3))))))
-         (mid-x (floor w 2))
-         (mid-y (floor h 2))
-         (west-x (jrpg-gen-street-clamp-x
-                  w (+ (floor w 4) (get-random-value -1 1))))
-         (east-x (jrpg-gen-street-clamp-x
-                  w (+ (floor (* 3 w) 4) (get-random-value -1 1))))
-         (lower-y sy)
-         (upper-y fy)
-         (market-y (jrpg-gen-street-clamp-y
-                    h (+ mid-y (get-random-value -1 1))))
-         (north-lane (jrpg-gen-street-clamp-y
-                      h (max 2 (min (- market-y 3)
-                                    (+ upper-y (get-random-value 2 3))))))
-         (south-lane (jrpg-gen-street-clamp-y
-                      h (min (- h 3) (+ market-y (get-random-value 3 4)))))
-         (route (jrpg-gen-street-carve-route
-                 grid w h
-                 (list (list sx sy)
-                       (list west-x lower-y)
-                       (list west-x market-y)
-                       (list east-x market-y)
-                       (list east-x upper-y)
-                       (list fx fy)))))
-    (jrpg-gen-street-square grid w h sx sy 2 1)
-    (jrpg-gen-street-segment grid w h 1 market-y (- w 2) market-y 0)
-    (jrpg-gen-street-segment grid w h 1 south-lane (- w 2) south-lane 0)
-    (jrpg-gen-street-segment grid w h mid-x north-lane mid-x lower-y 0)
-    (jrpg-gen-street-segment grid w h west-x north-lane west-x lower-y 0)
-    (jrpg-gen-street-segment grid w h east-x upper-y east-x south-lane 0)
-    (jrpg-gen-street-square grid w h west-x lower-y 2 1)
-    (jrpg-gen-street-square grid w h west-x market-y 2 1)
-    (jrpg-gen-street-square grid w h mid-x market-y 3 2)
-    (jrpg-gen-street-square grid w h east-x market-y 2 1)
-    (jrpg-gen-street-square grid w h east-x upper-y 2 1)
-    (jrpg-gen-street-square grid w h (floor (+ west-x mid-x) 2)
-                            north-lane 2 1)
-    (jrpg-gen-street-square grid w h (floor (+ mid-x east-x) 2)
-                            south-lane 2 1)
-    (jrpg-gen-street-square grid w h fx fy 2 1)
-    (let ((n (length route))
-          (k (length waypoints)))
-      (loop for wp in waypoints
-            for i from 1
-            for idx = (min (1- n) (max 1 (floor (* i n) (1+ k))))
-            do (destructuring-bind (wx wy) (nth idx route)
-                 (when (char= (aref grid wy wx) #\.)
-                   (setf (aref grid wy wx) wp)))))
-    (dolist (lamp (list (list west-x sy)
-                        (list west-x market-y)
-                        (list mid-x mid-y)
-                        (list east-x market-y)
-                        (list east-x fy)
-                        (list (floor (+ west-x mid-x) 2) north-lane)
-                        (list (floor (+ mid-x east-x) 2) south-lane)))
-      (destructuring-bind (x y) lamp
-        (when (char= (aref grid y x) #\.)
-          (setf (aref grid y x) #\+))))
-    (jrpg-gen-street-place-pickups grid w h 5)
+         (fy (jrpg-gen-street-clamp-y h (max 3 (floor h 4)))))
+    (multiple-value-bind (points west-x mid-x east-x market-y upper-y lower-y)
+        (jrpg-gen-street-route-points w h sx sy fx fy)
+      (let ((route (jrpg-gen-street-carve-route grid w h points)))
+        (jrpg-gen-street-carve-district grid w h
+                                        west-x mid-x east-x
+                                        market-y upper-y lower-y
+                                        fx fy)
+        (jrpg-gen-street-place-landmarks grid route waypoints)
+        (jrpg-gen-street-place-lamps
+         grid
+         (list (list west-x lower-y)
+               (list west-x market-y)
+               (list mid-x market-y)
+               (list mid-x upper-y)
+               (list east-x upper-y)
+               (list east-x market-y)
+               (list (max 2 (- mid-x 5)) (1+ upper-y))
+               (list (min (- w 3) (+ mid-x 6)) (- lower-y 2))))
+        (jrpg-gen-street-place-pickups grid w h 5)))
     (setf (aref grid sy sx) #\.
           (aref grid fy fx) finish-glyph)
     (values (jrpg-gen-rows grid) sx sy)))
