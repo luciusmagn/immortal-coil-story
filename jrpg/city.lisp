@@ -71,12 +71,12 @@ truly random."
 (defun jrpg-city-clamp-y (h y)
   (max 1 (min (- h 2) y)))
 
-(defun jrpg-city-door-slots (w h)
-  (let ((north-front (jrpg-city-clamp-y h (floor h 3)))
-        (south-front (jrpg-city-clamp-y h (- h 3)))
-        (left-x (jrpg-city-clamp-x w (floor w 5)))
-        (mid-x (jrpg-city-clamp-x w (floor w 2)))
-        (right-x (jrpg-city-clamp-x w (- w (floor w 5) 1))))
+(defun jrpg-city-door-slots (w h &key north-front south-front left-x mid-x right-x)
+  (let ((north-front (or north-front (jrpg-city-clamp-y h (floor h 3))))
+        (south-front (or south-front (jrpg-city-clamp-y h (- h 3))))
+        (left-x (or left-x (jrpg-city-clamp-x w (floor w 5))))
+        (mid-x (or mid-x (jrpg-city-clamp-x w (floor w 2))))
+        (right-x (or right-x (jrpg-city-clamp-x w (- w (floor w 5) 1)))))
     (list (list left-x south-front)
           (list right-x north-front)
           (list left-x north-front)
@@ -86,16 +86,28 @@ truly random."
           (list (jrpg-city-clamp-x w (- mid-x 3)) north-front)
           (list (jrpg-city-clamp-x w (+ mid-x 3)) north-front))))
 
+(defun jrpg-city-street-cell-p (grid x y)
+  (member (aref grid y x) '(#\. #\+) :test #'char=))
+
+(defun jrpg-city-door-slot-valid-p (grid w h slot used)
+  (and (consp slot)
+       (integerp (first slot))
+       (integerp (second slot))
+       (destructuring-bind (x y) slot
+         (and (< 0 x (1- w))
+              (< 0 y (1- h))
+              (char= (aref grid y x) #\#)
+              (not (member slot used :test #'equal))
+              (or (jrpg-city-street-cell-p grid x (1+ y))
+                  (jrpg-city-street-cell-p grid x (1- y))
+                  (jrpg-city-street-cell-p grid (1+ x) y)
+                  (jrpg-city-street-cell-p grid (1- x) y))))))
+
 (defun jrpg-city-extra-door-slots (grid w h used)
   (let ((slots nil))
     (loop for y from 1 below (1- h)
           do (loop for x from 1 below (1- w)
-                   when (and (char= (aref grid y x) #\#)
-                             (not (member (list x y) used :test #'equal))
-                             (or (char= (aref grid (1+ y) x) #\.)
-                                 (char= (aref grid (1- y) x) #\.)
-                                 (char= (aref grid y (1+ x)) #\.)
-                                 (char= (aref grid y (1- x)) #\.)))
+                   when (jrpg-city-door-slot-valid-p grid w h (list x y) used)
                      do (push (list x y) slots)))
     (nreverse slots)))
 
@@ -105,17 +117,29 @@ truly random."
         (offset (- index (/ (1- count) 2.0))))
     (max 1 (min (- w 2) (round (+ center (* offset spacing)))))))
 
-(defun jrpg-city-place-open-doors (grid w h open-glyphs planned-glyphs)
-  (let* ((slots (jrpg-city-door-slots w h))
+(defun jrpg-city-unique-slots (slots)
+  (let ((seen nil)
+        (unique nil))
+    (dolist (slot slots (nreverse unique))
+      (unless (member slot seen :test #'equal)
+        (push slot seen)
+        (push slot unique)))))
+
+(defun jrpg-city-place-open-doors (grid w h open-glyphs planned-glyphs
+                                   &key slots)
+  (let* ((slots (jrpg-city-unique-slots
+                 (or slots (jrpg-city-door-slots w h))))
          (used nil)
          (extras nil))
     (loop for glyph in planned-glyphs
           for index from 0
-          for slot = (or (nth index slots)
-                         (pop extras)
-                         (progn
-                           (setf extras (jrpg-city-extra-door-slots grid w h used))
-                           (pop extras)))
+          for candidate = (nth index slots)
+          for slot = (if (jrpg-city-door-slot-valid-p grid w h candidate used)
+                         candidate
+                         (or (pop extras)
+                             (progn
+                               (setf extras (jrpg-city-extra-door-slots grid w h used))
+                               (pop extras))))
           when slot
             do (progn
                  (push slot used)
@@ -125,32 +149,76 @@ truly random."
 
 (defun jrpg-gen-city (w h interior-glyphs exit-glyphs seed
                       &optional all-interior-glyphs all-exit-glyphs)
-  "Returns (values rows start-x start-y) for a small RPG town: a north gate,
-main street, square, and fixed building fronts. Door slots are planned from all
-configured doors so a completed district does not move the others."
-  (declare (ignore seed))
-  (let* ((grid (make-array (list h w) :initial-element #\.))
-         (mid (jrpg-city-clamp-x w (floor w 2)))
+  "Returns (values rows start-x start-y) for a small RPG town: north gate, main
+street, square, alleys, and stable building-front door slots. The seed changes
+the block shape without moving surviving doors when another district is done."
+  (let* ((rng (jrpg-city-rng seed))
+         (grid (make-array (list h w) :initial-element #\.))
+         (mid (jrpg-city-clamp-x w (+ (floor w 2) (funcall rng -1 1))))
+         (north-gap (funcall rng 5 7))
+         (south-gap (funcall rng 4 6))
+         (north-front (jrpg-city-clamp-y h (+ (floor h 3) (funcall rng -1 1))))
+         (south-front (jrpg-city-clamp-y h (- h (funcall rng 3 4))))
+         (south-top (jrpg-city-clamp-y h
+                                       (max (+ north-front 2)
+                                            (- south-front (funcall rng 2 4)))))
+         (cross-y (jrpg-city-clamp-y h (+ (floor h 2) (funcall rng -1 1))))
          (left-x (jrpg-city-clamp-x w (floor w 5)))
          (right-x (jrpg-city-clamp-x w (- w (floor w 5) 1)))
-         (north-front (jrpg-city-clamp-y h (floor h 3)))
-         (south-top (jrpg-city-clamp-y h (max (1+ north-front) (- h 6))))
-         (south-front (jrpg-city-clamp-y h (- h 3)))
+         (square-radius-x (funcall rng 3 4))
+         (square-radius-y (funcall rng 1 2))
+         (north-left-x (jrpg-city-clamp-x
+                        w (funcall rng 3 (max 3 (- mid north-gap 1)))))
+         (north-right-x (jrpg-city-clamp-x
+                         w (funcall rng (min (- w 4) (+ mid north-gap 1))
+                                    (- w 4))))
+         (south-left-x (jrpg-city-clamp-x
+                        w (funcall rng 3 (max 3 (- mid south-gap 1)))))
+         (south-right-x (jrpg-city-clamp-x
+                         w (funcall rng (min (- w 4) (+ mid south-gap 1))
+                                    (- w 4))))
+         (door-slots (append (list (list south-left-x south-front)
+                                   (list north-right-x north-front)
+                                   (list north-left-x north-front)
+                                   (list south-right-x south-front))
+                             (jrpg-city-door-slots
+                              w h
+                              :north-front north-front
+                              :south-front south-front
+                              :left-x left-x
+                              :mid-x mid
+                              :right-x right-x)))
          (planned-interior (or all-interior-glyphs interior-glyphs))
          (planned-exits (or all-exit-glyphs exit-glyphs)))
     (loop for x below w do (setf (aref grid 0 x) #\#))
-    (jrpg-city-fill-rect grid 2 1 (max 3 (- mid 6)) north-front #\#)
-    (jrpg-city-fill-rect grid (min (- w 4) (+ mid 6)) 1 (- w 3) north-front #\#)
-    (jrpg-city-fill-rect grid 2 south-top (max 3 (- mid 6)) south-front #\#)
-    (jrpg-city-fill-rect grid (min (- w 4) (+ mid 6)) south-top (- w 3) south-front #\#)
-    (jrpg-city-fill-rect grid (max 2 (- mid 4)) (- h 4)
+    (jrpg-city-fill-rect grid 2 1 (max 3 (- mid north-gap)) north-front #\#)
+    (jrpg-city-fill-rect grid (min (- w 4) (+ mid north-gap)) 1
+                         (- w 3) north-front #\#)
+    (jrpg-city-fill-rect grid 2 south-top (max 3 (- mid south-gap))
+                         south-front #\#)
+    (jrpg-city-fill-rect grid (min (- w 4) (+ mid south-gap)) south-top
+                         (- w 3) south-front #\#)
+    (jrpg-city-fill-rect grid (max 2 (- mid (funcall rng 4 5))) (- h 4)
                          (max 3 (- mid 2)) south-front #\#)
     (jrpg-city-fill-rect grid (min (- w 4) (+ mid 2)) (- h 4)
-                         (min (- w 3) (+ mid 4)) south-front #\#)
+                         (min (- w 3) (+ mid (funcall rng 4 5)))
+                         south-front #\#)
     (loop for y from 1 below (1- h)
           do (setf (aref grid y mid) #\.))
-    (loop for x from (max 1 (- mid 5)) to (min (- w 2) (+ mid 5))
-          do (setf (aref grid (jrpg-city-clamp-y h (floor h 2)) x) #\.))
+    (jrpg-city-fill-rect grid (max 1 (- mid square-radius-x))
+                         (jrpg-city-clamp-y h (- cross-y square-radius-y))
+                         (min (- w 2) (+ mid square-radius-x))
+                         (jrpg-city-clamp-y h (+ cross-y square-radius-y))
+                         #\.)
+    (loop for x from 1 to (- w 2)
+          do (setf (aref grid cross-y x) #\.))
+    (loop repeat 2
+          for alley-y = (jrpg-city-clamp-y
+                         h (+ north-front (funcall rng 1 (max 1 (- south-top
+                                                                  north-front)))))
+          do (loop for x from (max 1 (- mid (funcall rng 7 9)))
+                   to (min (- w 2) (+ mid (funcall rng 7 9)))
+                   do (setf (aref grid alley-y x) #\.)))
     (dolist (lamp (list (list left-x (floor h 2))
                         (list right-x (floor h 2))
                         (list (max 1 (- mid 3)) (jrpg-city-clamp-y h (1+ north-front)))
@@ -163,7 +231,8 @@ configured doors so a completed district does not move the others."
             for index from 0
             when (member glyph exit-glyphs :test #'char=)
               do (setf (aref grid 0 (jrpg-city-gate-x w count index)) glyph)))
-    (jrpg-city-place-open-doors grid w h interior-glyphs planned-interior)
+    (jrpg-city-place-open-doors grid w h interior-glyphs planned-interior
+                                :slots door-slots)
     (values (jrpg-gen-rows grid) mid (- h 2))))
 
 (defun make-fresh-jrpg-city (node)
