@@ -151,7 +151,7 @@
              (dialog-option "call into the house" "forest/call"))
 
 (dialog-text "forest/lock-door"
-             "the lock clicks twice. from inside, something clicks back once."
+             "the lock clicks twice. from inside, a second latch answers once."
              :next "forest/trail")
 
 (dialog-on-enter "forest/lock-door"
@@ -175,7 +175,7 @@
              (dialog-option "turn around" "forest/look-back"))
 
 (dialog-text "forest/creek"
-             "you follow water you cannot see. every stone is slick with handprints."
+             "you follow hidden water. every stone is slick with handprints."
              :next "forest/tag")
 
 (dialog-text "forest/hide"
@@ -197,7 +197,7 @@
              :next "forest/tag")
 
 (dialog-text "forest/look-back"
-             "the house is already small behind you, and you do not remember walking that far. one window is bright. one window has bars on the inside."
+             "the house is already small behind you. one window is bright. one window has bars on the inside."
              :next "forest/tag")
 
 (dialog-text "forest/tag"
@@ -228,7 +228,11 @@
                  '(setf (dialog-value "forest-refuge") "culvert"))
 
 (dialog-text "forest/culvert"
-             "the creek bed runs under a road through a concrete culvert. you wait in it while two cars pass overhead. neither slows. the lantern light stops at the tree line and turns back."
+             "the creek bed runs under a road through a concrete culvert. you wait in it while two cars pass overhead."
+             :next "forest/culvert-light")
+
+(dialog-text "forest/culvert-light"
+             "neither car slows. the lantern light stops at the tree line and turns back."
              :next "forest/unfinished")
 
 (dialog-text "forest/fence"
@@ -250,7 +254,11 @@
                  '(setf (dialog-value "forest-refuge") "cellar"))
 
 (dialog-text "forest/cellar-dark"
-             "you pull the door shut over your head. there is a box of matches on the second step. the first match shows a cot, a water jug, and four paper tags hanging on a nail."
+             "you pull the door shut over your head. there is a box of matches on the second step."
+             :next "forest/cellar-dark-s2")
+
+(dialog-text "forest/cellar-dark-s2"
+             "the first match shows a cot, a water jug, and four paper tags hanging on a nail."
              :next "forest/cellar-overhead")
 
 (dialog-text "forest/cellar-overhead"
@@ -258,7 +266,11 @@
              :next "forest/unfinished")
 
 (dialog-text "forest/unfinished"
-             "you wait out the dark in short stretches, never long in one place. by the time the sky greys, you cannot tell if you have moved away from the house or in a circle around it."
+             "you wait out the dark in short stretches, never long in one place."
+             :next "forest/unfinished-s2")
+
+(dialog-text "forest/unfinished-s2"
+             "by the time the sky greys, you do not know if you moved away from the house or circled it."
              :next "forest/dawn")
 
 
@@ -277,23 +289,43 @@
               :next #'forest-dawn-target)
 
 (dialog-text "forest/dawn-culvert"
-             "you wake in the culvert with the creek in your shoes. the road overhead is quiet now, and the frost on the concrete shows one set of boot prints that stopped at the mouth and went away."
+             "you wake in the culvert with the creek in your shoes. the road overhead is quiet now."
+             :next "forest/dawn-culvert-prints")
+
+(dialog-text "forest/dawn-culvert-prints"
+             "the frost on the concrete shows one set of boot prints. they stopped at the mouth and went away."
              :next "forest/dawn-walk")
 
 (dialog-text "forest/dawn-gate"
-             "you wake against the fence with the gate chain printed in your cheek. in daylight the sign is older than it looked, repainted many times, the same words every coat."
+             "you wake against the fence with the gate chain printed in your cheek."
+             :next "forest/dawn-gate-sign")
+
+(dialog-text "forest/dawn-gate-sign"
+             "in daylight the sign shows old paint under new paint. the same words on every coat."
              :next "forest/dawn-walk")
 
 (dialog-text "forest/dawn-cellar"
-             "you wake on the cot because you let yourself use the cot, near the end. the matches are gone from the shelf. the tags still hang on the nail, and you do not count them again."
+             "you wake on the cot because you let yourself use it, near the end. the matches are gone from the shelf."
+             :next "forest/dawn-cellar-tags")
+
+(dialog-text "forest/dawn-cellar-tags"
+             "the tags still hang on the nail. you do not count them again."
              :next "forest/dawn-walk")
 
 (dialog-text "forest/dawn-walk"
-             "in daylight the forest is just pines and cold. you keep the road in sight and follow the tire marks. twice you pass faded surveyor's tape tied at shoulder height."
+             "in daylight the forest is just pines and cold. you keep the road in sight and follow the tire marks."
+             :next "forest/dawn-walk-tape")
+
+(dialog-text "forest/dawn-walk-tape"
+             "twice you pass faded surveyor's tape tied at shoulder height."
              :next "forest/mailboxes")
 
 (dialog-text "forest/mailboxes"
-             "where a gravel lane meets the road there is a rack of mailboxes, five of them, names painted and weathered off. on the newest box the name is still readable: {forest-tag-name}."
+             "where a gravel lane meets the road there is a rack of mailboxes, five of them."
+             :next "forest/mailboxes-name")
+
+(dialog-text "forest/mailboxes-name"
+             "names are painted on them and weathered off. on the newest box the name is still readable: {forest-tag-name}."
              :next "forest/mailbox-choice")
 
 (dialog-pick "forest/mailbox-choice"
@@ -321,7 +353,11 @@
             :next "forest/truck-cab")
 
 (dialog-text "forest/truck-cab"
-             "the cab smells of dog and diesel. the driver watches the mirrors more than the road. at the county sign he lets out a breath he has been holding since the mailboxes."
+             "the cab smells of dog and diesel. the driver watches the mirrors more than the road."
+             :next "forest/truck-cab-sign")
+
+(dialog-text "forest/truck-cab-sign"
+             "at the county sign he lets out a breath he has been holding since the mailboxes."
              :next "forest/truck-driver-questions")
 
 (dialog-interrogation "forest/truck-driver-questions"
@@ -331,18 +367,22 @@
                       ("ask about the place up the hill"
                        :id "hill"
                        :speaker "the driver"
-                       "i don't go up it. i drive the road at the bottom of it. that is a different job and i mean to keep it different.")
+                       "i don't go up it. i drive the road at the bottom of it. that's a different job and i mean to keep it different.")
                       ("ask why folk don't ask about it"
                        :id "asking"
                        :speaker "the driver"
-                       "asking is how you end up part of a thing. i have a dog and a route. i would like to keep both.")
+                       "asking is how you end up part of a thing. i have a dog and a route. i want to keep both.")
                       ("ask what he gets for the drive"
                        :id "pay"
                        :speaker "the driver"
                        "nothing i would put on a form. somebody leaves diesel money in a mailbox when one of you comes down. i don't ask which box."))
 
 (dialog-text "forest/truck-drop"
-             "he drops you at a crossroads store with a phone, says nothing you can thank him for, and is gone. through the store window the clerk is already looking at you. it is a look she has used before."
+             "he drops you at a crossroads store with a phone, says nothing you can thank him for, and is gone."
+             :next "forest/truck-drop-s2")
+
+(dialog-text "forest/truck-drop-s2"
+             "through the store window the clerk is already looking at you. it is a look she has used before."
              :next "forest/store")
 
 (dialog-say "forest/store"
@@ -387,7 +427,11 @@
                  '(setf (dialog-value "forest-call") "operator"))
 
 (dialog-text "forest/operator"
-             "the operator asks who you need. you open your mouth and the answer is not there. she waits the way operators wait, and then says, gently, that she can connect you to the county office in the morning."
+             "the operator asks who you need. you open your mouth and the answer is not there."
+             :next "forest/operator-s2")
+
+(dialog-text "forest/operator-s2"
+             "she waits the way operators wait. then she says she can connect you to the county office in the morning."
              :next "forest/store-night")
 
 (dialog-on-enter "forest/tag-number"
@@ -405,19 +449,35 @@
              :next "forest/store-night")
 
 (dialog-text "forest/store-night"
-             "the clerk lets you sit by the cooler until close. when she locks up she leaves the porch light on, points at the bench under it, and says the bus comes at six, most days."
+             "the clerk lets you sit by the cooler until close."
+             :next "forest/store-night-bench")
+
+(dialog-text "forest/store-night-bench"
+             "when she locks up, she leaves the porch light on. she points at the bench under it and says the bus comes at six, most days."
              :next "forest/bench")
 
 (dialog-text "forest/bench"
-             "the bench holds the day's warmth for an hour and then gives it up. you sleep in pieces under the porch light, and nothing comes up the road all night except the road's own sounds, which you are learning."
+             "the bench holds the day's warmth for an hour and then gives it up."
+             :next "forest/bench-s2")
+
+(dialog-text "forest/bench-s2"
+             "you sleep in pieces under the porch light. nothing comes up the road all night except the road's own sounds."
              :next "forest/bench-dream")
 
 (dialog-text "forest/bench-dream"
-             "in one of the pieces of sleep there is a kitchen, and bread cooling on a rack, and someone humming low through a door, and you wake from it warm, which frightens you more than the forest managed all night."
+             "in one of the pieces of sleep there is a kitchen. bread cools on a rack. someone hums low through a door."
+             :next "forest/bench-dream-s2")
+
+(dialog-text "forest/bench-dream-s2"
+             "you wake warm. that frightens you more than the forest did all night."
              :next "forest/bus")
 
 (dialog-text "forest/bus"
-             "the bus comes at six, most days, and this is one of them. the doors fold open before you stand up, the way they do for people the driver has already decided about."
+             "the bus comes at six, most days, and this is one of them."
+             :next "forest/bus-doors")
+
+(dialog-text "forest/bus-doors"
+             "the doors fold open before you stand up. the driver has already decided about you."
              :next "forest/board-choice")
 
 (dialog-pick "forest/board-choice"
@@ -441,7 +501,11 @@
             :next "forest/passengers")
 
 (dialog-text "forest/passengers"
-             "there are four passengers and room for forty. nobody sits near you. nobody makes it unkind. past the gravel pits a woman in a postal jacket passes you half a sandwich over the seat back, without turning around."
+             "there are four passengers and room for forty. nobody sits near you. nobody makes it unkind."
+             :next "forest/passengers-sandwich")
+
+(dialog-text "forest/passengers-sandwich"
+             "past the gravel pits a woman in a postal jacket passes you half a sandwich over the seat back, without turning around."
              :next "forest/county-line")
 
 (dialog-pick "forest/county-line"
@@ -454,7 +518,11 @@
                  '(setf (dialog-value "forest-bus") "line"))
 
 (dialog-text "forest/get-off"
-             "you step down at the pole. across the line the fields are fenced in wire, not plank, and the first mailbox you pass has a name on it that has never been painted over."
+             "you step down at the pole. across the line the fields are fenced in wire, not plank."
+             :next "forest/get-off-mailbox")
+
+(dialog-text "forest/get-off-mailbox"
+             "the first mailbox you pass has a name on it that has never been painted over."
              :next "forest/county-dusk")
 
 (dialog-text "forest/county-dusk"
@@ -465,7 +533,11 @@
                  '(setf (dialog-value "forest-bus") "stayed"))
 
 (dialog-text "forest/stay-on"
-             "you stay on. the route runs the valley, turns with the river, and climbs. by the second hour you know the shape of it. the road does not leave the hill's country. it circles it, the way water circles a stone."
+             "you stay on. the route runs the valley, turns with the river, and climbs."
+             :next "forest/stay-on-s2")
+
+(dialog-text "forest/stay-on-s2"
+             "by the second hour you know the shape of it. the road does not leave the hill's country. it circles it."
              :next "forest/bus-end")
 
 (dialog-on-enter "forest/ask-driver"
@@ -483,25 +555,42 @@
 
 (dialog-say "forest/ask-driver-3"
             "the driver"
-            "twice that i know. county went up in my father's day and came down satisfied. nobody can tell you satisfied with what. that's the part that keeps the rest of us on the road."
+            "twice that i know. county went up in my father's day and came down satisfied."
+            :next "forest/ask-driver-4")
+
+(dialog-say "forest/ask-driver-4"
+            "the driver"
+            "nobody can tell you satisfied with what. that's the part that keeps the rest of us on the road."
             :next "forest/bus-end")
 
 (dialog-text "forest/bus-end"
-             "wherever the day ends, it ends with you still moving, the hill somewhere over your shoulder, in no hurry. when you finally sleep it is the deep kind, and it takes you all at once."
+             "wherever the day ends, it ends with you still moving, the hill somewhere over your shoulder."
+             :next "forest/bus-end-s2")
+
+(dialog-text "forest/bus-end-s2"
+             "deep sleep takes you all at once."
              :next "sys/reboot")
 
 (dialog-on-enter "forest/truck-hide"
                  '(setf (dialog-value "forest-dawn") "hid"))
 
 (dialog-text "forest/truck-hide"
-             "you stay in the trees. the pickup slows at the boxes anyway, pauses by the newest one, and moves on. whoever it was knew the boxes well enough not to look at them."
+             "you stay in the trees. the pickup slows at the boxes anyway, pauses by the newest one, and moves on."
+             :next "forest/truck-hide-s2")
+
+(dialog-text "forest/truck-hide-s2"
+             "whoever it was knew the boxes well enough not to look at them."
              :next "forest/road-back")
 
 (dialog-on-enter "forest/mailbox-open"
                  '(setf (dialog-value "forest-dawn") "opened"))
 
 (dialog-text "forest/mailbox-open"
-             "the box opens stiffly. inside: circulars, a seed catalog, and one envelope addressed by hand to {forest-tag-name}, postmarked eleven years ago, unopened. the pickup passes while you are holding it."
+             "the box opens stiffly. inside: circulars, a seed catalog, and one envelope addressed by hand to {forest-tag-name}."
+             :next "forest/mailbox-open-s2")
+
+(dialog-text "forest/mailbox-open-s2"
+             "it is postmarked eleven years ago, unopened. the pickup passes while you are holding it."
              :next "forest/letter-choice")
 
 (dialog-pick "forest/letter-choice"
@@ -513,7 +602,7 @@
                  '(setf (dialog-value "forest-letter") "read"))
 
 (dialog-text "forest/letter-read"
-             "one page, in the round patient hand of someone writing to a child."
+             "one page, in the round hand of an adult writing to a child."
              :next "forest/letter-read-s2")
 
 (dialog-text "forest/letter-read-s2"
@@ -528,7 +617,7 @@
                  '(setf (dialog-value "forest-letter") "kept"))
 
 (dialog-text "forest/letter-back"
-             "you put it back the way evidence goes back: exactly, and with the sick sense of having signed for it anyway. the box closes on the first try, which boxes out here do not."
+             "you put it back carefully. the box closes on the first try."
              :next "forest/road-back")
 
 (defun forest-porch-again-target ()
@@ -538,15 +627,23 @@
     (t "forest/porch-again")))
 
 (dialog-text "forest/road-back"
-             "the road bends with the hill, and every branch of it climbs. by noon you understand what the driver could have told you: out here all the lanes are the hill's lanes, and the hill has one house."
+             "the road bends with the hill, and every branch of it climbs."
+             :next "forest/road-back-s2")
+
+(dialog-text "forest/road-back-s2"
+             "by noon you know what the driver could have told you: out here all the lanes are the hill's lanes, and the hill has one house."
              :next #'forest-porch-again-target)
 
 (dialog-text "forest/porch-again"
-             "you come out of the trees above the house. on the porch, someone is sweeping. they stop, shade their eyes toward your stretch of woods, and wave, unhurried, the way you wave at family."
+             "you come out of the trees above the house. on the porch, someone is sweeping."
+             :next "forest/porch-again-wave")
+
+(dialog-text "forest/porch-again-wave"
+             "they stop, shade their eyes toward your stretch of woods, and wave, unhurried."
              :next "forest/porch-choice")
 
 (dialog-text "forest/porch-again-call"
-             "you come out of the trees above the house. on the porch, someone is sweeping, humming two notes over and over, low and patient."
+             "you come out of the trees above the house. on the porch, someone is sweeping, humming two notes over and over, low."
              :next "forest/porch-again-call-s2")
 
 (dialog-text "forest/porch-again-call-s2"
@@ -554,7 +651,11 @@
              :next "forest/porch-choice")
 
 (dialog-text "forest/porch-again-lock"
-             "you come out of the trees above the house. the front door you locked stands open, the key in the outside of the lock, turned. on the porch, someone is sweeping. they stop, shade their eyes toward your stretch of woods, and wave."
+             "you come out of the trees above the house. the front door you locked stands open, the key in the outside of the lock, turned."
+             :next "forest/porch-again-lock-s2")
+
+(dialog-text "forest/porch-again-lock-s2"
+             "on the porch, someone is sweeping. they stop, shade their eyes toward your stretch of woods, and wave."
              :next "forest/porch-choice")
 
 (dialog-pick "forest/porch-choice"
@@ -592,11 +693,19 @@
                  '(setf (dialog-value "forest-porch") "fled"))
 
 (dialog-text "forest/keep-going"
-             "you turn along the ridge and keep moving. behind you the sweeping goes on, unworried, the sound carrying the way sound does when no one is chasing you because no one needs to."
+             "you turn along the ridge and keep moving. behind you the sweeping goes on."
+             :next "forest/keep-going-s2")
+
+(dialog-text "forest/keep-going-s2"
+             "no one is chasing you because no one needs to."
              :next "forest/ridge-dusk")
 
 (dialog-text "forest/ridge-dusk"
-             "dusk catches you on the ridge with the house's chimney smoke below, rising straight. somewhere downslope, a lantern is lit, and begins, without hurry, to climb."
+             "dusk catches you on the ridge with the house's chimney smoke below, rising straight."
+             :next "forest/ridge-dusk-lantern")
+
+(dialog-text "forest/ridge-dusk-lantern"
+             "somewhere downslope, a lantern is lit and begins to climb."
              :next "forest/ridge-hide")
 
 (dialog-minigame "forest/ridge-hide"
@@ -607,16 +716,28 @@
                  :config '(:duration 7.0 :breath-rise 0.11))
 
 (dialog-text "forest/ridge-passed"
-             "the lantern crests the ridge two pines over, hangs a while looking at the dark you are part of, and goes down the far side. for the first time, you watched it the whole way through, and your count of your own breathing held."
+             "the lantern crests the ridge two pines over. it hangs a while, then goes down the far side."
+             :next "forest/ridge-passed-s2")
+
+(dialog-text "forest/ridge-passed-s2"
+             "for the first time, you watched it the whole way through. your count held."
              :next "forest/dawn-end")
 
 (dialog-on-enter "forest/ridge-heard"
                  '(setf (dialog-value "forest-seen") t))
 
 (dialog-text "forest/ridge-heard"
-             "the lantern stops below your stretch of dark and stays there through eleven breaths, the long kind. when it finally goes down the far side, it goes without searching, the way you leave a room when you know where everything is."
+             "the lantern stops below your stretch of dark and stays there through eleven long breaths."
+             :next "forest/ridge-heard-s2")
+
+(dialog-text "forest/ridge-heard-s2"
+             "when it finally goes down the far side, it goes without searching."
              :next "forest/dawn-end")
 
 (dialog-text "forest/dawn-end"
-             "you walk until walking is all there is. when you finally sleep, it is sudden and dreamless, in the needles, with your back against a fence post you did not check for carvings."
+             "you walk until walking is all there is."
+             :next "forest/dawn-end-s2")
+
+(dialog-text "forest/dawn-end-s2"
+             "when you finally sleep, it is sudden and dreamless, in the needles, with your back against a fence post you did not check for carvings."
              :next "sys/reboot")
