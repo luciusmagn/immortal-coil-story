@@ -177,11 +177,16 @@ cell at SX,SY. Editing the tile map repoints these without touching code."
     (jrpg-draw-tile atlas col row sx sy +jrpg-overworld-tile-size+ tint)))
 
 (defun draw-jrpg-city-building-tile (game atlas sx sy mx my)
-  "A building cell: a capped top on the top edge, a window on a cell whose front
-faces the street, otherwise plain wall - a light neighbour-aware variation."
+  "A building cell: the top edge is roofed - left/middle/right pieces chosen by
+where the roof run ends, exactly as the roofs are laid out in the scenes - a
+cell whose front faces the street gets a window, the rest is brick wall."
   (cond
     ((not (jrpg-city-building-p game mx (1- my)))
-     (jrpg-city-tile atlas :wall-top sx sy))
+     (jrpg-city-tile atlas
+                     (cond ((not (jrpg-city-building-p game (1- mx) my)) :roof-left)
+                           ((not (jrpg-city-building-p game (1+ mx) my)) :roof-right)
+                           (t :roof-middle))
+                     sx sy))
     ((not (jrpg-city-building-p game mx (1+ my)))
      (jrpg-city-tile atlas :window sx sy))
     (t (jrpg-city-tile atlas :wall sx sy))))
