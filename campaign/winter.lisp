@@ -7,15 +7,23 @@
 (dialog-particles "winter/doors" :snow :fade-seconds 5.0)
 
 (dialog-text "winter/doors"
-             "you do not stand up. the bench holds you, and you hold the bench, and the idling engine counts off the seconds of the only decision out here that nobody will make for you."
+             "you do not stand up. the bench holds you, and you hold the bench. the idling engine counts the seconds."
              :next "winter/doors-2")
 
 (dialog-text "winter/doors-2"
-             "the driver looks at you in the long mirror, not unkindly, for the length of a breath you recognize. then the doors fold shut and the bus pulls out. the sound of it goes down the valley and is gone. the morning is very large."
+             "the driver looks at you in the long mirror. then the doors shut and the bus pulls out."
+             :next "winter/doors-2-s2")
+
+(dialog-text "winter/doors-2-s2"
+             "the sound of it goes down the valley and is gone. the morning is large."
              :next "winter/bench-after")
 
 (dialog-text "winter/bench-after"
-             "you sit on the bench in the porch light until the light clicks off on its own at full day. the difference between missing a bus and letting one go is nothing anyone can see from outside. you sit inside the difference and keep it."
+             "you sit on the bench in the porch light until the light clicks off on its own at full day."
+             :next "winter/bench-after-s2")
+
+(dialog-text "winter/bench-after-s2"
+             "missing a bus and letting one go look the same from the road. you know which it was."
              :next "winter/clerk-morning")
 
 (dialog-say "winter/clerk-morning"
@@ -30,7 +38,12 @@
 
 (dialog-say "winter/clerk-morning-3"
             "the clerk"
-            "thought so. the ones who miss it pace. you sat like a man keeping an appointment. there's coffee, and the winter delivery wants stacking, and i don't pay wages, i pay lunch."
+            "thought so. the ones who miss it pace. you sat and waited."
+            :next "winter/clerk-morning-4")
+
+(dialog-say "winter/clerk-morning-4"
+            "the clerk"
+            "there's coffee, and the winter delivery wants stacking, and i don't pay wages, i pay lunch."
             :next "winter/stacking")
 
 (dialog-text "winter/stacking"
@@ -38,7 +51,11 @@
              :next "winter/stacking-2")
 
 (dialog-text "winter/stacking-2"
-             "the work is plain and your hands like it. you stop twice, both times for the same thought. your hands have liked work all over this county now. you have stopped asking them why."
+             "the work is plain and your hands take to it. you stop twice, both times for the same thought."
+             :next "winter/stacking-3")
+
+(dialog-text "winter/stacking-3"
+             "your hands have taken to work all over this county. you stop asking them why."
              :next "winter/weeks")
 
 (dialog-scene "winter/weeks"
@@ -46,7 +63,11 @@
               :next "winter/routine")
 
 (dialog-text "winter/routine"
-             "the days take a shape: sweep, stack, mind the counter when the clerk runs the post. you learn the regulars by their trucks. the valley people buy on account and talk weather."
+             "the days take a shape: sweep, stack, mind the counter when the clerk runs the post."
+             :next "winter/routine-s2")
+
+(dialog-text "winter/routine-s2"
+             "you learn the regulars by their trucks. the valley people buy on account and talk weather."
              :next "winter/routine-2")
 
 (dialog-text "winter/routine-2"
@@ -62,7 +83,7 @@
              :next "winter/salt-3")
 
 (dialog-text "winter/salt-3"
-             "he pays in coins older than the till, and at the door he nods to you, only to you, the small private nod you give across a room of strangers to your own."
+             "he pays in old coins. at the door he nods to you, only to you."
              :next "winter/salt-after")
 
 (dialog-text "winter/salt-after"
@@ -70,7 +91,11 @@
              :next "winter/salt-after-2")
 
 (dialog-text "winter/salt-after-2"
-             "that evening she counts the till twice and leaves the radio on past close, tuned to nothing in particular, the way you leave a light on in a house where something has been noticed."
+             "that evening she counts the till twice and leaves the radio on past close, tuned to nothing in particular."
+             :next "winter/salt-after-3")
+
+(dialog-text "winter/salt-after-3"
+             "she keeps glancing at the hill road."
              :next "winter/notice")
 
 (dialog-text "winter/notice"
@@ -78,7 +103,11 @@
              :next "winter/notice-2")
 
 (dialog-text "winter/notice-2"
-             "the clerk winters with her sister in the valley, she tells you, always has, since the store was her father's. the plows stop thursday. after thursday the road is the hill's."
+             "the clerk winters with her sister in the valley, she tells you. always has, since the store was her father's."
+             :next "winter/notice-3")
+
+(dialog-text "winter/notice-3"
+             "the plows stop thursday. after thursday the road is the hill's."
              :next "winter/offer")
 
 (dialog-say "winter/offer"
@@ -93,7 +122,17 @@
 
 (dialog-say "winter/offer-3"
             "the clerk"
-            "all of them took one. that's not the question you asked, and i noticed, and you noticed. sister's has a spare room. the last bus runs thursday noon. or somebody keeps my pipes from freezing, and i'd sooner it was somebody the hill already nods at."
+            "all of them took one. that's not the question you asked, and i noticed, and you noticed."
+            :next "winter/offer-4")
+
+(dialog-say "winter/offer-4"
+            "the clerk"
+            "sister's has a spare room. the last bus runs thursday noon. or somebody keeps my pipes from freezing."
+            :next "winter/offer-5")
+
+(dialog-say "winter/offer-5"
+            "the clerk"
+            "i'd sooner it was somebody the hill already nods at."
             :next "winter/clerk-questions")
 
 (dialog-interrogation "winter/clerk-questions"
@@ -127,15 +166,27 @@
              :next "winter/sister-2")
 
 (dialog-text "winter/sister-2"
-             "at half past, the truck will not start, and the clerk works the choke twice and then goes still, listening to the engine the way you listen to a hall, and gets out, and lifts the hood. the points are packed with pine needles. packed."
+             "at half past, the truck will not start. the clerk works the choke twice and goes still."
+             :next "winter/sister-2-s2")
+
+(dialog-text "winter/sister-2-s2"
+             "she listens to the engine, gets out, and lifts the hood. the points are packed with pine needles. packed."
              :next "winter/sister-3")
 
 (dialog-text "winter/sister-3"
-             "she stands looking at them with her breath going up white, and then she takes your bag out of the bed, gently, and sets it on the porch, and says, the hill answered. i'll send the bus by for you in spring."
+             "she stands looking at them with her breath going up white. then she takes your bag out of the bed and sets it on the porch."
+             :next "winter/sister-3-s2")
+
+(dialog-text "winter/sister-3-s2"
+             "the hill answered, she says. i'll send the bus by for you in spring."
              :next "winter/sister-4")
 
 (dialog-text "winter/sister-4"
-             "and she walks to the crossroads to flag the noon bus herself, because people with names the county still writes can leave, and you watch her go from the porch of the store that is now yours to keep."
+             "she walks to the crossroads to flag the noon bus herself. people with names the county still writes can leave."
+             :next "winter/sister-4-s2")
+
+(dialog-text "winter/sister-4-s2"
+             "you watch her go from the porch of the store."
              :next "winter/first-snow")
 
 (dialog-on-enter "winter/last-bus"
@@ -146,7 +197,11 @@
              :next "winter/last-bus-2")
 
 (dialog-text "winter/last-bus-2"
-             "at the third switchback the driver stops, looks at the white coming down the cut, and turns the route around without a word, because the word would have been one you already know. he lets you down at the crossroads at four."
+             "at the third switchback the driver stops. white comes down the cut. he turns the route around without a word."
+             :next "winter/last-bus-2-s2")
+
+(dialog-text "winter/last-bus-2-s2"
+             "he lets you down at the crossroads at four."
              :next "winter/last-bus-3")
 
 (dialog-text "winter/last-bus-3"
@@ -157,7 +212,11 @@
                  '(setf (dialog-value "winter-thursday") "kept"))
 
 (dialog-text "winter/keep-store"
-             "you say you will keep the store, and the clerk nods once, all business, and walks you through it: the stove's moods, the pump that wants priming, the ledger for anyone who comes needing on account."
+             "you say you will keep the store. the clerk nods once, all business."
+             :next "winter/keep-store-s2")
+
+(dialog-text "winter/keep-store-s2"
+             "she walks you through it: the stove's moods, the pump that wants priming, the ledger for anyone who comes needing on account."
              :next "winter/keep-store-2")
 
 (dialog-text "winter/keep-store-2"
@@ -169,11 +228,15 @@
               :next "winter/store-alone")
 
 (dialog-text "winter/store-alone"
-             "the snow takes the valley in one night, roofs first, then roads, then the difference between them."
+             "the snow takes the valley in one night. roofs first, then roads. by morning both are white."
              :next "winter/store-alone-2")
 
 (dialog-text "winter/store-alone-2"
-             "the store holds its warmth in the back room where the stove is, and you move your living into that one room the way the books say lost men should, and the phone by the cooler gives you the dial tone for two more days and then gives you the winter."
+             "the store holds its warmth in the back room where the stove is. you move your living into that one room."
+             :next "winter/store-alone-3")
+
+(dialog-text "winter/store-alone-3"
+             "the phone by the cooler gives you a dial tone for two more days. then it gives you the winter."
              :next "winter/lines-down")
 
 (dialog-text "winter/lines-down"
@@ -185,7 +248,7 @@
              :next "winter/lines-down-3")
 
 (dialog-text "winter/lines-down-3"
-             "it is the county's whole philosophy in one sentence, and after the click you stand holding the receiver, which smells of other people's hands, none of them recent."
+             "after the click you stand holding the receiver. it smells of other people's hands, none of them recent."
              :next "winter/rationing")
 
 (dialog-text "winter/rationing"
@@ -193,7 +256,11 @@
              :next "winter/rationing-2")
 
 (dialog-text "winter/rationing-2"
-             "the delivery was sized for a closed store, not a kept one, and by the fourth week you are eating once a day and writing it down, because writing it down is the difference between rationing and starving, according to you, at night, to the stove."
+             "the delivery was sized for a closed store, not a kept one. by the fourth week you are eating once a day."
+             :next "winter/rationing-3")
+
+(dialog-text "winter/rationing-3"
+             "you write each meal down. at night, by the stove, the page still calls it rationing."
              :next "winter/first-plate")
 
 (dialog-text "winter/first-plate"
@@ -201,7 +268,11 @@
              :next "winter/first-plate-2")
 
 (dialog-text "winter/first-plate-2"
-             "cloth over it, snow brushed off the stump first, the plate still warm enough to hold heat in its middle. boot prints lead away toward the tree line. bare footprints lead toward the stump."
+             "cloth covers it. someone brushed snow off the stump first. the plate is still warm in the middle."
+             :next "winter/first-plate-2-s2")
+
+(dialog-text "winter/first-plate-2-s2"
+             "boot prints lead away toward the tree line. bare footprints lead toward the stump."
              :next "winter/first-plate-3")
 
 (dialog-text "winter/first-plate-3"
@@ -218,11 +289,19 @@
                  '(setf (dialog-value "winter-plates") "ate"))
 
 (dialog-text "winter/eat"
-             "you eat it on the back step, fast, with your fingers, and it is barley and carrot and exactly right, and you know the cooking, you knew it before the cloth was off."
+             "you eat it on the back step, fast, with your fingers. barley and carrot. enough salt."
+             :next "winter/eat-s2")
+
+(dialog-text "winter/eat-s2"
+             "you know the cooking. you knew it before the cloth was off."
              :next "winter/eat-2")
 
 (dialog-text "winter/eat-2"
-             "you eat all of it anyway and stand the plate back on the stump, washed, because your hands insisted on the washing, and your hands are keeping customs now that you have not agreed to."
+             "you eat all of it. your hands wash the plate before you decide to."
+             :next "winter/eat-3")
+
+(dialog-text "winter/eat-3"
+             "you stand it back on the stump."
              :next "winter/plates-on")
 
 (dialog-on-enter "winter/refuse"
@@ -248,7 +327,11 @@
              :next "winter/trade-2")
 
 (dialog-text "winter/trade-2"
-             "in the morning the tin is gone and the plate is doubled, two days' worth under one cloth, and you understand that you have not paid a debt, you have opened an account, and that out here an account is the most binding thing two parties can hold."
+             "in the morning the tin is gone and the plate is doubled. two days' worth under one cloth."
+             :next "winter/trade-3")
+
+(dialog-text "winter/trade-3"
+             "you have not paid a debt. you have opened an account."
              :next "winter/plates-on")
 
 (dialog-text "winter/plates-on"
@@ -256,7 +339,11 @@
              :next "winter/plates-on-2")
 
 (dialog-text "winter/plates-on-2"
-             "you split wood for the stove and the work takes your thinking cleanly, and some evenings you catch yourself at the window with the lamp out, watching the stump the way you once watched a door. you are keeping it."
+             "you split wood for the stove and the work takes your thinking cleanly."
+             :next "winter/plates-on-3")
+
+(dialog-text "winter/plates-on-3"
+             "some evenings you catch yourself at the window with the lamp out, watching the stump the way you once watched a door."
              :next "winter/midwinter")
 
 (dialog-scene "winter/midwinter"
@@ -264,7 +351,7 @@
               :next "winter/lantern-night")
 
 (dialog-text "winter/lantern-night"
-             "in the deep of the season there is a night when the wind stops and the cold rings like struck iron."
+             "in the deep of the season there is a night when the wind stops. the cold rings in the walls."
              :next "winter/lantern-night-2")
 
 (dialog-text "winter/lantern-night-2"
@@ -287,11 +374,19 @@
              :next "winter/lantern-passes-2")
 
 (dialog-text "winter/lantern-passes-2"
-             "in the morning the only prints in the yard go around the store in a clean ring, at exactly the distance a person keeps when they are checking on a building they care for."
+             "in the morning the only prints in the yard go around the store in a clean ring."
+             :next "winter/lantern-passes-3")
+
+(dialog-text "winter/lantern-passes-3"
+             "the ring is set back from the walls by the same distance on every side."
              :next "winter/tag-post")
 
 (dialog-text "winter/lantern-window"
-             "halfway through its second circuit the light stops at the back window, your window, and stands there through eleven breaths, the long kind, while you hold the shelf edge and your chest burns."
+             "halfway through its second circuit the light stops at the back window. your window."
+             :next "winter/lantern-window-s2")
+
+(dialog-text "winter/lantern-window-s2"
+             "it stands there through eleven breaths while you hold the shelf edge and your chest burns."
              :next "winter/lantern-window-2")
 
 (dialog-text "winter/lantern-window-2"
@@ -303,7 +398,11 @@
              :next "winter/tag-post-2")
 
 (dialog-text "winter/tag-post-2"
-             "and under the name, where the number should be, nothing. no number. there is no one to call about you anymore. the tag is not a request. it is a record being kept current."
+             "under the name, where the number should be, there is nothing. no number."
+             :next "winter/tag-post-3")
+
+(dialog-text "winter/tag-post-3"
+             "there is no one to call about you anymore. the tag is not a request. it is a record kept current."
              :next "winter/thaw")
 
 (dialog-scene "winter/thaw"
@@ -334,7 +433,12 @@
 
 (dialog-say "winter/clerk-back-3"
             "the clerk"
-            "up here that's not a word for a season, you understand. it's a word for a person. there's maybe six of you in the county and the rest of them were born to it. sit down. i'll make the coffee. mine's better than yours, i can smell yours from here."
+            "up here that's not a word for a season. it's a word for a person. there's maybe six of you in the county and the rest were born to it."
+            :next "winter/clerk-back-4")
+
+(dialog-say "winter/clerk-back-4"
+            "the clerk"
+            "sit down. i'll make the coffee. mine's better than yours, i can smell yours from here."
             :next "winter/spring-bus")
 
 (dialog-text "winter/spring-bus"
@@ -342,7 +446,11 @@
              :next "winter/spring-bus-2")
 
 (dialog-text "winter/spring-bus-2"
-             "you are on the bench with your coffee when it slows for the stop, and you watch the driver read you through the glass, you, the bench, the kept store behind you, and the bus does not stop."
+             "you are on the bench with your coffee when it slows for the stop."
+             :next "winter/spring-bus-2-s2")
+
+(dialog-text "winter/spring-bus-2-s2"
+             "the driver reads you through the glass: you, the bench, the kept store behind you. the bus does not stop."
              :next "winter/spring-bus-3")
 
 (dialog-text "winter/spring-bus-3"
@@ -350,7 +458,7 @@
              :next "winter/spring-choice")
 
 (dialog-pick "winter/spring-choice"
-             "the clerk watches you watch the bus go, and says, gently, that there will be another one thursday. most days."
+             "the clerk watches you watch the bus go. there will be another one thursday, she says. most days."
              (dialog-option "flag the thursday bus and go" "winter/go-out")
              (dialog-option "stay. the store, the valley, the year" "winter/stay-on")
              (dialog-option "walk up the hill road" "winter/walk-up"))
@@ -359,11 +467,19 @@
                  '(setf (dialog-value "winter-spring") "left"))
 
 (dialog-text "winter/go-out"
-             "thursday you stand in the road so there can be no deciding, and the bus stops, and the driver nods as if conceding a point in a long game. county line's free going out."
+             "thursday you stand in the road so there can be no deciding. the bus stops."
+             :next "winter/go-out-s2")
+
+(dialog-text "winter/go-out-s2"
+             "the driver nods. county line's free going out."
              :next "winter/go-out-2")
 
 (dialog-text "winter/go-out-2"
-             "you ride it standing your bag between your feet, and you step down at the pole in the wire-fence country, and the bus pulls away, and the relief you waited all winter to feel does not arrive."
+             "you ride standing with your bag between your feet. you step down at the pole in the wire-fence country."
+             :next "winter/go-out-2-s2")
+
+(dialog-text "winter/go-out-2-s2"
+             "the bus pulls away. the relief you waited all winter to feel does not arrive."
              :next "winter/go-out-3")
 
 (dialog-text "winter/go-out-3"
@@ -374,11 +490,15 @@
                  '(setf (dialog-value "winter-spring") "stayed"))
 
 (dialog-text "winter/stay-on"
-             "you stay. it is not a decision with a moment in it."
+             "you stay. no one moment holds the decision."
              :next "winter/stay-on-2")
 
 (dialog-text "winter/stay-on-2"
-             "the thursday bus comes and goes while you prime the pump. the next one passes while you are on the roof with the stove flashing. by june the regulars stop lowering their voices when you come in."
+             "the thursday bus comes and goes while you prime the pump. the next one passes while you are on the roof with the stove flashing."
+             :next "winter/stay-on-2-s2")
+
+(dialog-text "winter/stay-on-2-s2"
+             "by june the regulars stop lowering their voices when you come in."
              :next "winter/stay-on-3")
 
 (dialog-text "winter/stay-on-3"
@@ -389,7 +509,11 @@
                  '(setf (dialog-value "winter-spring") "hill"))
 
 (dialog-text "winter/walk-up"
-             "you go up the hill road in the early afternoon with the last plate's cloth washed, dried, and folded in your pocket, because an account is open and you mean to stand in the doorway of it."
+             "you go up the hill road in the early afternoon with the last plate's cloth washed, dried, and folded in your pocket."
+             :next "winter/walk-up-s2")
+
+(dialog-text "winter/walk-up-s2"
+             "an account is open. you mean to stand in the doorway of it."
              :next "winter/walk-up-2")
 
 (dialog-text "winter/walk-up-2"
@@ -397,9 +521,17 @@
              :next "winter/walk-up-3")
 
 (dialog-text "winter/walk-up-3"
-             "by dusk you are above the house, and someone is on the porch, sweeping, and they stop, and shade their eyes toward your stretch of road, and wave, unhurried, the way you wave at family, and you lift your hand, and the cloth is in it."
+             "by dusk you are above the house. someone is on the porch, sweeping."
+             :next "winter/walk-up-3-s2")
+
+(dialog-text "winter/walk-up-3-s2"
+             "they stop and shade their eyes toward your stretch of road. they wave. you lift your hand, and the cloth is in it."
              :next "winter/end")
 
 (dialog-text "winter/end"
-             "that night sleep takes you all at once, the deep kind, wherever you have laid yourself down. the last thing through is the sound of meltwater finding the culvert. that is the hill's country, talking in its sleep."
+             "that night sleep takes you all at once, wherever you have laid yourself down."
+             :next "winter/end-s2")
+
+(dialog-text "winter/end-s2"
+             "the last thing through is the sound of meltwater finding the culvert."
              :next "sys/reboot")
