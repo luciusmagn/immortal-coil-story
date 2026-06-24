@@ -89,6 +89,16 @@ truly random."
 (defun jrpg-city-street-cell-p (grid x y)
   (member (aref grid y x) '(#\. #\+) :test #'char=))
 
+(defun jrpg-city-door-slot-spaced-p (slot used)
+  "Keep signed doors from crowding each other on one frontage. Adjacent glyphs
+make the city hard to read, and their labels overlap in the renderer."
+  (destructuring-bind (x y) slot
+    (every (lambda (other)
+             (destructuring-bind (other-x other-y) other
+               (or (>= (abs (- x other-x)) 3)
+                   (>= (abs (- y other-y)) 2))))
+           used)))
+
 (defun jrpg-city-door-slot-valid-p (grid w h slot used)
   (and (consp slot)
        (integerp (first slot))
@@ -98,6 +108,7 @@ truly random."
               (< 0 y (1- h))
               (char= (aref grid y x) #\#)
               (not (member slot used :test #'equal))
+              (jrpg-city-door-slot-spaced-p slot used)
               (or (jrpg-city-street-cell-p grid x (1+ y))
                   (jrpg-city-street-cell-p grid x (1- y))
                   (jrpg-city-street-cell-p grid (1+ x) y)
@@ -125,21 +136,22 @@ truly random."
         (push slot seen)
         (push slot unique)))))
 
+(defun jrpg-city-next-door-slot (grid w h preferred used)
+  (if (jrpg-city-door-slot-valid-p grid w h preferred used)
+      preferred
+      (find-if (lambda (slot)
+                 (jrpg-city-door-slot-valid-p grid w h slot used))
+               (jrpg-city-extra-door-slots grid w h used))))
+
 (defun jrpg-city-place-open-doors (grid w h open-glyphs planned-glyphs
                                    &key slots)
   (let* ((slots (jrpg-city-unique-slots
                  (or slots (jrpg-city-door-slots w h))))
-         (used nil)
-         (extras nil))
+         (used nil))
     (loop for glyph in planned-glyphs
           for index from 0
           for candidate = (nth index slots)
-          for slot = (if (jrpg-city-door-slot-valid-p grid w h candidate used)
-                         candidate
-                         (or (pop extras)
-                             (progn
-                               (setf extras (jrpg-city-extra-door-slots grid w h used))
-                               (pop extras))))
+          for slot = (jrpg-city-next-door-slot grid w h candidate used)
           when slot
             do (progn
                  (push slot used)
