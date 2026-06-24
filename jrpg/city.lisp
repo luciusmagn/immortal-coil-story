@@ -214,25 +214,29 @@ make the city hard to read, and their labels overlap in the renderer."
   (list left top (+ left width -1) (+ top height -1) front))
 
 (defun jrpg-city-town-buildings (w h)
-  "Separated old-RPG town buildings. Keep the center open for a square and keep
-the north/south gates readable instead of producing a wall lattice."
+  "Separated old-RPG town buildings. Entrances face south because the renderer
+shows the front of a building on its lower edge; north-facing doors read as roof
+doors in this view."
   (let* ((small-w (max 5 (min 7 (floor w 5))))
          (large-w (max 6 (min 8 (floor w 4))))
          (top-y 2)
-         (middle-y (jrpg-city-clamp-y h (max 7 (floor h 2))))
-         (bottom-y (- h 4))
-         (right-small-left (- w small-w 3))
-         (right-large-left (- w large-w 5)))
+         (middle-y (jrpg-city-clamp-y h (max 6 (1- (floor h 2)))))
+         (bottom-limit (max 2 (- h 6)))
+         (bottom-y (jrpg-city-clamp-y
+                    h (min bottom-limit (max (+ middle-y 4) (- h 7)))))
+         (bottom-left (max 3 (- (floor w 2) large-w 2)))
+         (bottom-right (min (- w large-w 3) (+ (floor w 2) 2)))
+         (right-small-left (- w small-w 3)))
     (remove-if-not
      (lambda (building)
        (jrpg-city-building-valid-p w h building))
      (list
       (jrpg-city-building-rect 3 top-y small-w 3 :south)
       (jrpg-city-building-rect right-small-left top-y small-w 3 :south)
-      (jrpg-city-building-rect 2 middle-y small-w 3 :east)
-      (jrpg-city-building-rect right-small-left middle-y small-w 3 :west)
-      (jrpg-city-building-rect 5 bottom-y large-w 3 :north)
-      (jrpg-city-building-rect right-large-left bottom-y large-w 3 :north)))))
+      (jrpg-city-building-rect 2 middle-y small-w 3 :south)
+      (jrpg-city-building-rect right-small-left middle-y small-w 3 :south)
+      (jrpg-city-building-rect bottom-left bottom-y large-w 3 :south)
+      (jrpg-city-building-rect bottom-right bottom-y large-w 3 :south)))))
 
 (defun jrpg-city-open-gate (grid w h x top-p)
   (let ((y (if top-p 0 (1- h)))
@@ -343,6 +347,21 @@ stable building-front door slots. The seed only nudges nonessential details."
 ;; cobble is laid faintly underneath for paved texture, not a white wash
 (defvar *jrpg-city-floor-tint* (make-color 255 255 255 38))
 
+(defun jrpg-city-edge-cell-p (game x y)
+  (or (= x 0)
+      (= y 0)
+      (= x (1- (jrpg-overworld-width game)))
+      (= y (1- (jrpg-overworld-height game)))))
+
+(defun jrpg-city-door-cell-p (game x y)
+  (let ((cell (jrpg-overworld-cell game x y)))
+    (and (not (member cell '(#\# #\+ #\.) :test #'char=))
+         (not (jrpg-city-edge-cell-p game x y)))))
+
+(defun jrpg-city-building-door-below-p (game x y)
+  (and (< y (1- (jrpg-overworld-height game)))
+       (jrpg-city-door-cell-p game x (1+ y))))
+
 (defun jrpg-city-tile (atlas role sx sy &optional tint)
   "Draw the tile bound to ROLE (see *jrpg-tile-map* in jrpg/tiles.lisp) into the
 cell at SX,SY. Editing the tile map repoints these without touching code."
@@ -360,6 +379,8 @@ cell whose front faces the street gets a window, the rest is brick wall."
                            ((not (jrpg-city-building-p game (1+ mx) my)) :roof-right)
                            (t :roof-middle))
                      sx sy))
+    ((jrpg-city-building-door-below-p game mx my)
+     (jrpg-city-tile atlas :doorway sx sy))
     ((not (jrpg-city-building-p game mx (1+ my)))
      (jrpg-city-tile atlas :window sx sy))
     (t (jrpg-city-tile atlas :wall sx sy))))
@@ -370,6 +391,14 @@ cell whose front faces the street gets a window, the rest is brick wall."
   (jrpg-ow-fill (- cx 3) (- cy 4) 6 5 240)              ; lamp head
   (jrpg-ow-fill (- cx 1) (+ cy 1) 2 9 170)              ; post
   (jrpg-ow-fill (- cx 4) (+ cy 9) 8 2 120))             ; base
+
+(defun draw-jrpg-city-door-threshold (sx sy)
+  "Small passable marker under a doorway. The actual door is drawn on the lower
+face of the building cell above, so the player walks onto this tile to enter."
+  (let* ((s +jrpg-overworld-tile-size+)
+         (cx (+ sx (/ s 2))))
+    (jrpg-ow-fill (- cx 6) (+ sy 2) 12 2 210)
+    (jrpg-ow-fill (- cx 4) (+ sy 5) 8 2 90)))
 
 (defun draw-jrpg-city-cell-tile (game atlas cell sx sy mx my)
   (cond
@@ -388,7 +417,9 @@ cell whose front faces the street gets a window, the rest is brick wall."
            (progn
              (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*)
              (jrpg-city-tile atlas :gate sx sy))
-           (jrpg-city-tile atlas :doorway sx sy))))))
+           (progn
+             (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*)
+             (draw-jrpg-city-door-threshold sx sy)))))))
 
 (defun draw-jrpg-city-house-cell (game sx sy mx my)
   "Part of a house: a dark wall, with a lit roof eave and walls drawn only on
@@ -401,8 +432,13 @@ inner cells just fill. A window where the wall fronts the street."
          (rt (jrpg-city-building-p game (1+ mx) my)))
     (jrpg-ow-fill sx sy s s 58)                          ; wall fill
     (unless up (jrpg-ow-fill sx sy s 4 168))             ; lit roof eave
-    (unless dn (jrpg-ow-fill sx (+ sy s -2) s 2 120)     ; base sill
-               (jrpg-ow-fill (+ sx (/ s 2) -3) (+ sy 8) 6 6 150)) ; a window
+    (unless dn (jrpg-ow-fill sx (+ sy s -2) s 2 120))    ; base sill
+    (cond
+      ((jrpg-city-building-door-below-p game mx my)
+       (jrpg-ow-fill (+ sx (/ s 2) -5) (+ sy 6) 10 (- s 6) 190)
+       (jrpg-ow-fill (+ sx (/ s 2) -3) (+ sy 9) 6 (- s 10) 55))
+      ((not dn)
+       (jrpg-ow-fill (+ sx (/ s 2) -3) (+ sy 8) 6 6 150))) ; a window
     (unless lf (jrpg-ow-fill sx sy 2 s 112))             ; left wall
     (unless rt (jrpg-ow-fill (+ sx s -2) sy 2 s 112))))  ; right wall
 
@@ -435,8 +471,7 @@ name plate is drawn later, in its own pass, so it always sits on top."
           (jrpg-ow-fill (- cx 9) (+ sy 4) 18 (- s 4) 210)
           (jrpg-ow-fill (- cx 7) (+ sy 7) 14 (- s 7) 60))
         (progn                                           ; an interior doorway
-          (jrpg-ow-fill (- cx 5) (+ sy 6) 10 (- s 6) 190)
-          (jrpg-ow-fill (- cx 3) (+ sy 9) 6 (- s 10) 55)))))
+          (draw-jrpg-city-door-threshold sx sy)))))
 
 (defun draw-jrpg-city-door-label (game sx sy mx my name)
   "The floating name plate. It sits above the door but drops below it when the
