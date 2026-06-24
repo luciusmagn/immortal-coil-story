@@ -22,11 +22,11 @@
                  :config '(:duration 9.0 :breath-rise 0.09))
 
 (dialog-text "lightsout/passed"
-             "it passes the way a barge passes a swimmer: a long displacement, a smell of cold wax and old fur, and the floor's count of your heartbeats. then the draft resumes, and the warm wall eases under your hand, and you both go on."
+             "it passes close enough to move the air around you. cold wax. old fur. the floor counts your heartbeats. then the draft resumes, and the warm wall eases under your hand, and you both go on."
              :next "lightsout/middles")
 
 (dialog-text "lightsout/brushed"
-             "it slows beside you. something at coat height takes one breath of you, files the result, and moves on, unhurried, having found you to be exactly what the inventory says. being known is the toll."
+             "it slows beside you. something at coat height takes one breath of you, files the result, and moves on. you are known and released."
              :next "lightsout/brushed-2")
 
 (dialog-text "lightsout/brushed-2"
@@ -205,7 +205,7 @@
              :next "lightsout/fed-after")
 
 (dialog-text "lightsout/fed-after"
-             "the change is immediate and impossible to point at: the dark around you goes from standing to sitting. the corridor's pressure eases off your ears."
+             "the pressure eases off your ears at once. the warm wall settles under your hand."
              :next "lightsout/fed-after-s2")
 
 (dialog-text "lightsout/fed-after-s2"
@@ -217,11 +217,11 @@
              :next "lightsout/walked-up")
 
 (dialog-text "lightsout/walked-up"
-             "the dark walks you back personally."
+             "you start back with one hand on the warm wall."
              :next "lightsout/walked-up-2")
 
 (dialog-text "lightsout/walked-up-2"
-             "there is no other way to put it. the warm wall on one side, a new warmth on the other. the corridor unrolls underfoot at exactly your stride. doors arrive when expected. the draft holds your bearing for you, steady on the same cheek the whole way."
+             "a second warmth keeps pace on your other side. you count the doors by touch and miss none. the draft stays on the same cheek the whole way."
              :next "lightsout/bracket-relit")
 
 (dialog-on-enter "lightsout/feed-nothing"
@@ -284,9 +284,9 @@
              :next "lightsout/sight-back")
 
 (dialog-text "lightsout/sight-back"
-             "sight comes back the way feeling comes back to a slept-on arm: in pins, in stages, embarrassingly grateful."
+             "sight returns in pieces: torch bracket, floor line, door edge, your hand on stone."
              :next "lightsout/sight-back-2")
 
 (dialog-text "lightsout/sight-back-2"
-             "the row of doors stands where your count put them, every one, and you look at the corridor you crossed blind, and it is shorter than it was, and longer than it looks, and yours now. you have been here in the dark."
+             "the row of doors stands where your count put it. you crossed it blind. you know it now by hand."
              :next "rogue/stair-hunt")

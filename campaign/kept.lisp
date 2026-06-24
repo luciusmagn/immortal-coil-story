@@ -42,7 +42,7 @@
              :next "kept/first-night")
 
 (dialog-text "kept/first-night"
-             "the first night you lie awake cataloguing, and the cell offers you its sounds one at a time, politely, like exhibits: a clock without hands, the curtain on the far side of the window, a stair pretending to be longer than it is."
+             "the first night you lie awake and catalogue the cell: a clock without hands, the curtain on the far side of the window, and a stair whose third step sounds too late."
              :next "kept/visiting")
 
 (dialog-scene "kept/visiting"
@@ -69,7 +69,7 @@
             :next "kept/cup-questions")
 
 (dialog-interrogation "kept/cup-questions"
-                      "the tea steams between you and the cup waits, with the patience of something that has nowhere it would rather be."
+                      "the tea steams between you."
                       (:next "kept/tea-ceremony")
                       (:continue-label "pour the first cup")
                       ("ask what it testified to"
@@ -125,11 +125,11 @@
              :next "kept/weather-s2")
 
 (dialog-text "kept/weather-s2"
-             "once, in some june, a full summer afternoon folded like linen, which you wore around your shoulders until it went through."
+             "once, in some june, the tray holds a summer afternoon: heat, flies, and the smell of cut grass."
              :next "kept/weather-after")
 
 (dialog-text "kept/weather-after"
-             "you learn to ration the weather the way the district rationed flour. then you stop. you do not know where that thought comes from. the cell pretends not to have heard it. that is the cell at its kindest."
+             "you learn to ration the weather the way the district rationed flour. then you stop. you do not know where that thought comes from. the cell is quiet."
              :next "kept/smell-jar")
 
 (dialog-text "kept/smell-jar"
@@ -145,7 +145,7 @@
              :next "kept/jar-after-2")
 
 (dialog-text "kept/jar-after-2"
-             "it has the furniture right and the smell wrong, and you sit with that until the corridor brings you its evening sounds, and the cell, to its credit, does not pretend the jar did not happen."
+             "it has the furniture right and the smell wrong. you sit with that until the corridor brings its evening sounds."
              :next "kept/first-appeal")
 
 (dialog-scene "kept/first-appeal"
@@ -153,7 +153,7 @@
               :next "kept/appeal-room")
 
 (dialog-text "kept/appeal-room"
-             "the appeal is heard in the same court, which has been redecorated, being moved. you are walked up through the corridor of verdicts, and the frames nod as you pass, very slightly, which frames learn to do where dusting is regular."
+             "the appeal is heard in the same court, rearranged for the hearing. you are walked up through the corridor of verdicts. the frames have been dusted."
              :next "kept/appeal-hearing")
 
 (dialog-say "kept/appeal-hearing"
@@ -196,7 +196,7 @@
              :next "kept/twelfth-frame-s2")
 
 (dialog-text "kept/twelfth-frame-s2"
-             "nobody has ever hung anything else in it. it is the most patient thing in the building, and the building contains the court."
+             "nobody has ever hung anything else in it. the dust line around the empty mat is exact."
              :next "kept/years")
 
 (dialog-scene "kept/years"
@@ -223,7 +223,7 @@
 
 (dialog-say "kept/neighbor-visit-3"
             "the defendant from the queue"
-            "longer going up. it pretends, you know. they all pretend. yours taps, i hear. mine creaks on the third step out of sympathy. we are luckier than the ones whose furniture says nothing."
+            "longer going up. the third step creaks after your foot has left it. yours taps, i hear. we are luckier than the ones whose furniture says nothing."
             :next "kept/seedlings-grown")
 
 (dialog-text "kept/seedlings-grown"
@@ -239,7 +239,7 @@
              :next "kept/clock-s3")
 
 (dialog-text "kept/clock-s3"
-             "clocks have one expression more than people think."
+             "you do not mention this to the cup."
              :next "kept/tap-one")
 
 (dialog-text "kept/tap-one"
@@ -339,7 +339,7 @@
 
 (dialog-say "kept/writ-read"
             "the card judge"
-            "the room moves for the return of its keeper, on the grounds that the glass has been filled by strangers for years, and is full, and has never once been drunk."
+            "the room petitions for the return of its keeper, on the grounds that the glass has been filled by strangers for years, and is full, and has never once been drunk."
             :next "kept/writ-read-s2")
 
 (dialog-say "kept/writ-read-s2"
@@ -349,7 +349,7 @@
 
 (dialog-say "kept/recusal"
             "the card judge"
-            "before the court rules on the writ, the court must disclose: the court is moved. the court has been moved for years. a moved court cannot rule, and so, for the first time in its records, the court asks the defendant how this should end."
+            "before the court rules on the writ, the court must disclose a conflict. the court is affected. it has been affected for years. for the first time in its records, the court asks the defendant how this should end."
             :next "kept/choice")
 
 (dialog-pick "kept/choice"
@@ -366,7 +366,7 @@
              :next "kept/go-home-s2")
 
 (dialog-text "kept/go-home-s2"
-             "the corridor of verdicts bows you out frame by frame, and the garden opens its gate without being asked, and the room receives you the way rooms do: by being exactly where you left it, with the water poured, and no questions, ever, about the years."
+             "the bailiff walks you past the verdicts and through the garden gate. the room is where you left it. the water is poured."
              :next "kept/corridor-last")
 
 (dialog-on-enter "kept/stay"
@@ -388,11 +388,11 @@
                  '(setf (dialog-value "kept-end") "summoned"))
 
 (dialog-text "kept/summon"
-             "you ask the room to come in, and the court holds its breath. behind the witness chair, where everyone has avoided looking, there is a curtained window set into the back wall, and a door beside it."
+             "you ask the room to come in. behind the witness chair, where everyone has avoided looking, there is a curtained window set into the back wall, and a door beside it."
              :next "kept/summon-2")
 
 (dialog-text "kept/summon-2"
-             "then the room is there, fitting inside the court the way the court once fit inside it, and you walk in, and it closes around you like a verdict going your way."
+             "you open the door. the room is beyond it: bed, night stand, glass. you walk in and shut the door behind you."
              :next "kept/cups-row")
 
 (dialog-text "kept/cups-row"
@@ -412,5 +412,5 @@
              :next "kept/end")
 
 (dialog-text "kept/end"
-             "the sill doors come with you, wherever you have ended, four small numbered things leaning into whatever light there is, and sleep arrives the way the bailiff once did: offering its arm."
+             "the sill doors come with you, wherever you have ended, four small numbered things leaning into whatever light there is. you sleep before the glass empties."
              :next "sys/reboot")

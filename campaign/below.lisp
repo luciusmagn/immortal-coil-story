@@ -8,7 +8,7 @@
              :next "below/stairs")
 
 (dialog-text "below/stairs"
-             "the white lines of the dungeon run down the stairwell with you and, somewhere in the dark, change their minds: by the first turning they are ruled lines, faint blue, margin-red at the left hand."
+             "the white lines of the dungeon run down the stairwell with you. by the first turning they are ruled lines, faint blue, margin-red at the left hand."
              :next "below/stairs-2")
 
 (dialog-text "below/stairs-2"
@@ -16,7 +16,7 @@
              :next "below/shelves")
 
 (dialog-text "below/shelves"
-             "the walls become shelving without admitting a seam. ledgers, spine out, floor to dark, each spine chalked in the tidy clerk's hand. the shelving goes on past the torch in both directions. it is silent down here, the deep silence of paper."
+             "shelving lines the walls: ledgers, spine out, floor to dark, each spine chalked in the tidy clerk's hand. the shelving goes on past the torch in both directions. it is silent down here."
              :next "below/tally-wall")
 
 (dialog-text "below/tally-wall"
@@ -84,7 +84,7 @@
              :next "below/clay-s2")
 
 (dialog-text "below/clay-s2"
-             "you cannot read it. a building's first minute only ever says one thing: expected."
+             "you cannot read it. the clerk can. he has copied one word under it in chalk: EXPECTED."
              :next "below/delve")
 
 (dialog-minigame "below/delve"
@@ -136,15 +136,15 @@
              :next "below/lamp-floor")
 
 (dialog-text "below/turned-back"
-             "the ramps refuse to add up and you fetch back against the tally wall twice, which down here is how a building says no. when you stop, the lamp smell is closer anyway."
+             "you lose the ramps twice and come back against the tally wall. when you stop, the lamp smell is closer anyway."
              :next "below/turned-back-2")
 
 (dialog-text "below/turned-back-2"
-             "the floors move the destination instead of the traveler when the traveler is wanted. it is more efficient."
+             "new chalk arrows mark the lower ramp. they point down. somebody has made the route plain."
              :next "below/lamp-floor")
 
 (dialog-text "below/lamp-floor"
-             "the bottom floor of the stacks is one room wide and all desk: a single lamp, a single chair for visitors, and the clerk, in person, mid-line, who finishes the line before looking up, because the line is about you arriving and it would be wrong twice if interrupted."
+             "the bottom floor of the stacks is one room wide and all desk: a single lamp, a single chair for visitors, and the clerk, in person. he finishes the line before looking up. the line is about you arriving."
              :next "below/clerk")
 
 (dialog-say "below/clerk"
@@ -159,7 +159,7 @@
 
 (dialog-say "below/clerk-3"
             "the clerk"
-            "somebody has to. a dungeon is a building that has decided to keep happening. the deciding takes minutes. the minutes are these. sit, i said. the chair is for sitting, not for symbolism."
+            "somebody has to. a dungeon runs on minutes. these are the minutes. sit, i said. the chair is for sitting, not for symbolism."
             :next "below/clerk-questions")
 
 (dialog-interrogation "below/clerk-questions"
@@ -192,7 +192,7 @@
              :next "below/your-book")
 
 (dialog-text "below/your-book"
-             "your book is already on the desk, fetched ahead of you, because the floors move what is wanted."
+             "your book is already on the desk. the clerk fetched it before you arrived."
              :next "below/your-book-s2")
 
 (dialog-text "below/your-book-s2"
@@ -208,7 +208,7 @@
              :next "below/ask-choice")
 
 (dialog-pick "below/ask-choice"
-             "the lamp hisses gently. in the walls, the pair holds still, listening the way ledgers listen."
+             "the lamp hisses gently. in the walls, the pair holds still."
              (dialog-option "ask to be unlogged" "below/unlogged")
              (dialog-option "ask to read your ending" "below/ending")
              (dialog-option "take the book and go" "below/take-book"))
@@ -301,7 +301,7 @@
              :next "below/escort")
 
 (dialog-text "below/escort"
-             "when it is time, the clerk stands, caps the pen, and the pair in the walls falls in, one each side, and the floors fold the ramps short for you, which is the building being polite."
+             "when it is time, the clerk stands, caps the pen, and the pair in the walls falls in, one each side. he takes the short ramps up, a service way you did not see on the descent."
              :next "below/escort-s2")
 
 (dialog-text "below/escort-s2"
