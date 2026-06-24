@@ -17,11 +17,11 @@
               :next "armistice/no-bell")
 
 (dialog-text "armistice/no-bell"
-             "at eight o'clock the bell does not ring. that is the whole of it. no treaty read aloud, no flags. an absence of bell, and the building standing inside the absence, listening with its entire staff."
+             "at eight o'clock the bell does not ring. no treaty is read aloud. no flags appear. clerks stand in the corridors and wait for the sound that does not come."
              :next "armistice/corridor")
 
 (dialog-text "armistice/corridor"
-             "the corridors fill with people who have stopped walking. clerks stand with folders against their chests, looking up, the way you look up at weather."
+             "the corridors fill with people who have stopped walking. clerks stand with folders against their chests and look up at the ceiling."
              :next "armistice/corridor-s2")
 
 (dialog-text "armistice/corridor-s2"
@@ -33,7 +33,7 @@
              :next "armistice/second-minute-s2")
 
 (dialog-text "armistice/second-minute-s2"
-             "the building begins, room by room, to remember its windows."
+             "room by room, the covered windows are opened."
              :next "armistice/tape")
 
 (dialog-text "armistice/tape"
@@ -49,7 +49,7 @@
              :next "armistice/map-room-2")
 
 (dialog-text "armistice/map-room-2"
-             "Olen stands at the map at attention, punctual to the last morning, and he is weeping, without noise, without moving, the way a wall sheds rain."
+             "Olen stands at the map at attention, punctual to the last morning. he is weeping without noise."
              :next "armistice/sorel-line")
 
 (dialog-say "armistice/sorel-line"
@@ -146,7 +146,7 @@
                        :id "map"
                        :speaker "Olen"
                        "like setting down a weight you forgot was yours. my hands keep reaching for it. i am told that fades. i am told a great many things fade, starting today.")
-                      ("ask whether the window feels like a weakness"
+                      ("ask whether the window worries him"
                        :id "window"
                        :speaker "Olen"
                        "for four years a window was where a shell came through. i must learn it as where light comes through. the river will help. it is patient about being only a river.")
@@ -160,11 +160,11 @@
              :next "armistice/vey-2")
 
 (dialog-text "armistice/vey-2"
-             "Vey turns with the wind, and the wind has changed. it is a comfort to watch."
+             "Vey has already begun the next administration. you leave him to it."
              :next "armistice/coat")
 
 (dialog-text "armistice/coat"
-             "you walk out the front entrance without your coat, which you have not done in four years. the sentries have stopped being sentries."
+             "you walk out the front entrance without your coat, which you have not done in four years. the sentries are not at attention."
              :next "armistice/coat-s2")
 
 (dialog-text "armistice/coat-s2"
@@ -184,15 +184,15 @@
              :next "armistice/street-2")
 
 (dialog-text "armistice/street-2"
-             "a woman you have never met hands you a cup of something hot and keeps moving, supplying the crowd by instinct, the whole city one kitchen."
+             "a woman you have never met hands you a cup of something hot and keeps moving. she does not ask who takes the next one."
              :next "armistice/unrecognized")
 
 (dialog-text "armistice/unrecognized"
-             "nobody knows you without the coat. you stand in your own capital holding a borrowed cup, one face in the crowd. it feels like being forgiven. you know better than to trust that. you take it anyway, for the one morning. the column is closed."
+             "nobody knows you without the coat. you stand in your own capital holding a borrowed cup, one face in the crowd. for one morning, no one asks your name. you know better than to trust it. you drink."
              :next "armistice/bells-other")
 
 (dialog-text "armistice/bread-queue"
-             "outside the baker's, the queue has stopped being a queue and become a party that happens to be shaped like one."
+             "outside the baker's, the queue still holds its line, but nobody is quiet. people pass bread backward over their shoulders and sing the same two lines badly."
              :next "armistice/bread-queue-2")
 
 (dialog-text "armistice/bread-queue-2"
