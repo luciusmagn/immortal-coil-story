@@ -495,7 +495,7 @@
                  '(setf (dialog-value "alice-thread-pocket") t))
 
 (dialog-text "alice/cups-last"
-             "behind you, faint and final as a clock in another room, you hear the long table being cleared: every cup turned back over, one by one, in no hurry, by someone who knows exactly how many there are."
+             "behind you, in another room, you hear the long table being cleared: every cup turned back over, one by one, in no hurry, by someone who knows exactly how many there are."
              :next "alice/stairwell-up")
 
 (dialog-text "alice/stairwell-up"
@@ -875,7 +875,7 @@
              :next "rogue/pillow-s2")
 
 (dialog-text "rogue/pillow-s2"
-             "inside the cover is a tally in pencil, the same clerk's hand as everywhere else down here, and one struck mark has been gone over twice, the way you redraw a line you wish you had not had to make."
+             "inside the cover is a tally in pencil, the same clerk's hand as everywhere else down here. one struck mark has been gone over twice."
              :next "rogue/sleep")
 
 (dialog-text "rogue/hands"
@@ -933,7 +933,7 @@
       "rogue/wall-bare"))
 
 (dialog-text "rogue/climb"
-             "you take the stairs up past the carved name, two floors of worn stone. on the second landing, the thing in the wall picks you up again, matching steps, patient as bookkeeping."
+             "you take the stairs up past the carved name, two floors of worn stone. on the second landing, the thing in the wall picks you up again, matching steps."
              :next #'rogue-companion-wall-target)
 
 (dialog-text "rogue/wall-sword"

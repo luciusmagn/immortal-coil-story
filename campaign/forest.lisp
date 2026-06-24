@@ -394,7 +394,7 @@
                  '(setf (dialog-value "forest-call") "tag"))
 
 (dialog-text "forest/tag-number"
-             "under RETURN IF FOUND, under the name, there is a number. you dial it. it rings twice, and a voice you know from the hall of the house says, calm as housework, that you can come home now."
+             "under RETURN IF FOUND, under the name, there is a number. you dial it. it rings twice. the voice from the hall of the house says you can come home now."
              :next "forest/store-night")
 
 (dialog-on-enter "forest/no-call"
@@ -567,7 +567,7 @@
                  '(setf (dialog-value "forest-porch") "returned"))
 
 (dialog-text "forest/go-down"
-             "you walk down. they hold the door the way it has always been held for you. the warmth inside smells like every winter you can remember. that is the problem with it."
+             "you walk down. they hold the door open for you. the warmth inside smells of every winter you can remember."
              :next "house/inside")
 
 (dialog-on-enter "forest/stay-still"

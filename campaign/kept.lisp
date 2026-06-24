@@ -396,7 +396,7 @@
              :next "kept/cups-row")
 
 (dialog-text "kept/cups-row"
-             "as the court empties, the cups file past you in a row, each pausing at your shoulder for the length of a steep. that, from a cup, is an embrace."
+             "as the court empties, the cups file past you in a row. each pauses at your shoulder for the length of a sip."
              :next "kept/cups-row-s2")
 
 (dialog-text "kept/cups-row-s2"

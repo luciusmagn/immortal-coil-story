@@ -241,7 +241,7 @@
              :next "armistice/windows-2")
 
 (dialog-text "armistice/windows-2"
-             "the building exhales four years of paper and blackout cloth and kept breath, and the drafts run the corridors like children, and by the top floor the two of you are racing, and he wins, and you contest the result, and lose the appeal."
+             "the building exhales four years of paper and blackout cloth and kept breath. the drafts run the corridors. by the top floor the two of you are racing, and he wins, and you contest the result, and lose the appeal."
              :next "armistice/evening")
 
 (dialog-on-enter "armistice/walk-district"
@@ -252,7 +252,7 @@
              :next "armistice/walk-district-2")
 
 (dialog-text "armistice/walk-district-2"
-             "not torn: taken down, folded, kept, the way you keep a thing you intend to be done with on your own terms."
+             "not torn: taken down, folded, kept in neat stacks."
              :next "armistice/district-bell")
 
 (dialog-text "armistice/district-bell"
@@ -267,7 +267,7 @@
                  '(setf (dialog-value "armistice-first") "slept"))
 
 (dialog-text "armistice/bed"
-             "you go home, to the flat that has technically been yours all along, and sleep in a bed, in daylight, with the window open and the street noise coming in like surf."
+             "you go home, to the flat that has technically been yours all along, and sleep in a bed, in daylight, with the window open and the street noise coming in."
              :next "armistice/bed-2")
 
 (dialog-text "armistice/bed-2"

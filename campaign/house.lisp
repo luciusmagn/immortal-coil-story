@@ -113,11 +113,11 @@
              :next "house/cot-tag")
 
 (dialog-text "house/cot-tag"
-             "the tag's ink has run, like yours. RETURN IF FOUND, and under it a name that is not {forest-tag-name}, in the same round patient hand, and under the name the same number, the one that answers calm as housework on the second ring."
+             "the tag's ink has run, like yours. RETURN IF FOUND, and under it a name that is not {forest-tag-name}, in the same round patient hand, and under the name the same number, the one that answers on the second ring."
              :next "house/night-choice")
 
 (dialog-pick "house/night-choice"
-             "downstairs, a bell rings once, softly, the way you ring a bell for someone you are sure will come."
+             "downstairs, a bell rings once, softly."
              (dialog-option "go down and ask about the cot" "house/ask-cot")
              (dialog-option "say nothing. eat. sleep" "house/quiet-night")
              (dialog-option "wait, then search the house" "house/search"))
@@ -384,7 +384,7 @@
             :next "house/mirror-after")
 
 (dialog-text "house/mirror-after"
-             "he goes off through the pines, quiet and practiced, and does not look back, and you stand by the creek with your scrubbed hands out from your sides like things you are carrying for someone else."
+             "he goes off through the pines, quiet and practiced, and does not look back. you stand by the creek with your scrubbed hands held away from your sides."
              :next "house/mirror-after-2")
 
 (dialog-text "house/mirror-after-2"

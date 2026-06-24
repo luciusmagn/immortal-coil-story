@@ -60,7 +60,7 @@
              :next "below/two-walls")
 
 (dialog-text "below/two-walls"
-             "and the pacing finds you again, in the left wall, patient as bookkeeping."
+             "the pacing finds you again in the left wall. it keeps pace."
              :next "below/two-walls-s2")
 
 (dialog-text "below/two-walls-s2"
