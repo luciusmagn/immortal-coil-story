@@ -56,67 +56,140 @@ three cells, so ranges read as ranges and not scatter."
       (setf x (max 1 (min (- w 2) x))
             y (max 1 (min (- h 2) y))))))
 
+(defun jrpg-gen-road-route (grid w h points)
+  "Carve a readable one-tile RPG road through POINTS, returning its cells in
+travel order. The route favors horizontal progress but bends at authored-feeling
+control points instead of wandering like noise."
+  (let ((road nil)
+        (x (first (first points)))
+        (y (second (first points))))
+    (labels ((mark-road ()
+               (setf (aref grid y x) #\,)
+               (unless (member (list x y) road :test #'equal)
+                 (push (list x y) road)))
+             (step-axis (horizontal-p tx ty)
+               (if horizontal-p
+                   (incf x (if (< x tx) 1 -1))
+                   (incf y (if (< y ty) 1 -1)))
+               (setf x (max 1 (min (- w 2) x))
+                     y (max 1 (min (- h 2) y)))))
+      (mark-road)
+      (dolist (target (rest points))
+        (destructuring-bind (tx ty) target
+          (setf tx (max 1 (min (- w 2) tx))
+                ty (max 1 (min (- h 2) ty)))
+          (loop until (and (= x tx) (= y ty))
+                do (let ((move-x (and (/= x tx)
+                                      (or (= y ty)
+                                          (plusp (get-random-value 0 2))))))
+                     (step-axis move-x tx ty)
+                     (mark-road)))))
+      (nreverse road))))
+
+(defun jrpg-gen-road-cell-p (road x y)
+  (member (list x y) road :test #'equal))
+
+(defun jrpg-gen-region (grid w h cx cy radius-x radius-y glyph avoid)
+  "Paint an oval-ish terrain region around CX,CY, sparing AVOID glyphs."
+  (loop for y from (- cy radius-y) to (+ cy radius-y)
+        do (loop for x from (- cx radius-x) to (+ cx radius-x)
+                 when (and (< 0 x (1- w))
+                           (< 0 y (1- h))
+                           (<= (+ (/ (expt (- x cx) 2)
+                                     (max 1 (expt radius-x 2)))
+                                  (/ (expt (- y cy) 2)
+                                     (max 1 (expt radius-y 2))))
+                               1.25)
+                           (not (member (aref grid y x) avoid :test #'char=)))
+                   do (setf (aref grid y x) glyph))))
+
+(defun jrpg-gen-road-bridge (grid w h road)
+  "Draw a north-south river crossing the road once, bridged on the route."
+  (let* ((bridge (nth (max 1 (min (1- (length road))
+                                  (floor (* (length road) 2) 3)))
+                      road))
+         (bridge-x (first bridge))
+         (bridge-y (second bridge))
+         (river-x bridge-x))
+    (loop for y from 1 below (1- h)
+          do (progn
+               (unless (= y bridge-y)
+                 (incf river-x (get-random-value -1 1)))
+               (setf river-x (max 2 (min (- w 3) river-x)))
+               (loop for dx from -1 to 1
+                     for x = (+ river-x dx)
+                     when (and (< 0 x (1- w))
+                               (not (jrpg-gen-road-cell-p road x y))
+                               (not (member (aref grid y x) '(#\! #\R #\T #\S)
+                                            :test #'char=)))
+                       do (setf (aref grid y x) #\~))))
+    (setf (aref grid bridge-y bridge-x) #\B)))
+
+(defun jrpg-gen-road-pickups (grid w h road count)
+  (let ((placed 0))
+    (dolist (cell road)
+      (when (< placed count)
+        (destructuring-bind (rx ry) cell
+          (let ((ox (max 1 (min (- w 2) (+ rx (get-random-value -2 2)))))
+                (oy (max 1 (min (- h 2) (+ ry (get-random-value -1 1))))))
+            (when (and (char= (aref grid oy ox) #\.)
+                       (zerop (get-random-value 0 5)))
+              (setf (aref grid oy ox)
+                    (if (zerop (get-random-value 0 1)) #\$ #\o))
+              (incf placed))))))))
+
 (defun jrpg-gen-overworld (w h finish-glyph waypoints)
-  "Returns (values rows start-x start-y). A coherent FF-style overworld: grass
-plains, a winding ROAD from the west edge to the finish (always passable),
-mountain ridges and forest patches and a lake set OFF the road, the occurrence's
-landmarks strung along it. Generated fresh each entry."
+  "Returns (values rows start-x start-y). A coherent FF-style overworld:
+readable plains, a main road, one bridged river, mountain ranges, forest belts,
+lakes, and landmarks placed along the road. Generated fresh each entry."
   (let* ((grid (make-array (list h w) :initial-element #\.))
-         (sx 1) (sy (floor h 2))
-         (fx (- w 2)) (fy (floor h 2))
-         (road nil) (x sx) (y sy))
-    ;; 1. carve a winding road (the guaranteed path), marked #\,
-    (setf (aref grid y x) #\,)
-    (push (list x y) road)
-    (loop repeat (* w h)
-          while (or (/= x fx) (/= y fy))
-          do (let ((choices nil))
-               (cond ((< x fx) (dotimes (k 3) (push (cons 1 0) choices)))
-                     ((> x fx) (push (cons -1 0) choices)))
-               (cond ((< y fy) (push (cons 0 1) choices))
-                     ((> y fy) (push (cons 0 -1) choices)))
-               (push (if (zerop (get-random-value 0 1)) (cons 0 1) (cons 0 -1)) choices)
-               (let ((step (nth (get-random-value 0 (1- (length choices))) choices)))
-                 (setf x (max 1 (min (- w 2) (+ x (car step))))
-                       y (max 1 (min (- h 2) (+ y (cdr step)))))
-                 (setf (aref grid y x) #\,)
-                 (push (list x y) road))))
-    (loop while (/= x fx) do (incf x (if (< x fx) 1 -1))
-                             (setf (aref grid y x) #\,) (push (list x y) road))
-    (loop while (/= y fy) do (incf y (if (< y fy) 1 -1))
-                             (setf (aref grid y x) #\,) (push (list x y) road))
-    (setf road (nreverse road))
-    ;; 2. ranges, forests, a lake - coherent regions, all sparing the road
+         (sx 1)
+         (sy (max 2 (min (- h 3) (+ (floor h 2) (get-random-value -2 2)))))
+         (fx (- w 2))
+         (fy (max 2 (min (- h 3) (+ (floor h 2) (get-random-value -2 2)))))
+         (road (jrpg-gen-road-route
+                grid w h
+                (list (list sx sy)
+                      (list (floor w 4)
+                            (max 2 (min (- h 3)
+                                        (+ (floor h 2) (get-random-value -3 3)))))
+                      (list (floor w 2)
+                            (max 2 (min (- h 3)
+                                        (+ (floor h 2) (get-random-value -4 4)))))
+                      (list (floor (* 3 w) 4)
+                            (max 2 (min (- h 3)
+                                        (+ (floor h 2) (get-random-value -3 3)))))
+                      (list fx fy)))))
+    ;; 1. terrain regions, all sparing the guaranteed route
+    (jrpg-gen-road-bridge grid w h road)
     (dotimes (i (max 2 (floor w 14)))
-      (jrpg-gen-ridge grid w h (floor w 2) '(#\,)))
+      (jrpg-gen-ridge grid w h (floor w 2) '(#\, #\B)))
     (dotimes (i (max 3 (floor (* w h) 90)))
-      (jrpg-gen-blob grid w h (get-random-value 2 (- w 3)) (get-random-value 2 (- h 3))
-                     (get-random-value 6 16) #\f '(#\, #\^ #\~)))
-    (dotimes (i (max 1 (floor w 22)))
-      (jrpg-gen-blob grid w h (get-random-value 2 (- w 3)) (get-random-value 2 (- h 3))
-                     (get-random-value 10 24) #\~ '(#\, #\^)))
-    ;; 3. landmarks (towns) strung along the road
-    (let ((n (length road)) (k (length waypoints)))
+      (jrpg-gen-region grid w h
+                       (get-random-value 2 (- w 3))
+                       (get-random-value 2 (- h 3))
+                       (get-random-value 2 4)
+                       (get-random-value 1 3)
+                       #\f '(#\, #\B #\^ #\~)))
+    (dotimes (i (max 1 (floor w 24)))
+      (jrpg-gen-region grid w h
+                       (get-random-value 3 (- w 4))
+                       (get-random-value 2 (- h 3))
+                       (get-random-value 2 4)
+                       (get-random-value 1 2)
+                       #\~ '(#\, #\B #\^)))
+    ;; 2. landmarks strung along the road after terrain is set
+    (let ((n (length road))
+          (k (length waypoints)))
       (loop for wp in waypoints
             for i from 1
             for idx = (min (1- n) (max 1 (floor (* i n) (1+ k))))
             do (destructuring-bind (wx wy) (nth idx road)
                  (setf (aref grid wy wx) wp))))
-    ;; 4. finish, and the start on the road
+    ;; 3. finish, start, and a few pickups near the route
     (setf (aref grid fy fx) finish-glyph
           (aref grid sy sx) #\,)
-    ;; 5. a few pickups on open grass beside the road
-    (let ((placed 0))
-      (dolist (cell road)
-        (when (< placed 5)
-          (destructuring-bind (rx ry) cell
-            (let ((ox (max 1 (min (- w 2) (+ rx (get-random-value -2 2)))))
-                  (oy (max 1 (min (- h 2) (+ ry (get-random-value -1 1))))))
-              (when (and (char= (aref grid oy ox) #\.)
-                         (zerop (get-random-value 0 6)))
-                (setf (aref grid oy ox)
-                      (if (zerop (get-random-value 0 1)) #\$ #\o))
-                (incf placed)))))))
+    (jrpg-gen-road-pickups grid w h road 5)
     (values (jrpg-gen-rows grid) sx sy)))
 
 (defun jrpg-gen-street-open (grid w h x y)
