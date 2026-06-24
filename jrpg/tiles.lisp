@@ -17,19 +17,22 @@
 ;;; The game reads these live; restart the game to see edits.
 ;;; ----------------------------------------------------------------------------
 
+;; The roles now index assets/tiles/dawnlike-mono.png (see assets/tiles/CREDITS.md),
+;; a small composited DawnLike atlas. The *jrpg-tile-map* catalog further down
+;; still documents the old Kenney sheet, which now backs only the Scene Builder.
 (defparameter *jrpg-tile-roles*
-  ;; role         col row   (real tiles, identified in the Scene Builder)
-  '((:floor         8  1)   ; faint street ground
-    (:wall          6 13)   ; brick wall
-    (:wall-top      6 12)   ; old roof, middle (default; edges use the L/R pieces)
-    (:roof-left     5 12)
-    (:roof-middle   6 12)
-    (:roof-right    7 12)
-    (:window        5 13)   ; brick wall with a window
-    (:doorway       4 13)   ; brick wall entrance / door
-    (:gate         39  4)   ; tall double door (the rim exit)
-    (:lamp         42  3)   ; torch
-    (:player       29  9)))
+  ;; role         col row   (dawnlike-mono.png)
+  '((:floor         1  0)   ; paved tile, drawn faint as street ground
+    (:wall          0  0)   ; brick face
+    (:wall-top      0  0)   ; brick - a top-down block shares one brick for
+    (:roof-left     0  0)   ; roof/wall/window until wall autotiling lands
+    (:roof-middle   0  0)
+    (:roof-right    0  0)
+    (:window        0  0)
+    (:doorway       2  0)   ; interior door
+    (:gate          3  0)   ; portcullis (the rim exit)
+    (:lamp          4  0)   ; candle
+    (:player        5  0)))
 
 (defun jrpg-tile-coords (role)
   "Return (values col row) for ROLE from *jrpg-tile-roles*; (0 0) if unset."

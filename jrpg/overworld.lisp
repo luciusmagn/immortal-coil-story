@@ -724,7 +724,7 @@ clamped to the map edges."
 ;;; PNG is absent, so callers fall back to drawn shapes.
 
 (defconstant +jrpg-tile-px+ 16)
-(defconstant +jrpg-tile-crop+ 1) ; match Scene Builder: drop atlas border pixels
+(defconstant +jrpg-tile-crop+ 0) ; DawnLike tiles are tight 16px - no border to crop
 
 (defvar *jrpg-tile-atlas* nil)
 
@@ -738,7 +738,7 @@ clamped to the map edges."
     ((eq *jrpg-tile-atlas* :none) nil)
     (*jrpg-tile-atlas* *jrpg-tile-atlas*)
     (t
-     (let ((path (project-pathname "assets/tiles/kenney-1bit-mono.png")))
+     (let ((path (project-pathname "assets/tiles/dawnlike-mono.png")))
        (handler-case
            (if (probe-file path)
                (let* ((asset (make-texture-asset path :load-now t))
