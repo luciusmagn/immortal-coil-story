@@ -606,7 +606,7 @@
              :next "rogue/armory-s2")
 
 (dialog-text "rogue/armory-s2"
-             "the whetstone beside it is worn to a wafer, and the oil rag is folded in thirds over the rack arm, damp side in, the way someone folds who expects to need it again soon and does not expect to be thanked."
+             "the whetstone beside it is worn to a wafer. the oil rag is folded in thirds over the rack arm, damp side in."
              :next "rogue/armory-choice")
 
 (dialog-pick "rogue/armory-choice"
@@ -654,7 +654,7 @@
                  '(setf (dialog-value "rogue-drank") t))
 
 (dialog-text "rogue/drink"
-             "you cup the water and drink. it is cold and tastes faintly of the glass on the night stand, which is not a flavor, and you drink again anyway."
+             "you cup the water and drink. it is cold and tastes faintly of the glass on the night stand. you drink again anyway."
              :next "rogue/far-hall")
 
 (dialog-on-enter "rogue/shrine"
@@ -675,7 +675,7 @@
                  '(setf (dialog-value "rogue-took-key") t))
 
 (dialog-text "rogue/offer-key"
-             "you hang the brass key on an empty nail. it fits the nail the way it fit the lock. exactly. you should not have been surprised either time."
+             "you hang the brass key on an empty nail. it fits the nail exactly, as it fit the lock."
              :next "rogue/far-hall")
 
 (dialog-text "rogue/take-key"
@@ -687,7 +687,7 @@
              :next "rogue/far-hall")
 
 (dialog-text "rogue/delve-entry"
-             "the stair drops past where stairs stop being furniture and start being terrain. cold air climbs it slowly, like something pacing itself, and there is no way on but down it."
+             "the stair drops for a long time. cold air climbs the steps. there is no way on but down."
              :next "rogue/delve")
 
 (defun rogue-delve-bottom-target ()
@@ -759,7 +759,7 @@
              (dialog-option "go through the far door" "below/door"))
 
 (dialog-text "rogue/delve-after"
-             "you do not take the tag. you close the door on it, quietly, the way you would on someone sleeping, and climb until the stair ends at furniture again: a far hall, and at the end of it a barred door."
+             "you do not take the tag. you close the door on it quietly and climb until the stair ends at a far hall. at the end of it is a barred door."
              :next "rogue/far-door")
 
 (dialog-text "rogue/delve-caught"
@@ -771,12 +771,12 @@
              :next "rogue/delve-return-choice")
 
 (dialog-pick "rogue/delve-return-choice"
-             "the stair is still open, and it is the only thing here that is."
+             "the stair is still open."
              (dialog-option "go back down" "rogue/delve-entry")
              (dialog-option "climb to the landing" "rogue/landing"))
 
 (dialog-text "rogue/far-hall"
-             "the far hall narrows. along it, something keeps pace with you one wall away, matching your steps so well that stopping feels like an agreement. it ends where the floor does, at the head of a stair going down."
+             "the far hall narrows. along it, something keeps pace with you one wall away, matching your steps. when you stop, it stops. the hall ends at the head of a stair going down."
              :next "rogue/delve-entry")
 
 (dialog-pick "rogue/far-door"
