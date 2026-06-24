@@ -152,7 +152,7 @@
              :next "house/quiet-night-3")
 
 (dialog-text "house/quiet-night-3"
-             "for the one on the hill, the keeper says, in case. you sleep in the bed because the bed is yours, and that is the fact you take down into sleep like a stone."
+             "for the one on the hill, the keeper says, in case. you sleep in the bed because the bed is yours. you keep that fact with you until morning."
              :next "house/listening")
 
 (dialog-text "house/listening"
@@ -227,11 +227,11 @@
                        "two. i think of them the way you think of a window left open in a house you loved. glad for the air. worried about the rain."))
 
 (dialog-text "house/washing"
-             "after supper you dry while the keeper washes, because the cloth was put in your hand. the two of you stand at the basin in the lamplight, passing plates, like any kitchen anywhere."
+             "after supper you dry while the keeper washes, because the cloth was put in your hand. the two of you stand at the basin in the lamplight, passing plates one by one."
              :next "house/washing-2")
 
 (dialog-text "house/washing-2"
-             "your dread does not go anywhere. it only goes quiet, and close, and stands at the basin with you, drying plates."
+             "your dread does not go anywhere. it goes quiet enough that you can dry plates."
              :next "house/morning")
 
 (dialog-scene "house/morning"
@@ -286,7 +286,7 @@
              :next "house/far-field")
 
 (dialog-text "house/far-field"
-             "after noon the keeper shoulders a sack and goes up toward the far field, unhurried, leaving you the house, the open door, the road below, and the whole grey afternoon. it is not carelessness. it is the lesson, set out like a meal."
+             "after noon the keeper shoulders a sack and goes up toward the far field, unhurried, leaving you the house, the open door, the road below, and the whole grey afternoon. it is not carelessness. he is testing whether you go."
              :next "house/door-test")
 
 (dialog-pick "house/door-test"
@@ -388,7 +388,7 @@
              :next "house/mirror-after-2")
 
 (dialog-text "house/mirror-after-2"
-             "the worst of it is the relief you feel when the cold starts working into you. the cold is honest, at least. the cold is on nobody's side."
+             "relief comes when the cold starts working into you. the cold is on nobody's side."
              :next "house/mirror-walk")
 
 (dialog-text "house/mirror-walk"
@@ -396,17 +396,17 @@
              :next "house/mirror-walk-2")
 
 (dialog-text "house/mirror-walk-2"
-             "at the porch the keeper has left the lamp lit, the door open, your plate covered, and has gone to bed. it is the kindest argument anyone has ever made to you. it is also the worst."
+             "at the porch the keeper has left the lamp lit, the door open, your plate covered, and has gone to bed."
              :next "house/last-notes")
 
 (dialog-text "house/last-notes"
-             "last of all, wherever the day has put you, bed or needles or tree line, the two notes come, faint, from the house or from your own keeping of them, you can no longer say which."
+             "last of all, wherever the day has put you, bed or needles or tree line, the two notes come faint from the house."
              :next "house/last-notes-2")
 
 (dialog-text "house/last-notes-2"
-             "they find the level of your breathing and settle there, patient, the way a thing settles that has nowhere else it needs to be."
+             "they match your breathing and stay there."
              :next "house/end")
 
 (dialog-text "house/end"
-             "sleep, when it takes you, takes you all at once, the deep kind, the kind the house keeps on the shelf for its own."
+             "sleep takes you all at once. you do not wake before morning."
              :next "sys/reboot")
