@@ -1,9 +1,8 @@
-;;; The King in Yellow path, Act II - Carcosa, unstuck in time.
+;;; The King in Yellow path, Act II - Carcosa under the King.
 ;;;
 ;;; Entered from jrpg/threshold via carcosa/cross. The King is the ship-captain
 ;;; (the captain path) gone cosmically, irretrievably insane, his power over
-;;; time swollen out of suffering into authority over moment and repetition.
-;;; Time will not hold still near him; the throne room keeps re-happening; the
+;;; repeated failure swollen out of suffering into rule and demand. The
 ;;; captain-truth surfaces only in shards through the raving. The Yellow Sign on
 ;;; the player means he may be claimed. Dreadful, never cozy.
 
@@ -13,7 +12,7 @@
 (dialog-particles "carcosa/king-hall" :tatters :fade-seconds 4.0)
 (dialog-particles "carcosa/throne-choice" :tatters :fade-seconds 2.0)
 (dialog-sound "carcosa/courtier-combat" "audio/jrpg/sword.wav" :volume 0.32)
-(dialog-sound "carcosa/king-loop" "audio/jrpg/bell.wav" :volume 0.24)
+(dialog-sound "carcosa/king-stutter" "audio/jrpg/bell.wav" :volume 0.24)
 
 ;; Lyria's Carcosa drone bed, the lake of Hali, the crown's shimmer.
 (dialog-music "carcosa/cross" "audio/jrpg-carcosa.mp3" :volume 0.20)
@@ -118,10 +117,10 @@
                        :id "before"
                        :speaker "Cassilda"
                        "a man, we think, once. he came across the lake with the crown already on him and no memory of the hand that set it there. now there is too much of him, spread through too much time, to be a man.")
-                      ("ask why the room repeats"
+                      ("ask why he repeats himself"
                        :id "repeat"
                        :speaker "Camilla"
-                       "he cannot stop arriving. the room near him forgets which moment is now. mind your own while you still have it.")
+                       "he cannot finish the crossing. every sentence goes back to it. mind your own while you still have it.")
                       ("ask about the songs"
                        :id "songs"
                        :speaker "Cassilda"
@@ -145,10 +144,10 @@
                                         (:tatter-shroud 92))))
 
 
-;;; The King - insane, time-shattered; the captain-truth only in shards
+;;; The King - insane, fragmentary; the captain-truth only in shards
 
 (dialog-text "carcosa/king-hall"
-             "the throne room keeps happening. you enter it more than once, from doors you did not use. on the throne, in tatters the colour of the Sign, the King. he wears no mask, or the mask is his face; your eyes will not decide which. he is talking, and has been, to no one, longer than the room has existed."
+             "the throne room is long and bare. you pass two doors you already passed. on the throne, in tatters the colour of the Sign, sits the King. he wears no mask. or the mask is his face. he is talking to the empty hall."
              :next "carcosa/king-1")
 
 (dialog-say "carcosa/king-1"
@@ -159,10 +158,10 @@
 (dialog-say "carcosa/king-2"
             "the KING"
             "-- and again, and the count is wrong, the count is always wrong by everyone, and they thanked me, with the good chair and the soft pill and their hands, and the dark put me HERE, here is not the ship, HERE --"
-            :next "carcosa/king-loop")
+            :next "carcosa/king-stutter")
 
-(dialog-text "carcosa/king-loop"
-             "the room slips back a half second. he says the same three words. the two suns un-set and set. for a moment you are at the door again, entering. the Sign in your coat is very warm."
+(dialog-text "carcosa/king-stutter"
+             "the bell answers him. his mouth begins the same phrase again. the twin suns lower another inch. you are still in the hall. the Sign in your coat is very warm."
              :next "carcosa/king-named")
 
 (dialog-on-enter "carcosa/king-named" '(jrpg-refresh-class))
@@ -180,7 +179,7 @@
 (dialog-on-enter "carcosa/throne-choice" '(jrpg-complete-quest :king))
 
 (dialog-pick "carcosa/throne-choice"
-             "the crown sits on the throne beside him, yellow, the one colour. the room is about to reset again."
+             "the crown sits on the throne beside him, yellow, the one colour. the King has reached the end of the same sentence again."
              ;; the one action only your inferred class can take
              (dialog-option "unmake his name, as you have unmade others" "carcosa/class-end"
                             :unless '(not (eq (jrpg-value "jrpg-class") :repairer)))
@@ -195,13 +194,13 @@
              (dialog-option "take the crown" "carcosa/take-crown")
              (dialog-option "refuse, and keep your own face" "carcosa/refuse-crown"
                             :unless '(not (jrpg-composed-p)))
-             (dialog-option "ask him the year, to break the loop" "carcosa/ask-year"))
+             (dialog-option "ask him the year" "carcosa/ask-year"))
 
 (dialog-on-enter "carcosa/class-end"
                  '(setf (jrpg-value "jrpg-vane-answer") "class"))
 
 (dialog-text "carcosa/class-end"
-             "you meet him the only way a {jrpg-class-title} can - and it is a thing the loop kept no line for. the suns hang. the room does not reset this time; it only lets you out, the Sign in your coat gone quiet at last."
+             "you meet him the only way a {jrpg-class-title} can. the King has no answer prepared for it. the suns hang. he stops speaking. the Sign in your coat goes quiet."
              :next "carcosa/out")
 
 (dialog-on-enter "carcosa/take-crown"
@@ -209,18 +208,18 @@
                  '(jrpg-add-item :crown))
 
 (dialog-text "carcosa/take-crown"
-             "you take it up. it weighs nothing, the way the tatters weigh nothing. the King stops mid-word, for the first time in longer than he could count, steps down, and is one of the pale kept, eased. the crossing is yours now. the count will be wrong. you will keep it anyway."
+             "you take it up. the crown weighs nothing. the King stops mid-word. he steps down from the throne, pale and empty-handed. the crossing is yours now. the count will be wrong. you keep it anyway."
              :next "carcosa/king-end")
 
 (dialog-text "carcosa/king-end"
-             "the room stops resetting. far down the shore one tune gets past its third line and into a fourth, once, while you hold the thing that was stopping it."
+             "far down the shore, one tune reaches its fourth line while you hold the crown."
              :next "sys/reboot")
 
 (dialog-on-enter "carcosa/refuse-crown"
                  '(setf (jrpg-value "jrpg-vane-answer") "refused"))
 
 (dialog-text "carcosa/refuse-crown"
-             "you keep your own face and back to the door. nothing crowned stops anything leaving. the room resets and you are not in it; you come out somewhere with one sun and a straight street, changed, the Sign in your coat gone cold at last."
+             "you keep your own face and step backward. the King keeps talking. you leave through a door with one sun beyond it. the Sign in your coat is cold."
              :next "carcosa/out")
 
 (dialog-on-enter "carcosa/ask-year"
@@ -228,7 +227,7 @@
                  '(setf (jrpg-value "jrpg-vane-answer") "year"))
 
 (dialog-text "carcosa/ask-year"
-             "you ask him the year. it is the one question the loop keeps no line for. he stops. the suns hang. for one held second the tatters are a coat, the throne is a chair, and the face under the mask is a tired man's, appalled - who says a number, and a name that is not the King's, before the room resets and takes it back. you keep it. you will not forget it."
+             "you ask him the year. the question stops him. for one second the tatters are a coat and the throne is a chair. the face under the mask is a tired man's. he gives a number, then a name that is not the King's. you keep both."
              :next "carcosa/out")
 
 (dialog-text "carcosa/out"
