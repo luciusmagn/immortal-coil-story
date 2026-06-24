@@ -244,7 +244,7 @@
                :target "alice/recess")
 
 (dialog-text "alice/recess"
-             "the court recesses for tea at the long table. your cup is the witness. it pretends not to know you."
+             "the court recesses for tea at the long table. your cup sits in the witness place and does not address you."
              :next "alice/tea")
 
 (dialog-pick "alice/tea"
@@ -349,7 +349,7 @@
 
 (dialog-say "alice/accept"
             "the card judge"
-            "accepted with grace. the court is moved, and being moved, will now be redecorated. inspection follows."
+            "accepted with grace. the court notes it for the record. inspection follows."
             :next "alice/inspection")
 
 (dialog-on-enter "alice/appeal"
@@ -369,7 +369,7 @@
             :next "alice/inspection")
 
 (dialog-text "alice/inspection"
-             "the bailiff opens a door in the back of the court, and the court files through it into the room itself, which holds everyone comfortably and should not."
+             "the bailiff opens a door in the back of the court, and the court files through it into the room itself. they stand shoulder to shoulder around the bed."
              :next "alice/inspection-bed")
 
 (dialog-text "alice/inspection-bed"
@@ -398,7 +398,7 @@
 
 (dialog-say "alice/inspection-close"
             "the card judge"
-            "the room passes inspection. it always does. that has begun to trouble the court, but the court's trouble is not the defendant's sentence. you may go back to bed."
+            "the room passes inspection. that has begun to trouble the court, but the court's trouble is not the defendant's sentence. you may go back to bed."
             :next "alice/effects")
 
 (dialog-text "alice/effects"
@@ -426,7 +426,7 @@
             :next "alice/garden-night")
 
 (dialog-text "alice/garden-night"
-             "the way out runs back through the garden of doors. at night the painted numbers are drying, and the gardener walks the rows blowing on them gently, one by one, like candles he has decided not to put out."
+             "the way out runs back through the garden of doors. at night the painted numbers are drying, and the gardener walks the rows blowing on them gently, one by one."
              :next "alice/garden-rows")
 
 (dialog-text "alice/garden-rows"
@@ -488,7 +488,7 @@
 
 (dialog-say "alice/goodbyes-3"
             "the chair"
-            "the room's. mind the stair. it pretends to be longer going up."
+            "the room's. mind the stair. the third step lags underfoot going up."
             :next "alice/cups-last")
 
 (dialog-on-enter "alice/cups-last"
@@ -610,7 +610,7 @@
              :next "rogue/armory-choice")
 
 (dialog-pick "rogue/armory-choice"
-             "the rack waits."
+             "the rack is bare beside it."
              (dialog-option "take the sword" "rogue/take-sword")
              (dialog-option "leave it on the rack" "rogue/leave-sword"))
 
@@ -633,7 +633,7 @@
              :next "rogue/cistern-s2")
 
 (dialog-text "rogue/cistern-s2"
-             "held still, the way you hold a breath. you know that stillness from the inside now, from under the pines. you do it the courtesy of not staring."
+             "the water by the far wall has no ripple. your torch shows no bottom there. you do not stare long."
              :next "rogue/cistern-choice")
 
 (dialog-pick "rogue/cistern-choice"
@@ -842,7 +842,7 @@
              :next "rogue/stair-hunt")
 
 (dialog-text "rogue/stair-hunt"
-             "the stair you came down is not where you left it. in a dungeon that means you are remembering wrong. you prefer the dungeon's explanation. you walk the corridor to find it."
+             "you cannot find the stair by memory. in a dungeon that means your map was poor. you walk the corridor to find it."
              :next "rogue/stair-maze")
 
 (dialog-minigame "rogue/stair-maze"
@@ -856,7 +856,7 @@
                                  "rogue/stair-lost"))
 
 (dialog-text "rogue/stair-found"
-             "the stairs are at the end you had not tried yet. going up, the carved name on the first step reads the same from below. carved names should not do that."
+             "the stairs are at the end you had not tried yet. going up, the carved name on the first step reads the same from below. the letters are cut through the whole riser."
              :next "rogue/return-cell")
 
 (dialog-text "rogue/stair-lost"
@@ -953,7 +953,7 @@
              :next "rogue/exit-choice")
 
 (dialog-pick "rogue/exit-choice"
-             "the lock plate waits at eye height."
+             "the lock plate is at eye height."
              (dialog-option "try the shrine key" "rogue/key-turn"
                             :when '(dialog-value "rogue-took-key"))
              (dialog-option "look through the keyhole" "rogue/keyhole")
