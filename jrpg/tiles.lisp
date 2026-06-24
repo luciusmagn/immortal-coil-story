@@ -28,7 +28,7 @@
     (:window        5 13)   ; brick wall with a window
     (:doorway       4 13)   ; brick wall entrance / door
     (:gate         39  4)   ; tall double door (the rim exit)
-    (:lamp         42  3)   ; torch
+    (:lamp         42  3)   ; torch atlas tile; city lamps are drawn overlays
     (:player       29  9)))
 
 (defun jrpg-tile-coords (role)

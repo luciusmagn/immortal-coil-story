@@ -94,11 +94,11 @@ truly random."
     (let ((x (floor (+ left right) 2))
           (y (floor (+ top bottom) 2)))
       (case front
-        (:north (list x top))
-        (:south (list x bottom))
-        (:west  (list left y))
-        (:east  (list right y))
-        (t      (list x bottom))))))
+        (:north (list x (1- top)))
+        (:south (list x (1+ bottom)))
+        (:west  (list (1- left) y))
+        (:east  (list (1+ right) y))
+        (t      (list x (1+ bottom)))))))
 
 (defun jrpg-city-place-building (grid w h building)
   (when (jrpg-city-building-valid-p w h building)
@@ -127,6 +127,18 @@ truly random."
 (defun jrpg-city-street-cell-p (grid x y)
   (member (aref grid y x) '(#\. #\+) :test #'char=))
 
+(defun jrpg-city-building-neighbor-p (grid x y)
+  (or (char= (aref grid (1+ y) x) #\#)
+      (char= (aref grid (1- y) x) #\#)
+      (char= (aref grid y (1+ x)) #\#)
+      (char= (aref grid y (1- x)) #\#)))
+
+(defun jrpg-city-street-neighbor-p (grid x y)
+  (or (jrpg-city-street-cell-p grid x (1+ y))
+      (jrpg-city-street-cell-p grid x (1- y))
+      (jrpg-city-street-cell-p grid (1+ x) y)
+      (jrpg-city-street-cell-p grid (1- x) y)))
+
 (defun jrpg-city-door-slot-spaced-p (slot used)
   "Keep signed doors from crowding each other on one frontage. Adjacent glyphs
 make the city hard to read, and their labels overlap in the renderer."
@@ -144,13 +156,11 @@ make the city hard to read, and their labels overlap in the renderer."
        (destructuring-bind (x y) slot
          (and (< 0 x (1- w))
               (< 0 y (1- h))
-              (char= (aref grid y x) #\#)
+              (char= (aref grid y x) #\.)
               (not (member slot used :test #'equal))
               (jrpg-city-door-slot-spaced-p slot used)
-              (or (jrpg-city-street-cell-p grid x (1+ y))
-                  (jrpg-city-street-cell-p grid x (1- y))
-                  (jrpg-city-street-cell-p grid (1+ x) y)
-                  (jrpg-city-street-cell-p grid (1- x) y))))))
+              (jrpg-city-building-neighbor-p grid x y)
+              (jrpg-city-street-neighbor-p grid x y)))))
 
 (defun jrpg-city-extra-door-slots (grid w h used)
   (let ((slots nil))
@@ -366,12 +376,20 @@ cell whose front faces the street gets a window, the rest is brick wall."
      (jrpg-city-tile atlas :window sx sy))
     (t (jrpg-city-tile atlas :wall sx sy))))
 
+(defun draw-jrpg-city-lamp (cx cy)
+  (jrpg-ow-fill (- cx 6) (- cy 7) 12 12 28)             ; small bloom
+  (jrpg-ow-fill (- cx 4) (- cy 6) 8 2 225)              ; cap
+  (jrpg-ow-fill (- cx 3) (- cy 4) 6 5 240)              ; lamp head
+  (jrpg-ow-fill (- cx 1) (+ cy 1) 2 9 170)              ; post
+  (jrpg-ow-fill (- cx 4) (+ cy 9) 8 2 120))             ; base
+
 (defun draw-jrpg-city-cell-tile (game atlas cell sx sy mx my)
   (cond
     ((char= cell #\#) (draw-jrpg-city-building-tile game atlas sx sy mx my))
     ((char= cell #\+)
      (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*)
-     (jrpg-city-tile atlas :lamp sx sy))
+     (draw-jrpg-city-lamp (+ sx (/ +jrpg-overworld-tile-size+ 2))
+                           (+ sy (/ +jrpg-overworld-tile-size+ 2))))
     ((char= cell #\.)
      (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*))
     (t                                                  ; a door glyph
@@ -399,10 +417,6 @@ inner cells just fill. A window where the wall fronts the street."
                (jrpg-ow-fill (+ sx (/ s 2) -3) (+ sy 8) 6 6 150)) ; a window
     (unless lf (jrpg-ow-fill sx sy 2 s 112))             ; left wall
     (unless rt (jrpg-ow-fill (+ sx s -2) sy 2 s 112))))  ; right wall
-
-(defun draw-jrpg-city-lamp (cx cy)
-  (jrpg-ow-fill (- cx 5) (- cy 5) 10 10 26)              ; glow
-  (jrpg-ow-fill (- cx 2) (- cy 2) 4 4 230))             ; flame
 
 (defun jrpg-door-label-width (name)
   (+ (text-width name 12) 14))
