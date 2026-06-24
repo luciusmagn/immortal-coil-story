@@ -82,7 +82,7 @@
                  '(jrpg-heal 7))
 
 (dialog-text "carcosa/courtier-limp"
-             "you go down on the wet stone. when you rise, the courtier is gone, and its mask lies pale and empty where it stood. you step over it to the far shore."
+             "you go down on the wet stone. when you rise, the courtier is gone. its mask lies pale and empty. you step over it to the far shore."
              :next "carcosa/court")
 
 

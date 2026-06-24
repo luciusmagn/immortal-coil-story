@@ -145,84 +145,65 @@ ranges so the map reads as geography, not scattered cells."
               (incf placed))))))))
 
 (defun jrpg-gen-overworld (w h finish-glyph waypoints)
-  "Returns (values rows start-x start-y). A coherent FF-style overworld:
-readable plains, a main road, one bridged river, mountain ranges, forest belts,
-lakes, and landmarks placed along the road. Generated fresh each entry."
+  "Returns (values rows start-x start-y). A small old-RPG overworld: readable
+plains, a road with deliberate bends, one bridged river, named landmarks on the
+road, and terrain regions that read as geography instead of noise."
   (let* ((grid (make-array (list h w) :initial-element #\.))
          (sx 1)
-         (sy (max 2 (min (- h 3) (+ (floor h 2) (get-random-value -2 2)))))
+         (sy (jrpg-gen-world-clamp-y h (- h 5)))
          (fx (- w 2))
-         (fy (max 2 (min (- h 3) (+ (floor h 2) (get-random-value -2 2)))))
+         (fy (jrpg-gen-world-clamp-y h 3))
+         (lower-y (jrpg-gen-world-clamp-y h (- h 5)))
+         (middle-y (jrpg-gen-world-clamp-y h (floor h 2)))
+         (upper-y (jrpg-gen-world-clamp-y h 4))
          (road (jrpg-gen-road-route
                 grid w h
                 (list (list sx sy)
-                      (list (floor w 4)
-                            (max 2 (min (- h 3)
-                                        (+ (floor h 2) (get-random-value -3 3)))))
-                      (list (floor w 2)
-                            (max 2 (min (- h 3)
-                                        (+ (floor h 2) (get-random-value -4 4)))))
-                      (list (floor (* 3 w) 4)
-                            (max 2 (min (- h 3)
-                                        (+ (floor h 2) (get-random-value -3 3)))))
+                      (list (jrpg-gen-world-clamp-x w (floor w 5)) lower-y)
+                      (list (jrpg-gen-world-clamp-x w (floor w 5)) middle-y)
+                      (list (jrpg-gen-world-clamp-x w (floor w 2)) middle-y)
+                      (list (jrpg-gen-world-clamp-x w (floor (* 3 w) 4))
+                            upper-y)
                       (list fx fy)))))
-    ;; 1. terrain regions, all sparing the guaranteed route. These are placed
-    ;; as map features, not noise: bridge river, lakes, mountain ranges, then
-    ;; forests in the open country around them.
+    ;; Terrain is broad and authored-looking: a river crossing, mountain ranges
+    ;; against the edges, a lake off the road, and forest belts near the route.
     (jrpg-gen-road-bridge grid w h road)
     (let* ((protected '(#\, #\B #\! #\R #\T #\S))
            (mountain-avoid (append protected '(#\~)))
            (forest-avoid (append protected '(#\^ #\~))))
       (jrpg-gen-region grid w h
-                       (jrpg-gen-world-clamp-x w (+ (floor w 5)
-                                                    (get-random-value -2 2)))
-                       (jrpg-gen-world-clamp-y h (+ (floor h 4)
-                                                    (get-random-value -1 2)))
-                       (get-random-value 2 4)
-                       (get-random-value 1 2)
-                       #\~ protected)
-      (jrpg-gen-region grid w h
-                       (jrpg-gen-world-clamp-x w (- w (get-random-value 7 10)))
-                       (jrpg-gen-world-clamp-y h (- h (get-random-value 4 6)))
-                       (get-random-value 3 5)
-                       (get-random-value 1 3)
+                       (jrpg-gen-world-clamp-x w (- (floor w 2) 5))
+                       (jrpg-gen-world-clamp-y h 4)
+                       3 2
                        #\~ protected)
       (jrpg-gen-terrain-path
        grid w h
-       (list (list 3 (get-random-value 2 4))
-             (list (floor w 3) (get-random-value 2 5))
-             (list (floor w 2) (get-random-value 3 6)))
+       (list (list 2 2)
+             (list (floor w 4) 2)
+             (list (floor w 2) 3))
        #\^ mountain-avoid :radius 1)
       (jrpg-gen-terrain-path
        grid w h
-       (list (list (floor w 2) (- h (get-random-value 4 6)))
-             (list (floor (* 2 w) 3) (- h (get-random-value 3 5)))
-             (list (- w 4) (- h (get-random-value 5 7))))
+       (list (list (floor w 3) (- h 3))
+             (list (floor (* 2 w) 3) (- h 4))
+             (list (- w 4) (- h 3)))
        #\^ mountain-avoid :radius 1)
       (jrpg-gen-region grid w h
-                       (jrpg-gen-world-clamp-x w (+ (floor w 4)
-                                                    (get-random-value -2 2)))
-                       (jrpg-gen-world-clamp-y h (+ sy
-                                                    (get-random-value -5 -3)))
-                       (get-random-value 3 5)
-                       (get-random-value 2 3)
+                       (jrpg-gen-world-clamp-x w (+ (floor w 4) 2))
+                       (jrpg-gen-world-clamp-y h (- middle-y 3))
+                       4 2
                        #\f forest-avoid)
       (jrpg-gen-region grid w h
-                       (jrpg-gen-world-clamp-x w (+ (floor w 2)
-                                                    (get-random-value -3 3)))
-                       (jrpg-gen-world-clamp-y h (+ sy
-                                                    (get-random-value 3 5)))
-                       (get-random-value 4 6)
-                       (get-random-value 2 3)
+                       (jrpg-gen-world-clamp-x w (+ (floor w 2) 4))
+                       (jrpg-gen-world-clamp-y h (+ middle-y 3))
+                       5 2
                        #\f forest-avoid)
       (jrpg-gen-region grid w h
-                       (jrpg-gen-world-clamp-x w (- w (get-random-value 6 9)))
-                       (jrpg-gen-world-clamp-y h (+ fy
-                                                    (get-random-value -3 3)))
-                       (get-random-value 3 5)
-                       (get-random-value 2 3)
+                       (jrpg-gen-world-clamp-x w (- w 7))
+                       (jrpg-gen-world-clamp-y h (+ fy 4))
+                       4 2
                        #\f forest-avoid))
-    ;; 2. landmarks strung along the road after terrain is set
+    ;; Landmarks sit on the authored route after terrain is set.
     (let ((n (length road))
           (k (length waypoints)))
       (loop for wp in waypoints

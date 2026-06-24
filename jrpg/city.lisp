@@ -210,53 +210,58 @@ make the city hard to read, and their labels overlap in the renderer."
                 (runtime-warn "JRPG city could not place open doorway ~s; map is too crowded."
                               glyph))))))
 
+(defun jrpg-city-building-rect (left top width height front)
+  (list left top (+ left width -1) (+ top height -1) front))
+
+(defun jrpg-city-town-buildings (w h)
+  "Separated old-RPG town buildings. Keep the center open for a square and keep
+the north/south gates readable instead of producing a wall lattice."
+  (let* ((small-w (max 5 (min 7 (floor w 5))))
+         (large-w (max 6 (min 8 (floor w 4))))
+         (top-y 2)
+         (middle-y (jrpg-city-clamp-y h (max 7 (floor h 2))))
+         (bottom-y (- h 4))
+         (right-small-left (- w small-w 3))
+         (right-large-left (- w large-w 5)))
+    (remove-if-not
+     (lambda (building)
+       (jrpg-city-building-valid-p w h building))
+     (list
+      (jrpg-city-building-rect 3 top-y small-w 3 :south)
+      (jrpg-city-building-rect right-small-left top-y small-w 3 :south)
+      (jrpg-city-building-rect 2 middle-y small-w 3 :east)
+      (jrpg-city-building-rect right-small-left middle-y small-w 3 :west)
+      (jrpg-city-building-rect 5 bottom-y large-w 3 :north)
+      (jrpg-city-building-rect right-large-left bottom-y large-w 3 :north)))))
+
+(defun jrpg-city-open-gate (grid w h x top-p)
+  (let ((y (if top-p 0 (1- h)))
+        (inside-y (if top-p 1 (- h 2))))
+    (loop for dx from -1 to 1
+          for gx = (max 1 (min (- w 2) (+ x dx)))
+          do (setf (aref grid y gx) #\.
+                   (aref grid inside-y gx) #\.))))
+
+(defun jrpg-city-place-lamps (grid w h lamps)
+  (dolist (lamp lamps)
+    (destructuring-bind (x y) lamp
+      (when (and (< 0 x (1- w))
+                 (< 0 y (1- h))
+                 (char= (aref grid y x) #\.))
+        (setf (aref grid y x) #\+)))))
+
 (defun jrpg-gen-city (w h interior-glyphs exit-glyphs seed
                       &optional all-interior-glyphs all-exit-glyphs)
-  "Returns (values rows start-x start-y) for a small RPG town: a rim wall,
-south entry, north gate, main avenue, cross streets, plaza, and separate houses
-with stable building-front door slots. The seed nudges the town without moving
-surviving doors when another district is done."
+  "Returns (values rows start-x start-y) for a small RPG town: separated
+buildings around a central square, a south entry, a north gate, lamps, and
+stable building-front door slots. The seed only nudges nonessential details."
   (let* ((rng (jrpg-city-rng seed))
          (grid (make-array (list h w) :initial-element #\.))
          (mid (jrpg-city-clamp-x w (+ (floor w 2) (funcall rng -1 1))))
-         (cross-y (jrpg-city-clamp-y h (+ (floor h 2) (funcall rng -1 1))))
-         (left-lane (jrpg-city-clamp-x w (+ (floor w 4)
-                                            (funcall rng -1 1))))
-         (right-lane (jrpg-city-clamp-x w (+ (- w (floor w 4) 1)
-                                             (funcall rng -1 1))))
-         (north-road (jrpg-city-clamp-y h (- cross-y 2)))
-         (south-road (jrpg-city-clamp-y h (min (- h 5) (+ cross-y 2))))
-         (top-bottom (max 2 (1- north-road)))
-         (bottom-top (min (- h 4) (1+ south-road)))
-         (bottom-bottom (- h 3))
-         (west-right (max 3 (- left-lane 2)))
-         (left-inner-left (min (- mid 4) (+ left-lane 2)))
-         (left-inner-right (max left-inner-left (- mid 3)))
-         (right-inner-left (min (- right-lane 2) (+ mid 3)))
-         (right-inner-right (max right-inner-left (- right-lane 2)))
-         (east-left (min (- w 3) (+ right-lane 2)))
-         (buildings (remove-if-not
-                     (lambda (building)
-                       (jrpg-city-building-valid-p w h building))
-                     (list
-                      (list 2 bottom-top west-right bottom-bottom :north)
-                      (list east-left bottom-top (- w 3) bottom-bottom :north)
-                      (list 2 1 west-right top-bottom :south)
-                      (list east-left 1 (- w 3) top-bottom :south)
-                      (list left-inner-left 1 left-inner-right top-bottom :south)
-                      (list right-inner-left 1 right-inner-right top-bottom :south)
-                      (list left-inner-left bottom-top left-inner-right
-                            bottom-bottom :north)
-                      (list right-inner-left bottom-top right-inner-right
-                            bottom-bottom :north))))
+         (square-y (jrpg-city-clamp-y h (+ (floor h 2) (funcall rng -1 1))))
+         (buildings (jrpg-city-town-buildings w h))
          (door-slots (append (jrpg-city-building-door-slots buildings)
-                             (jrpg-city-door-slots
-                              w h
-                              :north-front top-bottom
-                              :south-front bottom-top
-                              :left-x left-lane
-                              :mid-x mid
-                              :right-x right-lane)))
+                             (jrpg-city-door-slots w h)))
          (planned-interior (or all-interior-glyphs interior-glyphs))
          (planned-exits (or all-exit-glyphs exit-glyphs)))
     (jrpg-city-fill-rect-safe grid w h 0 0 (1- w) 0 #\#)
@@ -265,48 +270,31 @@ surviving doors when another district is done."
     (jrpg-city-fill-rect-safe grid w h (1- w) 0 (1- w) (1- h) #\#)
     (dolist (building buildings)
       (jrpg-city-place-building grid w h building))
-    (jrpg-city-fill-rect-safe grid w h (1- mid) 1 (1+ mid) (- h 2) #\.)
-    (jrpg-city-fill-rect-safe grid w h 1 north-road (- w 2) north-road #\.)
-    (jrpg-city-fill-rect-safe grid w h 1 cross-y (- w 2) cross-y #\.)
-    (jrpg-city-fill-rect-safe grid w h 1 south-road (- w 2) south-road #\.)
-    (jrpg-city-fill-rect-safe grid w h left-lane north-road
-                              left-lane south-road #\.)
-    (jrpg-city-fill-rect-safe grid w h right-lane north-road
-                              right-lane south-road #\.)
-    (jrpg-city-fill-rect-safe grid w h (max 1 (- mid 4))
-                              (max 1 (1- cross-y))
-                              (min (- w 2) (+ mid 4))
-                              (min (- h 2) (1+ cross-y))
-                              #\.)
-    (dolist (lamp (list (list left-lane (floor h 2))
-                        (list right-lane (floor h 2))
-                        (list (max 1 (- mid 4)) cross-y)
-                        (list (min (- w 2) (+ mid 4)) cross-y)
-                        (list mid north-road)
-                        (list mid south-road)))
-      (destructuring-bind (x y) lamp
-        (when (char= (aref grid y x) #\.)
-          (setf (aref grid y x) #\+))))
+    (jrpg-city-open-gate grid w h mid nil)
     (let ((count (max 1 (length planned-exits))))
       (loop for glyph in planned-exits
             for index from 0
             for gate-x = (jrpg-city-gate-x w count index)
             when (member glyph exit-glyphs :test #'char=)
               do (progn
-                   (setf (aref grid 0 gate-x) glyph)
-                   (jrpg-city-fill-rect-safe grid w h
-                                             (min gate-x mid) 1
-                                             (max gate-x mid) 1
-                                             #\.))))
-    (jrpg-city-fill-rect-safe grid w h (1- mid) (- h 2) (1+ mid) (1- h) #\.)
+                   (jrpg-city-open-gate grid w h gate-x t)
+                   (setf (aref grid 0 gate-x) glyph))))
     (jrpg-city-place-open-doors grid w h interior-glyphs planned-interior
                                 :slots door-slots)
+    (jrpg-city-place-lamps
+     grid w h
+     (list (list (- mid 4) square-y)
+           (list (+ mid 4) square-y)
+           (list mid (1- square-y))
+           (list mid (1+ square-y))
+           (list (max 2 (floor w 4)) (- h 3))
+           (list (min (- w 3) (- w (floor w 4))) (- h 3))))
     (values (jrpg-gen-rows grid) mid (- h 2))))
 
 (defun make-fresh-jrpg-city (node)
   (jrpg-init-state)
-  (let* ((w (jrpg-overworld-config-int node :gen-width 26))
-         (h (jrpg-overworld-config-int node :gen-height 13))
+  (let* ((w (jrpg-overworld-config-int node :gen-width 35))
+         (h (jrpg-overworld-config-int node :gen-height 17))
          (prefix (minigame-config-value node :store-prefix "jrpg-city"))
          (seed-key (concatenate 'string prefix "-seed"))
          ;; one seed per playthrough, kept in the saved store, so the town is

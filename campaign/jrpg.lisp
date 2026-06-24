@@ -70,7 +70,7 @@
 ;;; The night city - travel and the ordinary menace of it (overworld + battle)
 
 (dialog-text "jrpg/street"
-             "after dark the street is dangerous in the usual ways. gas lamps far apart. a man asleep or dead in a doorway. footsteps behind you, then no footsteps."
+             "after dark the street is dangerous in the usual ways. gas lamps far apart. a man in a doorway. footsteps behind you, then none."
              :next "jrpg/street-walk")
 
 (dialog-minigame "jrpg/street-walk"
@@ -160,7 +160,7 @@
                       ("ask about the book on the shelf"
                        :id "play"
                        :speaker "Scott"
-                       "the first act is harmless. beautiful, even. it is the second that damns you. we read the first, the three of us, and laughed; i will not open the second."))
+                       "the first act is harmless. beautiful, even. the second damns you. we read the first, the three of us. i will not open the second."))
 
 (dialog-on-enter "jrpg/clasp"
                  '(jrpg-grant-item "jrpg-mask-shard")
@@ -431,7 +431,7 @@
                       ("ask what the fluid does to a person"
                        :id "fluid"
                        :speaker "Boris"
-                       "it keeps them perfectly, in the pose they were in. destroyed, preserved; how can you tell? i found it by accident. it was so simple; it discovered itself.")
+                       "it keeps them in the pose they were in. destroyed, preserved; how can you tell? i found it by accident. it was simple.")
                       ("ask about Geneviève"
                        :id "genevieve"
                        :speaker "Boris"
@@ -469,7 +469,7 @@
                  '(setf (jrpg-value "kiy-did-mask") t))
 
 (dialog-text "jrpg/after-marble"
-             "the marble-touched goes still mid-step. Boris does not look up from the pool. you leave him there, the white light behind you, and find your way back to the square."
+             "the marble-touched goes still mid-step. Boris does not look up from the pool. you leave him there and find your way back to the square."
              :next "jrpg/city-hub")
 
 
@@ -543,8 +543,8 @@
                  :game :jrpg-city
                  :success "jrpg/church"
                  :failure "jrpg/church"
-                 :config (list :gen-width 27
-                               :gen-height 13
+                 :config (list :gen-width 35
+                               :gen-height 17
                                :store-prefix "kiy-hub"
                                :doors '(("A" "jrpg/wilde-street" :name "armoury"      :done "kiy-did-repairer")
                                         ("M" "jrpg/mask-street"  :name "marble court" :done "kiy-did-mask")
