@@ -14,7 +14,7 @@
             :next "kept/gavel")
 
 (dialog-text "kept/gavel"
-             "the gavel comes down softly, the way a careful person closes a lid. the bailiff does not seize you. he offers his arm, the way you offer it to someone at a funeral."
+             "the gavel comes down softly. the bailiff does not seize you. he offers his arm."
              :next "kept/cell-walk")
 
 (dialog-text "kept/cell-walk"
@@ -381,7 +381,7 @@
              :next "kept/stay-3")
 
 (dialog-text "kept/stay-3"
-             "that is the spite. it is also the sentence. you keep two rooms now, and that turns out to be the title."
+             "that is the spite. it is also the sentence. you keep two rooms now."
              :next "kept/corridor-last")
 
 (dialog-on-enter "kept/summon"

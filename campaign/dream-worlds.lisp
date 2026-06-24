@@ -790,7 +790,7 @@
              :next "rogue/cell")
 
 (dialog-text "rogue/bar-knock"
-             "you knock. the thing pacing you in the wall stops. nothing answers, which is an answer, and you lift the bar. beyond is a small room: a bed, a small table, a door."
+             "you knock. the thing pacing you in the wall stops. nothing answers. you lift the bar. beyond is a small room: a bed, a small table, a door."
              :next "rogue/cell")
 
 (dialog-text "rogue/bar-wait"

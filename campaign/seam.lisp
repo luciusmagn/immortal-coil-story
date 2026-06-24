@@ -56,7 +56,7 @@
              :next "seam/seamstress")
 
 (dialog-text "seam/seamstress"
-             "she works at a table made of tables, in light that comes from nowhere and lands like late afternoon. white thread, long stitches, a kitchen across her lap. she is taking it out."
+             "she works at a table made of tables, in light that comes from nowhere and falls in late-afternoon bars. white thread, long stitches, a kitchen across her lap. she is taking it out."
              :next "seam/seamstress-2")
 
 (dialog-text "seam/seamstress-2"
@@ -64,7 +64,7 @@
              :next "seam/watch-unpick")
 
 (dialog-text "seam/watch-unpick"
-             "she unpicks the window over the sink and the light in it goes out, slow, the way a held note ends. she unpicks the smell of the kitchen last, winding it close to the spool's heart, where it will keep."
+             "she unpicks the window over the sink and the light in it goes out slowly. she unpicks the smell of the kitchen last, winding it tight around the spool."
              :next "seam/lesson")
 
 (dialog-text "seam/lesson"
@@ -127,7 +127,7 @@
             :next "seam/number-tin")
 
 (dialog-text "seam/number-tin"
-             "by her elbow, a biscuit tin of flaked-off numbers, swept from the corners: threes gone soft, sevens curled like bark. the gardener paints his new doors from this tin, she says. numbers are reused."
+             "by her elbow, a biscuit tin of flaked-off numbers, swept from the corners: threes gone soft, sevens curled at the ends. the gardener paints his new doors from this tin, she says. numbers are reused."
              :next "seam/number-tin-2")
 
 (dialog-text "seam/number-tin-2"
@@ -167,7 +167,7 @@
              :next "seam/stray")
 
 (dialog-text "seam/stray"
-             "it is at the shelf that you notice the room following you. a small one, half unpicked, trailing its hem of floorboards: a child's room, wallpaper soft as flannel, one window unraveling at the corner."
+             "it is at the shelf that you notice the room following you. a small one, half unpicked, trailing its hem of floorboards: a child's room, wallpaper gone soft, one window unraveling at the corner."
              :next "seam/stray-2")
 
 (dialog-text "seam/stray-2"
@@ -190,7 +190,7 @@
             :next "seam/stray-close")
 
 (dialog-text "seam/stray-close"
-             "the small room comes a board's width closer while you are not looking, and arranges its unraveled window to face you, the way a dog arranges its ears."
+             "the small room comes a board's width closer while you are not looking. its unraveled window faces you now."
              :next "seam/stray-close-s2")
 
 (dialog-text "seam/stray-close-s2"

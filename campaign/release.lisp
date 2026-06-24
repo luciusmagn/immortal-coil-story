@@ -259,7 +259,7 @@
              :next "release/chit-2")
 
 (dialog-text "release/chit-2"
-             "everything else was initialed and surrendered. this one is yours, the way the bed is yours now. by the last chapter."
+             "everything else was initialed and surrendered. this one is yours. the bed is yours too, by the last chapter."
              :next "release/m3-out")
 
 (dialog-text "release/m3-out"

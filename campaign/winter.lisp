@@ -233,7 +233,7 @@
              :next "winter/refuse-2")
 
 (dialog-text "winter/refuse-2"
-             "you last four days on flour and stubbornness while the plates come patient as weather, and on the fifth morning you eat, on the back step, fast, with your fingers. it is a kind of signing, and the hill does not gloat."
+             "you last four days on flour and stubbornness. the plates keep coming. on the fifth morning you eat on the back step, fast, with your fingers."
              :next "winter/refuse-2-s2")
 
 (dialog-text "winter/refuse-2-s2"
@@ -393,7 +393,7 @@
              :next "winter/walk-up-2")
 
 (dialog-text "winter/walk-up-2"
-             "the pines close over the road the way a door closes, without hurry."
+             "the pines close over the road."
              :next "winter/walk-up-3")
 
 (dialog-text "winter/walk-up-3"

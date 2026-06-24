@@ -45,7 +45,7 @@
                     "the stethoscope is cold and she is not really asking about your heart."
                     ("answer the question she meant"
                      :id "honest"
-                     "you tell her how long. the pencil does not speed up or slow down. the steadiness is its own kind of mercy."
+                     "you tell her how long. the pencil does not speed up or slow down."
                      :next "mutiny/bridge-day")
                     ("answer only the question she asked"
                      :id "evade"
@@ -128,7 +128,7 @@
                  '(setf (dialog-value "mutiny-answer") "bargained"))
 
 (dialog-text "mutiny/last-crossing"
-             "one last crossing. they give it to you the way a family gives in at a bedside. Voss preflights the lane twice."
+             "one last crossing. they give it to you. Voss preflights the lane twice."
              :next "mutiny/last-crossing-s2")
 
 (dialog-text "mutiny/last-crossing-s2"
@@ -186,7 +186,7 @@
             :next "mutiny/visit-3")
 
 (dialog-say "mutiny/visit-3" "Voss"
-            "acting captain. and yes. it was a bad one. the next ones will be better. i have a file of them now. someone keeps files on this ship, it turns out."
+            "acting captain. and yes. it was a bad one. the next ones will be better. i have a file of them now. someone keeps files on this ship."
             :next "mutiny/inspection")
 
 (dialog-scene "mutiny/inspection"
@@ -286,7 +286,7 @@
              :next "mutiny/succession")
 
 (dialog-text "mutiny/night-bridge"
-             "they let you onto the bridge at night the way a family lets a grandfather into a workshop. the watch greets you by rank. someone fetches coffee. the jump seat is already out."
+             "they let you onto the bridge at night. the watch greets you by rank. someone fetches coffee. the jump seat is already out."
              :next "mutiny/night-bridge-2")
 
 (dialog-text "mutiny/night-bridge-2"
