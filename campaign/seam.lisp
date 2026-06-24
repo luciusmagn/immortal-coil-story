@@ -4,7 +4,11 @@
 ;;; Entered from the thread's fork; exits up through the garden.
 
 (dialog-text "seam/under"
-             "under the long table the cloth hangs to the floor. the floor under it is plain boards. between two boards, a seam. the second strand of thread runs down into it, taut, like a line let down a well."
+             "under the long table the cloth hangs to the floor. the floor under it is plain boards. between two boards, a seam."
+             :next "seam/under-thread")
+
+(dialog-text "seam/under-thread"
+             "the second strand of thread runs down into the seam. it is taut. it disappears below the floor."
              :next "seam/boards")
 
 (dialog-text "seam/boards"
@@ -16,7 +20,7 @@
              :next "seam/descent-s2")
 
 (dialog-text "seam/descent-s2"
-             "you go down holding strangers' grips, one after another, and they fit, every one. handles are the most forgiving furniture."
+             "you go down holding strangers' grips, one after another. each handle fits your hand."
              :next "seam/smell")
 
 (dialog-text "seam/smell"
@@ -24,11 +28,19 @@
              :next "seam/compost")
 
 (dialog-text "seam/compost"
-             "the under-court opens out farther than the court above could cover it. drifts of doorframes going soft at the joints. numbers flaking off and turning in the air like leaves. hinges shed in the lanes like seeds, bright, then dull, then soil."
+             "the under-court is wider than the court above. doorframes stand in drifts. their joints have gone soft."
+             :next "seam/compost-s2")
+
+(dialog-text "seam/compost-s2"
+             "numbers have flaked off the doors. hinges lie in the lanes, bright in some places and dull in others."
              :next "seam/compost-quiet")
 
 (dialog-text "seam/compost-quiet"
-             "nothing rots here, exactly. it loosens. a wardrobe drift settles as you watch, a hand's width in an hour. the only sound is the settling, and somewhere off among the lintels, a needle being threaded."
+             "nothing rots here. it loosens. a wardrobe drift settles while you watch, a hand's width in an hour."
+             :next "seam/compost-quiet-s2")
+
+(dialog-text "seam/compost-quiet-s2"
+             "the only sound is the settling. farther off, someone threads a needle."
              :next "seam/lanes")
 
 (dialog-text "seam/lanes"
@@ -36,11 +48,11 @@
              :next "seam/lanes-s2")
 
 (dialog-text "seam/lanes-s2"
-             "one whole quarter is staircases, lying down at last, and you do not linger there. a staircase lying down is hard to look at."
+             "one whole quarter is staircases laid flat. you do not linger there."
              :next "seam/curtain-meadow")
 
 (dialog-text "seam/curtain-meadow"
-             "past the staircases, a meadow of curtains lies flat. every few seconds the cloth lifts an inch and settles. they are the only thing down here that still moves on its own."
+             "past the staircases, a meadow of curtains lies flat. every few seconds the cloth lifts an inch and settles."
              :next "seam/lullaby")
 
 (dialog-text "seam/lullaby"
@@ -52,11 +64,11 @@
              :next "seam/lullaby-2")
 
 (dialog-text "seam/lullaby-2"
-             "it was a nursery's, you understand, hearing it here. the jury did not write it. the jury borrowed it. the last note is the one you know. then it starts again."
+             "it was a nursery's. the jury did not write it. the jury borrowed it. the last note is the one you know. then it starts again."
              :next "seam/seamstress")
 
 (dialog-text "seam/seamstress"
-             "she works at a table made of tables, in light that comes from nowhere and falls in late-afternoon bars. white thread, long stitches, a kitchen across her lap. she is taking it out."
+             "she works at a table made of tables. white thread runs through her fingers. a kitchen lies across her lap. she is taking it out."
              :next "seam/seamstress-2")
 
 (dialog-text "seam/seamstress-2"
@@ -76,7 +88,7 @@
              :next "seam/lesson-work")
 
 (dialog-text "seam/lesson-work"
-             "one is enough, she says, taking the needle back. now you know the weight of the work, and you will not tell anyone above that it is cruel, because you have felt it, and it is not cruel. it is exact."
+             "one is enough, she says, taking the needle back. now you know the weight of the work. it is not cruel. it is exact."
              :next "seam/seamstress-talk")
 
 (dialog-say "seam/seamstress-talk"
@@ -91,7 +103,7 @@
 
 (dialog-say "seam/seamstress-talk-3"
             "the seamstress"
-            "where rooms go when nobody keeps them. somebody has to take them apart kindly. the alternative is that they come apart unkindly, up there, around whoever is left in them."
+            "where rooms go when nobody keeps them. somebody has to take them apart. otherwise they come apart upstairs, around whoever is left."
             :next "seam/seamstress-questions")
 
 (dialog-interrogation "seam/seamstress-questions"
@@ -109,11 +121,11 @@
                       ("ask how long she has worked here"
                        :id "long"
                        :speaker "the seamstress"
-                       "longer than the rooms i unpick, shorter than the thread. time is measured in stitches here, and i have lost the count kindly, which is the only way to lose it."))
+                       "long enough that the first spools have gone pale. i stopped counting. the work did not."))
 
 (dialog-say "seam/economy"
             "the seamstress"
-            "the thread goes to the spools. the spools go to the gardener. he plants what i wind, and doors come up, and rooms are sewn from them for the next keepers. nothing here is lost. it is only no longer addressed."
+            "the thread goes to the spools. the spools go to the gardener. he plants what i wind. doors come up for the next keepers."
             :next "seam/economy-2")
 
 (dialog-say "seam/economy-2"
@@ -123,11 +135,11 @@
 
 (dialog-say "seam/economy-3"
             "the seamstress"
-            "every garden grows out of something like this. the gardener and i keep separate ledgers. he takes what i wind. i take what he sends down."
+            "every garden grows out of old rooms. the gardener and i keep separate ledgers. he takes what i wind. i take what he sends down."
             :next "seam/number-tin")
 
 (dialog-text "seam/number-tin"
-             "by her elbow, a biscuit tin of flaked-off numbers, swept from the corners: threes gone soft, sevens curled at the ends. the gardener paints his new doors from this tin, she says. numbers are reused."
+             "by her elbow is a biscuit tin of flaked-off numbers. threes, sevens, nines. the gardener paints his new doors from this tin."
              :next "seam/number-tin-2")
 
 (dialog-text "seam/number-tin-2"
@@ -139,7 +151,7 @@
              :next "seam/spool-shelf-2")
 
 (dialog-text "seam/spool-shelf-2"
-             "the oldest spools, high up, predate the court, predate the garden, are wound in thread the color old linen goes, and their chalk has worn almost to nothing."
+             "the oldest spools are high up. their thread is the color of old linen. their chalk marks have worn almost blank."
              :next "seam/glasses")
 
 (dialog-text "seam/glasses"
@@ -151,7 +163,7 @@
              :next "seam/glass-count")
 
 (dialog-text "seam/glass-count"
-             "you do not count the glasses. you have learned, in several worlds now, what counting does to you here, and the shelf is long, and the shelf is not the only shelf."
+             "you do not count the glasses. you have learned what counting does to you here."
              :next "seam/her-glass")
 
 (dialog-text "seam/her-glass"
@@ -159,7 +171,7 @@
              :next "seam/her-glass-kept")
 
 (dialog-text "seam/her-glass-kept"
-             "she drinks from it while she works. it is the only drinking glass in the under-court. she lives here, so somebody keeps her too."
+             "she drinks from it while she works. it is the only drinking glass in the under-court. someone fills it."
              :next "seam/her-glass-question")
 
 (dialog-text "seam/her-glass-question"
@@ -167,16 +179,16 @@
              :next "seam/stray")
 
 (dialog-text "seam/stray"
-             "it is at the shelf that you notice the room following you. a small one, half unpicked, trailing its hem of floorboards: a child's room, wallpaper gone soft, one window unraveling at the corner."
+             "at the shelf you notice the room following you. it is small, half unpicked, with floorboards trailing behind it."
              :next "seam/stray-2")
 
 (dialog-text "seam/stray-2"
-             "it stops when you stop. the loose wallpaper trembles at its window corner."
+             "it stops when you stop. wallpaper hangs loose. one corner of the window has unraveled."
              :next "seam/stray-history")
 
 (dialog-say "seam/stray-history"
             "the seamstress"
-            "that one came down early. its keeper grew, which is not the keeper's fault and not the room's, and it will not lie flat for the needle. it has been following my visitors for years. ignore it and it will settle."
+            "that one came down early. its keeper grew. it will not lie flat for the needle. it has followed visitors for years. ignore it and it will settle."
             :next "seam/stray-history-2")
 
 (dialog-say "seam/stray-history-2"
@@ -207,7 +219,7 @@
 
 (dialog-say "seam/spool-truth"
             "the seamstress"
-            "yes. your room is sewn from here, like all of them. the court's thread was never the court's. keeping a room is what keeps the stitches in. that is all keeping has ever been."
+            "yes. your room is sewn from here. the court's thread was never the court's. keeping a room keeps the stitches in."
             :next "seam/spool-truth-2")
 
 (dialog-say "seam/spool-truth-2"
@@ -217,7 +229,12 @@
 
 (dialog-say "seam/spool-truth-3"
             "the seamstress"
-            "then one day the thread goes slack, and i wind, and the spool fills, and the glass comes down to the shelf, full, at its line. i am not threatening you. i am telling you what i do for a living. somebody tells the keepers. it has come to be me."
+            "then one day the thread goes slack. i wind it. the spool fills. the glass comes down to the shelf, full to its line."
+            :next "seam/spool-truth-4")
+
+(dialog-say "seam/spool-truth-4"
+            "the seamstress"
+            "i am not threatening you. i am telling you what i do for a living. somebody tells the keepers. today it is me."
             :next "seam/sit")
 
 (dialog-text "seam/sit"
@@ -235,7 +252,7 @@
 (dialog-pick "seam/stray-choice"
              "the small room stands at the lane's edge with its lamp in it. the seamstress threads her needle and does not hurry you."
              (dialog-option "take its thread. adopt the room" "seam/adopt")
-             (dialog-option "ask her to finish it kindly" "seam/finish")
+             (dialog-option "ask her to finish it" "seam/finish")
              (dialog-option "ask the gardener to plant it" "seam/plant"))
 
 (dialog-on-enter "seam/adopt"
@@ -250,7 +267,11 @@
              :next "seam/adopt-room")
 
 (dialog-text "seam/adopt-room"
-             "from now on, she says, your room has a small room behind one wall. keep them both watered. she means the glasses. you will stand two glasses now, each to its line, and the second one is lower, child height."
+             "from now on, she says, your room has a small room behind one wall. keep them both watered."
+             :next "seam/adopt-room-2")
+
+(dialog-text "seam/adopt-room-2"
+             "she means the glasses. you will stand two glasses now. the second line is lower, child height."
              :next "seam/parting")
 
 (dialog-on-enter "seam/finish"
@@ -288,11 +309,15 @@
              :next "seam/parting")
 
 (dialog-text "seam/parting"
-             "before you go she reaches up to the spool wall without looking and takes down a short length of the old linen-colored thread, and ties off the end of your wrist thread with it, a finishing knot, so it cannot unravel from use."
+             "before you go she takes down a short length of old linen-colored thread."
+             :next "seam/parting-knot")
+
+(dialog-text "seam/parting-knot"
+             "she ties off your wrist thread with it. the knot is small and flat. it will not unravel from use."
              :next "seam/parting-2")
 
 (dialog-text "seam/parting-2"
-             "everything should end in older thread than itself, she says. that is the whole craft."
+             "old thread holds new thread, she says. that is the craft."
              :next "seam/way-up")
 
 (dialog-text "seam/way-up"
@@ -300,15 +325,19 @@
              :next "seam/way-up-2")
 
 (dialog-text "seam/way-up-2"
-             "it will hold one passage and then i am taking it out. nothing down here is permanent. that is the kindness. tell the room i sew straight."
+             "one passage. then i take it out. nothing down here is permanent. tell the room i sew straight."
              :next "seam/stairs-up")
 
 (dialog-text "seam/stairs-up"
-             "you climb the sill stairs with the basting taut beside your hand, and the handles of the banister turn under your palm as you pass, each one, the way they did on the way down."
+             "you climb the sill stairs with the basting taut beside your hand. the handles turn under your palm as you pass."
              :next "seam/underside")
 
 (dialog-text "seam/underside"
-             "near the top you pass beneath the long table itself and see its underside, which nobody above has ever seen: ring marks of every cup that ever stood on it, ghosted through the wood, and each one named in chalk, in her hand."
+             "near the top you pass beneath the long table itself. nobody above has seen its underside."
+             :next "seam/underside-2")
+
+(dialog-text "seam/underside-2"
+             "ring marks cover the wood. every cup that ever stood on it is named in chalk, in her hand."
              :next "seam/garden-gate")
 
 (dialog-text "seam/garden-gate"
@@ -316,20 +345,20 @@
              :next "seam/garden-gate-2")
 
 (dialog-text "seam/garden-gate-2"
-             "the gardener is waiting with his lantern down low, and he looks at the thread lint on your coat and asks nothing, knowing everything a gardener needs to."
+             "the gardener waits with his lantern low. he looks at the thread lint on your coat and asks nothing."
              :next "seam/cloth-plot")
 
 (dialog-text "seam/cloth-plot"
-             "he walks you out past the new plot, where tomorrow's doors are still bolts of room-cloth, pinned to the turned earth with sill pegs, and under the pins the cloth rises and falls, very slightly, at the pace of the curtain meadow far below."
+             "he walks you past the new plot. tomorrow's doors are still bolts of room-cloth, pinned to the earth with sill pegs."
              :next "seam/cloth-plot-2")
 
 (dialog-text "seam/cloth-plot-2"
-             "the curtain cloth in the earth rises and settles at the same pace."
+             "under the pins the cloth rises and falls. it keeps the same pace as the curtain meadow below."
              :next "seam/gate-out")
 
 (dialog-say "seam/gate-out"
             "the gardener"
-            "you have been to see her. the coat says so. the gate is still free. the toll for down there is paid in different coin, and you have paid it, by the look of you."
+            "you have been to see her. the coat says so. the gate is free. the toll down there is paid in other coin. you have paid it."
             :next "seam/gate-out-2")
 
 (dialog-say "seam/gate-out-2"
@@ -347,7 +376,7 @@
              :next "seam/gate-look-back-2")
 
 (dialog-text "seam/gate-look-back-2"
-             "numbers drying, and under all of it, faint as a needle through cloth, the lullaby, going around, keeping the whole place company from below."
+             "numbers dry in rows. under all of it, the lullaby goes around below."
              :next "seam/thread-slack")
 
 (dialog-text "seam/thread-slack"
@@ -355,7 +384,11 @@
              :next "seam/thread-slack-2")
 
 (dialog-text "seam/thread-slack-2"
-             "you wind it twice around two fingers, the way thread is kept, and put it in your pocket, where the seam cannot wind it, and the court cannot enter it, and only you know its length."
+             "you wind it twice around two fingers and put it in your pocket."
+             :next "seam/thread-slack-3")
+
+(dialog-text "seam/thread-slack-3"
+             "the seam cannot wind it there. the court cannot enter it. only you know its length."
              :next "seam/pocket-hum")
 
 (dialog-text "seam/pocket-hum"
