@@ -119,6 +119,124 @@ landmarks strung along it. Generated fresh each entry."
                 (incf placed)))))))
     (values (jrpg-gen-rows grid) sx sy)))
 
+(defun jrpg-gen-street-open (grid w h x y)
+  (when (and (<= 0 x) (< x w)
+             (<= 0 y) (< y h))
+    (setf (aref grid y x) #\.)))
+
+(defun jrpg-gen-street-square (grid w h cx cy radius-x radius-y)
+  (loop for y from (- cy radius-y) to (+ cy radius-y)
+        do (loop for x from (- cx radius-x) to (+ cx radius-x)
+                 do (jrpg-gen-street-open grid w h x y))))
+
+(defun jrpg-gen-street-segment (grid w h x1 y1 x2 y2 &optional (radius 1))
+  (let ((x x1)
+        (y y1)
+        (path nil))
+    (loop
+      (jrpg-gen-street-square grid w h x y radius radius)
+      (push (list x y) path)
+      (when (and (= x x2) (= y y2))
+        (return))
+      (cond
+        ((< x x2) (incf x))
+        ((> x x2) (decf x))
+        ((< y y2) (incf y))
+        ((> y y2) (decf y))))
+    (nreverse path)))
+
+(defun jrpg-gen-street-carve-route (grid w h points)
+  (let ((route nil))
+    (loop for (from to) on points while to
+          do (let ((segment (jrpg-gen-street-segment grid w h
+                                                     (first from) (second from)
+                                                     (first to) (second to))))
+               (setf route (append route segment))))
+    route))
+
+(defun jrpg-gen-street-cells (grid w h)
+  (let ((cells nil))
+    (loop for y from 1 below (1- h)
+          do (loop for x from 1 below (1- w)
+                   when (char= (aref grid y x) #\.)
+                     do (push (list x y) cells)))
+    (nreverse cells)))
+
+(defun jrpg-gen-street-place-pickups (grid w h count)
+  (let ((open (jrpg-gen-street-cells grid w h))
+        (placed 0))
+    (loop while (and (< placed count) open)
+          for index = (get-random-value 0 (1- (length open)))
+          for cell = (nth index open)
+          do (destructuring-bind (x y) cell
+               (setf open (remove cell open :test #'equal :count 1))
+               (when (and (char= (aref grid y x) #\.)
+                          (or (char= (aref grid y (1- x)) #\#)
+                              (char= (aref grid y (1+ x)) #\#)
+                              (char= (aref grid (1- y) x) #\#)
+                              (char= (aref grid (1+ y) x) #\#))
+                          (plusp (get-random-value 0 2)))
+                 (setf (aref grid y x)
+                       (if (zerop (get-random-value 0 1)) #\$ #\o))
+                 (incf placed))))))
+
+(defun jrpg-gen-streets (w h finish-glyph waypoints)
+  "Returns (values rows start-x start-y). A generated night-city walk: building
+blocks, orthogonal streets, a central square, side roads, sparse lamps, and one
+guaranteed route from the lower west side to the destination."
+  (let* ((grid (make-array (list h w) :initial-element #\#))
+         (sx 1)
+         (sy (max 2 (- h 3)))
+         (fx (max 2 (- w 2)))
+         (fy (max 2 (min (- h 3) (get-random-value 2 (max 2 (floor h 3))))))
+         (mid-x (floor w 2))
+         (mid-y (floor h 2))
+         (turn-a (max 4 (min (- w 5) (+ (floor w 4)
+                                         (get-random-value -2 2)))))
+         (turn-b (max 5 (min (- w 4) (+ (floor (* 3 w) 4)
+                                         (get-random-value -2 2)))))
+         (route (jrpg-gen-street-carve-route
+                 grid w h
+                 (list (list sx sy)
+                       (list turn-a sy)
+                       (list turn-a mid-y)
+                       (list turn-b mid-y)
+                       (list turn-b fy)
+                       (list fx fy)))))
+    (dolist (x (remove-duplicates
+                (list turn-a mid-x turn-b
+                      (max 3 (floor w 6))
+                      (min (- w 4) (- w (floor w 6))))
+                :test #'=))
+      (jrpg-gen-street-segment grid w h x 1 x (- h 2) 0))
+    (dolist (y (remove-duplicates
+                (list mid-y
+                      (max 2 (floor h 4))
+                      (min (- h 3) (- h (floor h 4))))
+                :test #'=))
+      (jrpg-gen-street-segment grid w h 1 y (- w 2) y 0))
+    (jrpg-gen-street-square grid w h mid-x mid-y 3 2)
+    (let ((n (length route))
+          (k (length waypoints)))
+      (loop for wp in waypoints
+            for i from 1
+            for idx = (min (1- n) (max 1 (floor (* i n) (1+ k))))
+            do (destructuring-bind (wx wy) (nth idx route)
+                 (when (char= (aref grid wy wx) #\.)
+                   (setf (aref grid wy wx) wp)))))
+    (dolist (lamp (list (list turn-a sy)
+                        (list turn-a mid-y)
+                        (list mid-x mid-y)
+                        (list turn-b mid-y)
+                        (list turn-b fy)))
+      (destructuring-bind (x y) lamp
+        (when (char= (aref grid y x) #\.)
+          (setf (aref grid y x) #\+))))
+    (jrpg-gen-street-place-pickups grid w h 5)
+    (setf (aref grid sy sx) #\.
+          (aref grid fy fx) finish-glyph)
+    (values (jrpg-gen-rows grid) sx sy)))
+
 (defvar *jrpg-overworld* nil)
 
 (defstruct jrpg-overworld
@@ -202,14 +320,18 @@ landmarks strung along it. Generated fresh each entry."
   (let ((gen-width (minigame-config-value node :gen-width)))
     (if (and (integerp gen-width) (> gen-width 12))
         (let* ((gen-height (jrpg-overworld-config-int node :gen-height 18))
+               (terrain (minigame-config-value node :terrain :world))
                (finish (let ((value (minigame-config-value node
                                                            :finish-glyph #\!)))
                          (if (characterp value) value #\!)))
+               (waypoint-default (if (eq terrain :streets) nil '(#\R)))
                (waypoints (let ((value (minigame-config-value node :waypoints
-                                                              '(#\R))))
-                            (if (listp value) value '(#\R)))))
+                                                              waypoint-default)))
+                            (if (listp value) value waypoint-default))))
           (multiple-value-bind (rows start-x start-y)
-              (jrpg-gen-overworld gen-width gen-height finish waypoints)
+              (case terrain
+                (:streets (jrpg-gen-streets gen-width gen-height finish waypoints))
+                (t (jrpg-gen-overworld gen-width gen-height finish waypoints)))
             (make-jrpg-overworld
              :node-id (node-id node)
              :map (coerce rows 'vector)
@@ -298,6 +420,7 @@ node changes, so a returning walk resumes (encounters do not reset it)."
     (#\$ "loose Hours dropped in the grass.")
     (#\o "a small corked bottle waits on a flat stone.")
     (#\~ "the water lies still and the colour of slate.")
+    (#\# "closed fronts block the way.")
     (#\, "the road runs on, pale through the grass.")
     (#\f "trees crowd close to the road.")
     (t "open grass, and your own long shadow.")))
@@ -428,7 +551,9 @@ steps and the steps just after a fight safe."
         (setf (jrpg-overworld-message game)
               (if (char= cell #\~)
                   "the water is too deep to wade."
-                  "you cannot get through that way.")))))
+                  (if (char= cell #\#)
+                      "closed fronts block the way."
+                      "you cannot get through that way."))))))
 
 (defun jrpg-overworld-step (node game)
   "One frame of walking input; shared by the road and the city. C opens the
@@ -471,6 +596,7 @@ clamped to the map edges."
     (#\$ "$")
     (#\o "o")
     (#\~ "~")
+    (#\# "")
     (t ".")))
 
 (defun jrpg-ow-fill (x y w h alpha)
@@ -592,6 +718,10 @@ mountains peaks, forest little trees, water a glinting pool; landmarks bold."
        (jrpg-ow-fill (+ screen-x 2) (+ screen-y 2) (- s 4) (- s 4) 52)
        (jrpg-ow-fill (+ screen-x 4) (- cy 2) (- s 9) 2 110)
        (jrpg-ow-fill (+ screen-x 6) (+ cy 3) (- s 12) 2 90))
+      (#\#                               ; city frontage
+       (jrpg-ow-fill (+ screen-x 1) (+ screen-y 1) (- s 2) (- s 2) 72)
+       (jrpg-ow-fill (+ screen-x 4) (+ screen-y 5) (- s 8) 2 126)
+       (jrpg-ow-fill (+ screen-x 6) (+ screen-y 11) (- s 12) 2 96))
       (t                                 ; landmark / pickup / finish
        (draw-centered-text (jrpg-overworld-tile-label cell)
                            cx cy 20 (make-color 255 255 255 235))))))

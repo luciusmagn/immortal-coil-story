@@ -68,6 +68,7 @@
                  :failure "jrpg/studio-door"
                  :config (list :gen-width 34
                                :gen-height 18
+                               :terrain :streets
                                :finish-glyph #\!
                                :waypoints '(#\R)
                                :store-prefix "kiy-street"
@@ -211,6 +212,7 @@
                  :failure "jrpg/hawberk"
                  :config (list :gen-width 32
                                :gen-height 16
+                               :terrain :streets
                                :finish-glyph #\!
                                :store-prefix "kiy-wilde"
                                :encounter-target "jrpg/thief-combat"
@@ -407,14 +409,16 @@
                  :failure "jrpg/threshold"
                  :config (list :gen-width 38
                                :gen-height 20
+                               :terrain :streets
                                :finish-glyph #\!
+                               :waypoints '(#\R)
                                :store-prefix "kiy-flight"
-                               :start-message "the streets fold back on themselves. arrows or wasd move."
+                               :start-message "side streets and courts. arrows or wasd move."
                                :legend "! the way out"
                                :tile-messages
                                '((#\R . "the same corner you turned from.")
-                                 (#\! . "an arch you did not walk toward, and are under.")
-                                 (#\. . "your steps, and a half-step more."))))
+                                 (#\! . "the covered arch opens beyond the last row of shops.")
+                                 (#\. . "slick stones and your own breath."))))
 
 (dialog-text "jrpg/threshold"
              "the streets run out. the organ has stopped, but you hear it now from every direction at once. above the last roofs the stars are black, and two suns go down into a lake you can smell from here, and never finish setting. you are expected."
