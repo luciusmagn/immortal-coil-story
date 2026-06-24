@@ -233,7 +233,7 @@
              :next "seam/stray-choice")
 
 (dialog-pick "seam/stray-choice"
-             "the small room waits at the lane's edge with its lamp in it. the seamstress threads her needle and does not hurry you."
+             "the small room stands at the lane's edge with its lamp in it. the seamstress threads her needle and does not hurry you."
              (dialog-option "take its thread. adopt the room" "seam/adopt")
              (dialog-option "ask her to finish it kindly" "seam/finish")
              (dialog-option "ask the gardener to plant it" "seam/plant"))
@@ -246,11 +246,11 @@
              :next "seam/adopt-knot")
 
 (dialog-text "seam/adopt-knot"
-             "the room comes in against your side, boards to your boot, the way a thing comes in that has decided about you. promises take all of it, she says again, but gently, the way you bless someone."
+             "the knot tightens. a floorboard touches your boot. promises take all of it, she says."
              :next "seam/adopt-room")
 
 (dialog-text "seam/adopt-room"
-             "from now on, she says, your room has a small room in it, somewhere a wall used to be honest. keep them both watered. she means the glasses. you will stand two glasses now, each to its line, and the second one is lower, child height."
+             "from now on, she says, your room has a small room behind one wall. keep them both watered. she means the glasses. you will stand two glasses now, each to its line, and the second one is lower, child height."
              :next "seam/parting")
 
 (dialog-on-enter "seam/finish"
@@ -261,11 +261,11 @@
              :next "seam/finish-lamp")
 
 (dialog-text "seam/finish-lamp"
-             "she unpicks the lamp last of all, lit for the first stitch and the last, and winds its evening light into the heart of the spool."
+             "she unpicks the lamp last. it stays lit until the last thread is on the spool."
              :next "seam/finish-spool")
 
 (dialog-text "seam/finish-spool"
-             "the chalk she writes on the spool is one word long, and she lets you write it, and you write the word you would want on yours, and she reads it and nods once, and shelves it where the afternoon light lands longest."
+             "the chalk she writes on the spool is one word long. she lets you write it. she reads the word, nods once, and shelves the spool."
              :next "seam/parting")
 
 (dialog-on-enter "seam/plant"
@@ -276,7 +276,7 @@
              :next "seam/plant-s2")
 
 (dialog-text "seam/plant-s2"
-             "he pots the small room entire, lamp and all, in turned black earth, and promises nothing, which from him is the highest grade of promise available."
+             "he pots the small room entire, lamp and all, in turned black earth. he promises nothing."
              :next "seam/plant-2")
 
 (dialog-text "seam/plant-2"
@@ -284,7 +284,7 @@
              :next "seam/plant-2-2")
 
 (dialog-text "seam/plant-2-2"
-             "but this one will come up with its lamp already lit, and some keeper, some year, will open a door with evening behind it, and that is the gardener's whole pension, moments like that, paid irregularly."
+             "this one will come up with its lamp already lit, he says. some keeper, some year, will open it and find evening behind it."
              :next "seam/parting")
 
 (dialog-text "seam/parting"
@@ -296,7 +296,7 @@
              :next "seam/way-up")
 
 (dialog-text "seam/way-up"
-             "when it is time, the seamstress sews you a way up: long basting stitches in the air of the stairwell, loose on purpose. follow the basting, she says."
+             "when it is time, the seamstress lays a line of loose basting stitches up the stairwell. follow the basting, she says."
              :next "seam/way-up-2")
 
 (dialog-text "seam/way-up-2"
