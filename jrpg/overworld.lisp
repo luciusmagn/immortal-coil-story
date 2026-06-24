@@ -227,6 +227,42 @@ lakes, and landmarks placed along the road. Generated fresh each entry."
                (setf route (append route segment))))
     route))
 
+(defun jrpg-gen-street-clamp-x (w x)
+  (max 1 (min (- w 2) x)))
+
+(defun jrpg-gen-street-clamp-y (h y)
+  (max 1 (min (- h 2) y)))
+
+(defun jrpg-gen-street-branch (grid w h x y direction length)
+  "Carve a short alley from the main route and return its end cell."
+  (destructuring-bind (dx dy) direction
+    (let ((end-x (jrpg-gen-street-clamp-x w (+ x (* dx length))))
+          (end-y (jrpg-gen-street-clamp-y h (+ y (* dy length)))))
+      (jrpg-gen-street-segment grid w h x y end-x end-y 0)
+      (jrpg-gen-street-square grid w h end-x end-y
+                              (if (zerop dx) 1 2)
+                              (if (zerop dy) 1 2))
+      (list end-x end-y))))
+
+(defun jrpg-gen-street-branches (grid w h route count)
+  "Add short side streets to the guaranteed route. Unlike full-width grid cuts,
+these keep the buildings as blocks while giving the walk old-RPG side paths."
+  (let ((ends nil)
+        (n (length route)))
+    (loop for i from 1 to count
+          for idx = (min (1- n) (max 1 (floor (* i n) (1+ count))))
+          for cell = (nth idx route)
+          do (destructuring-bind (x y) cell
+               (let* ((vertical-p (zerop (get-random-value 0 1)))
+                      (sign (if (zerop (get-random-value 0 1)) -1 1))
+                      (direction (if vertical-p
+                                     (list 0 sign)
+                                     (list sign 0)))
+                      (length (get-random-value 3 7)))
+                 (push (jrpg-gen-street-branch grid w h x y direction length)
+                       ends))))
+    (nreverse ends)))
+
 (defun jrpg-gen-street-cells (grid w h)
   (let ((cells nil))
     (loop for y from 1 below (1- h)
@@ -275,20 +311,16 @@ guaranteed route from the lower west side to the destination."
                        (list turn-a mid-y)
                        (list turn-b mid-y)
                        (list turn-b fy)
-                       (list fx fy)))))
-    (dolist (x (remove-duplicates
-                (list turn-a mid-x turn-b
-                      (max 3 (floor w 6))
-                      (min (- w 4) (- w (floor w 6))))
-                :test #'=))
-      (jrpg-gen-street-segment grid w h x 1 x (- h 2) 0))
-    (dolist (y (remove-duplicates
-                (list mid-y
-                      (max 2 (floor h 4))
-                      (min (- h 3) (- h (floor h 4))))
-                :test #'=))
-      (jrpg-gen-street-segment grid w h 1 y (- w 2) y 0))
+                       (list fx fy))))
+         (branch-ends (jrpg-gen-street-branches
+                       grid w h route (max 5 (floor w 5)))))
+    (jrpg-gen-street-square grid w h sx sy 2 1)
+    (jrpg-gen-street-square grid w h turn-a sy 2 1)
+    (jrpg-gen-street-square grid w h turn-a mid-y 2 2)
     (jrpg-gen-street-square grid w h mid-x mid-y 3 2)
+    (jrpg-gen-street-square grid w h turn-b mid-y 2 2)
+    (jrpg-gen-street-square grid w h turn-b fy 2 1)
+    (jrpg-gen-street-square grid w h fx fy 2 1)
     (let ((n (length route))
           (k (length waypoints)))
       (loop for wp in waypoints
@@ -302,6 +334,10 @@ guaranteed route from the lower west side to the destination."
                         (list mid-x mid-y)
                         (list turn-b mid-y)
                         (list turn-b fy)))
+      (destructuring-bind (x y) lamp
+        (when (char= (aref grid y x) #\.)
+          (setf (aref grid y x) #\+))))
+    (dolist (lamp (subseq branch-ends 0 (min 4 (length branch-ends))))
       (destructuring-bind (x y) lamp
         (when (char= (aref grid y x) #\.)
           (setf (aref grid y x) #\+))))
