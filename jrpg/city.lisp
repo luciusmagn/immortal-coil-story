@@ -152,12 +152,15 @@ make the city hard to read, and their labels overlap in the renderer."
           for index from 0
           for candidate = (nth index slots)
           for slot = (jrpg-city-next-door-slot grid w h candidate used)
-          when slot
-            do (progn
-                 (push slot used)
-                 (when (member glyph open-glyphs :test #'char=)
-                   (destructuring-bind (x y) slot
-                     (setf (aref grid y x) glyph)))))))
+          do (cond
+               (slot
+                (push slot used)
+                (when (member glyph open-glyphs :test #'char=)
+                  (destructuring-bind (x y) slot
+                    (setf (aref grid y x) glyph))))
+               ((member glyph open-glyphs :test #'char=)
+                (runtime-warn "JRPG city could not place open doorway ~s; map is too crowded."
+                              glyph))))))
 
 (defun jrpg-gen-city (w h interior-glyphs exit-glyphs seed
                       &optional all-interior-glyphs all-exit-glyphs)
