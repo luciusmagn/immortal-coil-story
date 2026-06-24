@@ -163,7 +163,7 @@ lakes, and landmarks placed along the road. Generated fresh each entry."
     ;; 1. terrain regions, all sparing the guaranteed route
     (jrpg-gen-road-bridge grid w h road)
     (dotimes (i (max 2 (floor w 14)))
-      (jrpg-gen-ridge grid w h (floor w 2) '(#\, #\B)))
+      (jrpg-gen-ridge grid w h (floor w 2) '(#\, #\B #\~)))
     (dotimes (i (max 3 (floor (* w h) 90)))
       (jrpg-gen-region grid w h
                        (get-random-value 2 (- w 3))
