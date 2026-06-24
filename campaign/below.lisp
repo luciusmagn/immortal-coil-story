@@ -269,23 +269,23 @@
                  '(setf (dialog-value "below-asked") "took"))
 
 (dialog-text "below/take-book"
-             "you pick the book up. the clerk does not stop you, which should have been the warning."
+             "you pick the book up. the clerk does not stop you. his pen rests uncapped by his hand."
              :next "below/take-book-s2")
 
 (dialog-text "below/take-book-s2"
-             "it is heavier than pages, heavier each step, and at the third step the walls go silent, both of them, because your hours have nowhere to be kept while the book is in your hands."
+             "the book is heavier than pages. each step adds to it. at the third step both walls go silent. your hours have nowhere to go while the book is in your hands."
              :next "below/take-book-2")
 
 (dialog-text "below/take-book-2"
-             "you stand in the unreceived silence with your own account dead-weight in your arms, and you carry it one more step, just to have done, and then you put it back on the desk."
+             "you stand in the silence with your own account dead weight in your arms. you carry it one more step, just to have done it, and put it back on the desk."
              :next "below/take-book-2-2")
 
 (dialog-text "below/take-book-2-2"
-             "the pen resumes, and the clerk rules off the incident with one clean line and no comment, which is the kindest entry in the whole book."
+             "the pen resumes. the clerk rules off the incident with one clean line. he adds no comment."
              :next "below/margin")
 
 (dialog-text "below/margin"
-             "while the clerk rules the visit off, you look once more at your page, at the margin, which is wider than the entries need."
+             "while the clerk rules the visit off, you look once more at your page. the margin is wider than the entries need."
              :next "below/margin-2")
 
 (dialog-text "below/margin-2"

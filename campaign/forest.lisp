@@ -401,7 +401,7 @@
                  '(setf (dialog-value "forest-call") "none"))
 
 (dialog-text "forest/no-call"
-             "you set the receiver back. the clerk refills your coffee without being asked and writes nothing down. out here that is a kind of citizenship."
+             "you set the receiver back. the clerk refills your coffee without being asked and writes nothing down."
              :next "forest/store-night")
 
 (dialog-text "forest/store-night"
@@ -421,7 +421,7 @@
              :next "forest/board-choice")
 
 (dialog-pick "forest/board-choice"
-             "the doors stand open. the engine idles. the driver does not hurry you, which is its own kind of question."
+             "the doors stand open. the engine idles. the driver does not hurry you."
              (dialog-option "get on" "forest/fare")
              (dialog-option "stay on the bench" "winter/doors"))
 

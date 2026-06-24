@@ -232,7 +232,7 @@
              :next "release/sign-all-s2")
 
 (dialog-text "release/sign-all-s2"
-             "the whole room, against one signature, condition kept. it does not feel like acquiring furniture. it feels like keeping something that was already yours."
+             "the whole room, against one signature, condition kept. you are not acquiring furniture. you are keeping something already entered under your name."
              :next "release/carbon")
 
 (dialog-on-enter "release/decline"
@@ -275,7 +275,7 @@
              :next "release/page-guess-2")
 
 (dialog-text "release/page-guess-2"
-             "you have read his column long enough to know where the paper is worn soft. it is the line, years down, where his initials change from one letter to another. the morning a designation became a name, or stopped being one."
+             "you have read his column long enough to know where the paper is worn soft. years down, his initials change from one letter to another. that morning is the page he keeps."
              :next "release/page-guess-3")
 
 (dialog-text "release/page-guess-3"

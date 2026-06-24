@@ -169,7 +169,7 @@
              :next "nightshift/gift-2")
 
 (dialog-text "nightshift/gift-2"
-             "on the far side, a held breath answers. you are the subject of someone's first line now. you have made it a kind one."
+             "on the far side, a held breath answers. you are the subject of someone's first line now. the pencil writes a calm line."
              :next "nightshift/spelling")
 
 (dialog-text "nightshift/spelling"

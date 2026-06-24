@@ -223,7 +223,7 @@
              :next "district/opened-2")
 
 (dialog-text "district/opened-2"
-             "you stand in the gap of it for as long as you can make yourself, which is not long, and what is in the car is people, quiet, awake, arranged, looking back at you with the particular patience of the counted."
+             "you stand in the gap as long as you can. it is not long. the car holds people, quiet, awake, arranged, looking back at you."
              :next "district/opened-3")
 
 (dialog-text "district/opened-3"
@@ -280,7 +280,7 @@
             :next "district/walk-back")
 
 (dialog-text "district/walk-back"
-             "the walk back is the same streets in reverse and nothing about them is the same. the lists on the doors have stopped being paper."
+             "you walk back by the same streets in reverse. every posted list is a person now."
              :next "district/walk-back-s2")
 
 (dialog-text "district/walk-back-s2"
@@ -320,7 +320,7 @@
              :next "district/boots-3")
 
 (dialog-text "district/boots-3"
-             "you put on the clean boots. they fit exactly as well as yesterday. this morning that feels like an accusation."
+             "you put on the clean boots. they fit exactly as well as yesterday. this morning you notice the fit."
              :next "district/vey")
 
 (dialog-say "district/vey"
