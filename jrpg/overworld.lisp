@@ -233,36 +233,6 @@ lakes, and landmarks placed along the road. Generated fresh each entry."
 (defun jrpg-gen-street-clamp-y (h y)
   (max 1 (min (- h 2) y)))
 
-(defun jrpg-gen-street-branch (grid w h x y direction length)
-  "Carve a short alley from the main route and return its end cell."
-  (destructuring-bind (dx dy) direction
-    (let ((end-x (jrpg-gen-street-clamp-x w (+ x (* dx length))))
-          (end-y (jrpg-gen-street-clamp-y h (+ y (* dy length)))))
-      (jrpg-gen-street-segment grid w h x y end-x end-y 0)
-      (jrpg-gen-street-square grid w h end-x end-y
-                              (if (zerop dx) 1 2)
-                              (if (zerop dy) 1 2))
-      (list end-x end-y))))
-
-(defun jrpg-gen-street-branches (grid w h route count)
-  "Add short side streets to the guaranteed route. Unlike full-width grid cuts,
-these keep the buildings as blocks while giving the walk old-RPG side paths."
-  (let ((ends nil)
-        (n (length route)))
-    (loop for i from 1 to count
-          for idx = (min (1- n) (max 1 (floor (* i n) (1+ count))))
-          for cell = (nth idx route)
-          do (destructuring-bind (x y) cell
-               (let* ((vertical-p (zerop (get-random-value 0 1)))
-                      (sign (if (zerop (get-random-value 0 1)) -1 1))
-                      (direction (if vertical-p
-                                     (list 0 sign)
-                                     (list sign 0)))
-                      (length (get-random-value 3 7)))
-                 (push (jrpg-gen-street-branch grid w h x y direction length)
-                       ends))))
-    (nreverse ends)))
-
 (defun jrpg-gen-street-cells (grid w h)
   (let ((cells nil))
     (loop for y from 1 below (1- h)
@@ -291,8 +261,8 @@ these keep the buildings as blocks while giving the walk old-RPG side paths."
 
 (defun jrpg-gen-streets (w h finish-glyph waypoints)
   "Returns (values rows start-x start-y). A generated night-city walk: building
-blocks, orthogonal streets, a central square, side roads, sparse lamps, and one
-guaranteed route from the lower west side to the destination."
+blocks, an old-RPG street grid, a central court, side lanes, sparse lamps, and
+one guaranteed route from the lower west side to the destination."
   (let* ((grid (make-array (list h w) :initial-element #\#))
          (sx 1)
          (sy (max 2 (- h 3)))
@@ -300,26 +270,42 @@ guaranteed route from the lower west side to the destination."
          (fy (max 2 (min (- h 3) (get-random-value 2 (max 2 (floor h 3))))))
          (mid-x (floor w 2))
          (mid-y (floor h 2))
-         (turn-a (max 4 (min (- w 5) (+ (floor w 4)
-                                         (get-random-value -2 2)))))
-         (turn-b (max 5 (min (- w 4) (+ (floor (* 3 w) 4)
-                                         (get-random-value -2 2)))))
+         (west-x (jrpg-gen-street-clamp-x
+                  w (+ (floor w 4) (get-random-value -1 1))))
+         (east-x (jrpg-gen-street-clamp-x
+                  w (+ (floor (* 3 w) 4) (get-random-value -1 1))))
+         (lower-y sy)
+         (upper-y fy)
+         (market-y (jrpg-gen-street-clamp-y
+                    h (+ mid-y (get-random-value -1 1))))
+         (north-lane (jrpg-gen-street-clamp-y
+                      h (max 2 (min (- market-y 3)
+                                    (+ upper-y (get-random-value 2 3))))))
+         (south-lane (jrpg-gen-street-clamp-y
+                      h (min (- h 3) (+ market-y (get-random-value 3 4)))))
          (route (jrpg-gen-street-carve-route
                  grid w h
                  (list (list sx sy)
-                       (list turn-a sy)
-                       (list turn-a mid-y)
-                       (list turn-b mid-y)
-                       (list turn-b fy)
-                       (list fx fy))))
-         (branch-ends (jrpg-gen-street-branches
-                       grid w h route (max 5 (floor w 5)))))
+                       (list west-x lower-y)
+                       (list west-x market-y)
+                       (list east-x market-y)
+                       (list east-x upper-y)
+                       (list fx fy)))))
     (jrpg-gen-street-square grid w h sx sy 2 1)
-    (jrpg-gen-street-square grid w h turn-a sy 2 1)
-    (jrpg-gen-street-square grid w h turn-a mid-y 2 2)
-    (jrpg-gen-street-square grid w h mid-x mid-y 3 2)
-    (jrpg-gen-street-square grid w h turn-b mid-y 2 2)
-    (jrpg-gen-street-square grid w h turn-b fy 2 1)
+    (jrpg-gen-street-segment grid w h 1 market-y (- w 2) market-y 0)
+    (jrpg-gen-street-segment grid w h 1 south-lane (- w 2) south-lane 0)
+    (jrpg-gen-street-segment grid w h mid-x north-lane mid-x lower-y 0)
+    (jrpg-gen-street-segment grid w h west-x north-lane west-x lower-y 0)
+    (jrpg-gen-street-segment grid w h east-x upper-y east-x south-lane 0)
+    (jrpg-gen-street-square grid w h west-x lower-y 2 1)
+    (jrpg-gen-street-square grid w h west-x market-y 2 1)
+    (jrpg-gen-street-square grid w h mid-x market-y 3 2)
+    (jrpg-gen-street-square grid w h east-x market-y 2 1)
+    (jrpg-gen-street-square grid w h east-x upper-y 2 1)
+    (jrpg-gen-street-square grid w h (floor (+ west-x mid-x) 2)
+                            north-lane 2 1)
+    (jrpg-gen-street-square grid w h (floor (+ mid-x east-x) 2)
+                            south-lane 2 1)
     (jrpg-gen-street-square grid w h fx fy 2 1)
     (let ((n (length route))
           (k (length waypoints)))
@@ -329,15 +315,13 @@ guaranteed route from the lower west side to the destination."
             do (destructuring-bind (wx wy) (nth idx route)
                  (when (char= (aref grid wy wx) #\.)
                    (setf (aref grid wy wx) wp)))))
-    (dolist (lamp (list (list turn-a sy)
-                        (list turn-a mid-y)
+    (dolist (lamp (list (list west-x sy)
+                        (list west-x market-y)
                         (list mid-x mid-y)
-                        (list turn-b mid-y)
-                        (list turn-b fy)))
-      (destructuring-bind (x y) lamp
-        (when (char= (aref grid y x) #\.)
-          (setf (aref grid y x) #\+))))
-    (dolist (lamp (subseq branch-ends 0 (min 4 (length branch-ends))))
+                        (list east-x market-y)
+                        (list east-x fy)
+                        (list (floor (+ west-x mid-x) 2) north-lane)
+                        (list (floor (+ mid-x east-x) 2) south-lane)))
       (destructuring-bind (x y) lamp
         (when (char= (aref grid y x) #\.)
           (setf (aref grid y x) #\+))))
