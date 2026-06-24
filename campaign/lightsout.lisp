@@ -22,7 +22,7 @@
                  :config '(:duration 9.0 :breath-rise 0.09))
 
 (dialog-text "lightsout/passed"
-             "it passes close enough to move the air around you. cold wax. old fur. the floor counts your heartbeats. then the draft resumes, and the warm wall eases under your hand, and you both go on."
+             "it passes close enough to stir your coat. cold wax. old fur. the floor carries your heartbeat. then the draft resumes. the wall is warm under your hand. you go on."
              :next "lightsout/middles")
 
 (dialog-text "lightsout/brushed"
@@ -30,7 +30,7 @@
              :next "lightsout/brushed-2")
 
 (dialog-text "lightsout/brushed-2"
-             "you pay it standing very still, and the corridor gives you back your lungs a size smaller."
+             "you pay it standing very still. after it passes, the corridor gives you your lungs back."
              :next "lightsout/middles")
 
 (dialog-text "lightsout/middles"
@@ -38,7 +38,7 @@
              :next "lightsout/lamplighter-glow")
 
 (dialog-text "lightsout/lamplighter-glow"
-             "farther on, around no corner you can point to, there is almost-light, so faint you might be inventing it, the kind your eyes make for themselves after a lamp goes out. and a sound you know from somewhere upstairs: a taper, being carried with care."
+             "farther on, the black thins. not light. almost-light, the kind your eyes make after a lamp goes out. then a sound from upstairs: a taper carried with care."
              :next "lightsout/lamplighter")
 
 (dialog-say "lightsout/lamplighter"
@@ -100,7 +100,7 @@
 
 (dialog-say "lightsout/one-dark-3"
             "the lamplighter"
-            "one, the way a river is one river. what you feed at this bracket is drunk at every bracket, and somewhere a dark that has never met you is a little less hungry because you stood here. that is either comforting or enormous. most people need it to be one or the other. it is both."
+            "one. the brackets share a draught. feed one, and the pull eases along the run. somewhere else, a bracket goes quiet because you stood here."
             :next "lightsout/round")
 
 (dialog-text "lightsout/round"
@@ -108,15 +108,15 @@
              :next "lightsout/round-flame")
 
 (dialog-text "lightsout/round-flame"
-             "then, each time, comes the long soft pull as the new flame bends into the dark and is drunk, steadily, like a beast at a trough at evening."
+             "then, each time, the new flame bends into the dark. the pull is steady. the wick shortens by visible degrees."
              :next "lightsout/round-attending")
 
 (dialog-text "lightsout/round-attending"
-             "the lamplighter stands by each torch while it is taken, a hand on the bracket, the way a farmer stands at the rail at feeding. not guarding. attending."
+             "the lamplighter waits by each torch while it is taken. one hand on the bracket. he does not guard it. he attends it."
              :next "lightsout/round-company")
 
 (dialog-text "lightsout/round-company"
-             "the dark eats better with company, is the theory, and the theory is the lamplighter's own, and nobody is in a position to argue."
+             "he says the dark eats better with company. no one nearby can argue."
              :next "lightsout/taper")
 
 (dialog-text "lightsout/taper"
@@ -124,7 +124,7 @@
              :next "lightsout/taper-s2")
 
 (dialog-text "lightsout/taper-s2"
-             "the one protected flame on the round. the dark respects it the way a table respects the serving spoon."
+             "the one protected flame on the round. the dark leaves it alone because the rota says so."
              :next "lightsout/taper-2")
 
 (dialog-text "lightsout/taper-2"
@@ -140,7 +140,7 @@
              :next "lightsout/your-turn-2")
 
 (dialog-text "lightsout/your-turn-2"
-             "and you light two torches by touch, shoulder shielding the mother flame, while the dark leans in around you like a stable at oats, and your hands do not shake, which both of you note and neither mentions."
+             "you light two torches by touch. your shoulder shields the mother flame. the dark presses close around your hands. they do not shake. both of you notice. neither says so."
              :next "lightsout/ration-manners")
 
 (dialog-text "lightsout/ration-manners"
@@ -152,7 +152,7 @@
              :next "lightsout/shrine-maps")
 
 (dialog-text "lightsout/shrine-maps"
-             "and the upper shrine assembles itself in your head, correctly this time: the candles are the table, and the maps nailed under them are reading matter."
+             "you understand the upper shrine correctly now. the candles are the table. the maps nailed under them are reading matter."
              :next "lightsout/shrine-maps-2")
 
 (dialog-text "lightsout/shrine-maps-2"
@@ -160,7 +160,7 @@
              :next "lightsout/licked-bracket")
 
 (dialog-text "lightsout/licked-bracket"
-             "one bracket on the round you find by touch before the lamplighter names it: the stone around it is polished smooth as the inside of a cup, a full arm's reach in every direction."
+             "one bracket on the round you find by touch before the lamplighter names it. the stone around it is polished smooth, a full arm's reach in every direction."
              :next "lightsout/licked-bracket-2")
 
 (dialog-text "lightsout/licked-bracket-2"
@@ -176,7 +176,7 @@
              :next "lightsout/feed-choice")
 
 (dialog-pick "lightsout/feed-choice"
-             "at the round's last bracket the lamplighter pauses, taper down, and the dark settles in around the two of you, close, expectant, like a table waiting to be served."
+             "at the round's last bracket the lamplighter pauses with the taper lowered. the dark gathers close around the two of you."
              (dialog-option "feed it your dead torch stub" "lightsout/feed-stub")
              (dialog-option "feed it the ring" "lightsout/feed-ring"
                             :when '(not (dialog-value "rogue-ring-worn")))
@@ -190,18 +190,18 @@
              :next "lightsout/feed-stub-2")
 
 (dialog-text "lightsout/feed-stub-2"
-             "the flame pulls long, bends, and is drunk to the wood, and the stub goes light in your fingers, then absent, taken cleanly, like a coin from an open palm."
+             "the flame pulls long, bends, and is drunk to the wood. the stub goes light in your fingers, then absent."
              :next "lightsout/fed-after")
 
 (dialog-on-enter "lightsout/feed-ring"
                  '(setf (dialog-value "lightsout-fed") "ring"))
 
 (dialog-text "lightsout/feed-ring"
-             "you hold out the unidentified ring, and the dark considers it the way you consider an unfamiliar dish, and takes it slowly, silver, curse and all."
+             "you hold out the unidentified ring. the dark pauses over it, then takes it slowly, silver, curse and all."
              :next "lightsout/feed-ring-2")
 
 (dialog-text "lightsout/feed-ring-2"
-             "somewhere in the walls, the pacing makes a sound you have never heard from it, short and low, which you elect to file as laughter."
+             "somewhere in the walls, the pacing makes a short low sound you have never heard from it."
              :next "lightsout/fed-after")
 
 (dialog-text "lightsout/fed-after"
@@ -209,11 +209,11 @@
              :next "lightsout/fed-after-s2")
 
 (dialog-text "lightsout/fed-after-s2"
-             "fed, the lamplighter says, approvingly, and to the dark, not to you: there now. and the dark, demonstrably, is there."
+             "fed, the lamplighter says, approvingly. then, to the dark: there now. the dark stays close and leaves you alone."
              :next "lightsout/fed-after-2")
 
 (dialog-text "lightsout/fed-after-2"
-             "a fed dark has its own feel. it is the difference between being unwatched and being unbothered. you stand in it and understand why the lamplighter has held this round for a tenure. it is good to be left alone like this. that is the whole of the pay, and it is enough."
+             "a fed dark has its own feel. not unwatched. unbothered. you stand in it and understand the lamplighter's tenure a little. it is good to be left alone here."
              :next "lightsout/walked-up")
 
 (dialog-text "lightsout/walked-up"
@@ -228,7 +228,7 @@
                  '(setf (dialog-value "lightsout-fed") "nothing"))
 
 (dialog-text "lightsout/feed-nothing"
-             "you keep your pockets. the lamplighter does not judge, having rationed households too, and the dark does not punish, which is worse: it simply stops attending you."
+             "you keep your pockets. the lamplighter does not judge. he has rationed households too. the dark does not punish you. it stops attending you."
              :next "lightsout/feed-nothing-2")
 
 (dialog-text "lightsout/feed-nothing-2"
@@ -244,7 +244,7 @@
              :next "lightsout/long-count-knock")
 
 (dialog-text "lightsout/long-count-knock"
-             "the warm wall stayed, is the thing you will keep from it."
+             "you will remember the warm wall."
              :next "lightsout/long-count-knock-s2")
 
 (dialog-text "lightsout/long-count-knock-s2"
@@ -252,11 +252,11 @@
              :next "lightsout/bracket-relit")
 
 (dialog-text "lightsout/bracket-relit"
-             "at the row's end, behind you, a bracket catches: the lamplighter, on the rota, restoring your stretch of corridor to the menu."
+             "at the row's end, behind you, a bracket catches: the lamplighter, on the rota, restoring your stretch of corridor."
              :next "lightsout/bracket-relit-2")
 
 (dialog-text "lightsout/bracket-relit-2"
-             "the light reaches you at the ankles like tidewater and stops there, respectful. your eyes hurt at even this much. that is how far in you went."
+             "the light reaches your ankles and stops there. your eyes hurt at even this much. that is how far in you went."
              :next "lightsout/goodbye")
 
 (dialog-text "lightsout/goodbye"
@@ -264,7 +264,7 @@
              :next "lightsout/goodbye-s2")
 
 (dialog-text "lightsout/goodbye-s2"
-             "the taper dips once in your direction, the smallest light in the building acknowledging you over the new torch's shoulder, and the round goes on, bracket by bracket, into the dark it keeps, which keeps it back."
+             "the taper dips once in your direction. then the round goes on, bracket by bracket, into the dark it keeps back."
              :next "lightsout/rota-board")
 
 (dialog-text "lightsout/rota-board"
@@ -272,15 +272,15 @@
              :next "lightsout/rota-board-2")
 
 (dialog-text "lightsout/rota-board-2"
-             "your bracket's line has been amended tonight: levied, struck through, and after it, restored. the books balance. down here they always balance. the question is only ever out of whose bracket."
+             "your bracket's line has been amended tonight: levied, struck through, restored. the books balance. down here they always balance."
              :next "lightsout/torch-handed")
 
 (dialog-text "lightsout/torch-handed"
-             "a fresh torch stands in the next bracket, already half spent, which you now read correctly: half for you, half for the table."
+             "a fresh torch stands in the next bracket, already half spent. you read it correctly now: half for you, half for the dark."
              :next "lightsout/torch-handed-2")
 
 (dialog-text "lightsout/torch-handed-2"
-             "you take it, and tithe is the word you think, lifting it, and the flame leans once toward the dark, courteously, and the dark, courteously, declines."
+             "you take it. tithe is the word that comes. the flame leans once toward the dark. the dark declines."
              :next "lightsout/sight-back")
 
 (dialog-text "lightsout/sight-back"
