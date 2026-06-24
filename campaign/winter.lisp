@@ -315,7 +315,7 @@
              :next "winter/melt-2")
 
 (dialog-text "winter/melt-2"
-             "the plates stop with the snow, exactly with the snow, the way a thing ends when it is no longer needed."
+             "the plates stop with the snow. no cloth waits on the stump."
              :next "winter/melt-2-s2")
 
 (dialog-text "winter/melt-2-s2"
@@ -346,7 +346,7 @@
              :next "winter/spring-bus-3")
 
 (dialog-text "winter/spring-bus-3"
-             "it picks up and goes on down the valley. the doors did not even fold open. he has decided about you, the way he decides, and what he has decided is that you are not a passenger. you are a fixture of the route."
+             "it picks up and goes on down the valley. the doors do not fold open. the driver lifts two fingers from the wheel. you are not a passenger today."
              :next "winter/spring-choice")
 
 (dialog-pick "winter/spring-choice"
@@ -367,7 +367,7 @@
              :next "winter/go-out-3")
 
 (dialog-text "winter/go-out-3"
-             "what arrives, at dusk, with the yard lights coming on one farm at a time, is the knowledge of exactly what the pines smell like after snow, carried somewhere you cannot return it."
+             "at dusk the yard lights come on one farm at a time. you can smell the pines after snow, though there are no pines near the road."
              :next "winter/end")
 
 (dialog-on-enter "winter/stay-on"
@@ -378,7 +378,7 @@
              :next "winter/stay-on-2")
 
 (dialog-text "winter/stay-on-2"
-             "the thursday bus comes and goes while you are priming the pump, and the one after while you are on the roof with the stove flashing, and by june the regulars have stopped being careful around you, which is the county's citizenship, granted without ceremony."
+             "the thursday bus comes and goes while you prime the pump. the next one passes while you are on the roof with the stove flashing. by june the regulars stop lowering their voices when you come in."
              :next "winter/stay-on-3")
 
 (dialog-text "winter/stay-on-3"
