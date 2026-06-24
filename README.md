@@ -22,7 +22,7 @@ in or out of a submodule.
 
 The prose follows one voice: plain, concrete, declarative. See `WRITING.md` in
 the main repo. The King-in-Yellow path quotes Chambers (public domain) verbatim
-where it fits.
+where it fits; use Project Gutenberg ebook #8492 as the text source.
 
 ## Authoring
 

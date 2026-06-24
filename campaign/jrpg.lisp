@@ -58,7 +58,7 @@
 ;;; The night city - travel and the ordinary menace of it (overworld + battle)
 
 (dialog-text "jrpg/street"
-             "the street is the ordinary kind of dangerous after dark. gas lamps far apart, a man asleep or dead in a doorway, footsteps that keep your pace and then do not."
+             "after dark the street is dangerous in the usual ways. gas lamps far apart. a man asleep or dead in a doorway. footsteps behind you, then no footsteps."
              :next "jrpg/street-walk")
 
 (dialog-minigame "jrpg/street-walk"
@@ -154,7 +154,7 @@
              :next "jrpg/read-choice")
 
 (dialog-pick "jrpg/read-choice"
-             "Scott's copy of the Play lies open at the end of the first act. the second waits."
+             "Scott's copy of the Play lies open at the end of the first act. the second act begins on the next page."
              (dialog-option "read on into the second act" "jrpg/read-second")
              (dialog-option "read the strange middle pages first" "jrpg/prophets")
              (dialog-option "close the book" "jrpg/watchman-comes"))
@@ -165,11 +165,11 @@
                  '(jrpg-lean-class :reader 2))
 
 (dialog-text "jrpg/read-second"
-             "you read a few lines of the second act before Scott takes the book from your hands - too late for you, in time for him. the words are clear as crystal, limpid and musical, and they do not let go. nothing in the room has moved. the stove has gone cold, and the air smells of turned earth."
+             "you read a few lines of the second act before Scott takes the book from your hands. he is too late for you. the words are clear as crystal, limpid and musical. they stay in your mouth after the book closes. the stove has gone cold."
              :next "jrpg/watchman-comes")
 
 (dialog-text "jrpg/watchman-comes"
-             "a step on the stair. then another, wet and heavy and in no hurry. the door, which Scott bolted, is opening. the smell that comes up is churchyard. Tessie does not scream; she used up screaming on the dream."
+             "a step on the stair. then another, wet and heavy. the door, which Scott bolted, is opening. the smell that comes up is churchyard. Tessie grips the stove rail and does not scream."
              :next "jrpg/watchman-combat")
 
 (dialog-minigame "jrpg/watchman-combat"
@@ -189,11 +189,11 @@
 (dialog-on-enter "jrpg/after-watchman" '(jrpg-lean-class :watchman 1))
 
 (dialog-text "jrpg/after-watchman"
-             "it comes apart like a thing long drowned, and what is left on the boards is a coat, a smell, and one soft white finger. Scott is down with the Play shut under his hand. Tessie holds your sleeve and says nothing. you keep the clasp; you did not mean to."
+             "the watchman drops to the boards. the coat splits at the seams. inside are wet cloth, churchyard mud, and one soft white finger. Scott is down with the Play shut under his hand. Tessie holds your sleeve and says nothing. you keep the clasp; you did not mean to."
              :next "jrpg/leave-studio")
 
 (dialog-text "jrpg/watchman-takes"
-             "it is stronger than a dead thing should be. when you can stand, the watchman is gone, and so is Tessie; Scott will only say she has gone to find the Yellow Sign, and will not say it again. you still have the clasp. it is warm now."
+             "the watchman is stronger than you. when you can stand, he is gone, and so is Tessie. Scott says she has gone to find the Yellow Sign, and will not say it again. you still have the clasp. it is warm now."
              :next "jrpg/leave-studio")
 
 (dialog-on-enter "jrpg/leave-studio" '(jrpg-add-item :palette-knife))
@@ -217,11 +217,11 @@
                                :store-prefix "kiy-wilde"
                                :encounter-target "jrpg/thief-combat"
                                :encounter-rate 16
-                               :start-message "the thinned streets. arrows or wasd move."
+                               :start-message "a side street. arrows or wasd move."
                                :legend "! the armourer's    $ Hours    o tonic"
                                :tile-messages
                                '((#\! . "the armourer's lit window, the mail white in it.")
-                                 (#\. . "thin cobbles, fewer than there were."))))
+                                 (#\. . "narrow cobbles underfoot."))))
 
 (dialog-minigame "jrpg/thief-combat"
                  "choose a command. arrows or wasd move. enter or space confirms."
@@ -273,7 +273,7 @@
                       ("ask about the ledger of names"
                        :id "register"
                        :speaker "Mr. Wilde"
-                       "every man whose name is in it has received the Yellow Sign, which no living soul dares disregard. yours is here. it is here twice - the second dated after today, in a hand i would call yours, had you got round to writing it.")
+                       "every man whose name is in it has received the Yellow Sign, which no living soul dares disregard. yours is here. it is here twice. the second entry is dated after today. the handwriting matches yours.")
                       ("ask about the locked cabinet"
                        :id "crown"
                        :speaker "Mr. Wilde"
@@ -311,7 +311,7 @@
                  '(jrpg-lean-class :watchman 1))
 
 (dialog-text "jrpg/after-castaigne"
-             "Hildred sits down hard, the title gone out of him, and weeps that the cat has got Mr. Wilde. the cat has: the small scarred man bleeds from the throat in his high chair, the ledger fallen open at your name, twice. you go before the noise brings anyone. the cabinet you leave shut, this time."
+             "Hildred sits down hard and cries that the cat has got Mr. Wilde. the cat has: the small scarred man bleeds from the throat in his high chair, the ledger fallen open at your name, twice. you go before the noise brings anyone. the cabinet you leave shut, this time."
              :next "jrpg/city-hub")
 
 (dialog-on-enter "jrpg/castaigne-down"
@@ -320,7 +320,7 @@
                  '(jrpg-lean-class :watchman 1))
 
 (dialog-text "jrpg/castaigne-down"
-             "he has your collar and the razor at it when the cat, for its own reasons, takes Mr. Wilde's throat instead, and Hildred forgets you entirely for the man who promised him a crown. you leave them to it. the ledger lies open at your name, twice."
+             "he has your collar and the razor at it when the cat takes Mr. Wilde's throat instead. Hildred lets go of you and turns on the man who promised him a crown. you leave them to it. the ledger lies open at your name, twice."
              :next "jrpg/city-hub")
 
 
@@ -330,7 +330,7 @@
 (dialog-on-enter "jrpg/boris" '(jrpg-lean-class :painter 1))
 
 (dialog-text "jrpg/mask-street"
-             "the streets give onto a court. one door stands open on white light, and the white is not lamplight: it is marble, far too much of it, and too lifelike."
+             "the streets give onto a court. one door stands open on white light. the light comes from marble: walls, floor, busts, hands, faces."
              :next "jrpg/boris")
 
 (dialog-say "jrpg/boris"
@@ -355,7 +355,7 @@
                       ("ask what the fluid does to a person"
                        :id "fluid"
                        :speaker "Boris"
-                       "it keeps them - perfectly, in the pose they were in. destroyed, preserved; how can you tell? i found it by accident. it was so simple; it discovered itself.")
+                       "it keeps them perfectly, in the pose they were in. destroyed, preserved; how can you tell? i found it by accident. it was so simple; it discovered itself.")
                       ("ask about Geneviève"
                        :id "genevieve"
                        :speaker "Boris"
@@ -386,13 +386,13 @@
                                :enemy-attack-max 7
                                :victory-xp 10
                                :victory-gold 4
-                               :message "the marble by the wall softens, steps down off its base, and comes at you."))
+                               :message "the marble by the wall moves first at the fingers, then at the jaw. it steps down off its base."))
 
 (dialog-on-enter "jrpg/after-marble"
                  '(setf (jrpg-value "kiy-did-mask") t))
 
 (dialog-text "jrpg/after-marble"
-             "the marble-touched goes still again, mid-step, a better statue than before. Boris does not look up from the pool. you leave him there, the white light behind you, and find your way back to the square."
+             "the marble-touched goes still mid-step. Boris does not look up from the pool. you leave him there, the white light behind you, and find your way back to the square."
              :next "jrpg/city-hub")
 
 
@@ -416,12 +416,12 @@
                                :start-message "side streets and courts. arrows or wasd move."
                                :legend "! the way out"
                                :tile-messages
-                               '((#\R . "the same corner you turned from.")
+                               '((#\R . "a corner with a broken lamp glass.")
                                  (#\! . "the covered arch opens beyond the last row of shops.")
                                  (#\. . "slick stones and your own breath."))))
 
 (dialog-text "jrpg/threshold"
-             "the streets run out. the organ has stopped, but you hear it now from every direction at once. above the last roofs the stars are black, and two suns go down into a lake you can smell from here, and never finish setting. you are expected."
+             "you pass under the covered arch. black stars hang in the heavens. wet wind comes off the lake of Hali. beyond it, the towers of Carcosa rise behind the moon. the organ has stopped."
              :next "carcosa/title")
 
 
@@ -429,9 +429,9 @@
 ;;; Discoverable episodes - the rest of Chambers, off the spine but in depth.
 ;;; Each is an optional detour that rejoins the main road, and each turns on the
 ;;; same engine as the King: time that will not move on, people kept in a last
-;;; gesture. THE DEMOISELLE D'YS (a fugue out of time), THE PROPHETS' PARADISE
-;;; (the Play's looping middle pages), and the four Paris street stories (an old
-;;; quarter the Sign keeps in its last good minute).
+;;; gesture. THE DEMOISELLE D'YS (a Breton moor, five centuries back), THE
+;;; PROPHETS' PARADISE (the Play's middle pages), and the four Paris street
+;;; stories (an old quarter caught before loss).
 ;;; ===========================================================================
 
 
@@ -443,8 +443,8 @@
 ;;; THE NIGHT-CITY HUB (in-city grid). The player chooses which district to
 ;;; enter and in what order; a finished district drops its door on re-entry; the
 ;;; church door is always open and is the crossing - leave by it early and you
-;;; simply miss the stories you did not walk into. The flyleaf's "again" brings
-;;; you back to find them. This is where the player's agency lives.
+;;; miss the stories you did not walk into. The flyleaf's "again" brings you
+;;; back to find them.
 
 (dialog-particles "jrpg/city-hub" :snow :fade-seconds 2.5)
 (dialog-on-enter "jrpg/city-hub" '(jrpg-start-quest :cross))
@@ -469,11 +469,11 @@
 (dialog-particles "jrpg/dys-meet" :motes :fade-seconds 3.0)
 
 (dialog-text "jrpg/dys-lane"
-             "the lane gives out onto open moor at sundown, gorse to every horizon, the sea somewhere behind the wind. you are dressed for a hunt you never planned, a fowling-piece on your shoulder. the city is an hour and five hundred years from here."
+             "the lane gives out onto open moor at sundown. gorse and heath cover the valleys. granite boulders stand in the grass. you carry a fowling-piece, and the sea-wind is in your face."
              :next "jrpg/dys-meet")
 
 (dialog-text "jrpg/dys-meet"
-             "out of the gorse come falconers in old dress, hooded hawks on their wrists. a girl rides at their head, gloved, grave, young. she greets you by no name and as one expected. she is the Demoiselle Jeanne d'Ys."
+             "out of the gorse come falconers in old dress, hooded hawks on their wrists. a girl rides at their head, gloved, grave, young. she asks whether you came from Kerselec. she is the Demoiselle Jeanne d'Ys."
              :next "jrpg/dys-questions")
 
 (dialog-interrogation "jrpg/dys-questions"
@@ -488,13 +488,13 @@
                        :id "hastur"
                        :speaker "Jeanne"
                        "her master of hawks; incomparable, she says, on the green. you heard the name once tonight from a scarred man, said of a god. she has never left this moor to hear it said so.")
-                      ("ask why she expected you"
+                      ("ask how far Kerselec is"
                        :id "expected"
                        :speaker "Jeanne"
-                       "she has waited for a stranger, she says, and prayed for one, longer than is decent to say. she colours and looks at the bird, not at you. her falconers look at the ground."))
+                       "to come is easy and takes hours, she says. to go is different, and may take centuries. then she looks at the bird, not at you."))
 
 (dialog-text "jrpg/dys-hawk"
-             "she teaches you the lure - swing it, let the hawk taste the quarry, faire courtoisie a l'oiseau. the day is long and good and does not seem to spend itself. you could stay inside it."
+             "she teaches you the lure. swing it. let the hawk taste the quarry. faire courtoisie a l'oiseau. the sun stays above the gorse until your arm aches."
              :next "jrpg/dys-viper")
 
 (dialog-on-enter "jrpg/dys-viper"
@@ -502,7 +502,7 @@
                  '(jrpg-lean-class :mourner 2))
 
 (dialog-text "jrpg/dys-viper"
-             "by the stream the hawks scream. a grey snake on the warm rock, a black V on its neck. she clings to your arm - don't, i am afraid. for me? for you, she says. i love you. then a sting at the ankle, and the light in your eyes goes out."
+             "by the stream the hawks scream. a grey snake on the warm rock, a black V on its neck. she clings to your arm - don't, i am afraid. for me? for you, she says. i love you. then a sting at the ankle. your legs fail, and the stream fills your ear."
              :next "jrpg/dys-wake")
 
 (dialog-text "jrpg/dys-wake"
@@ -522,13 +522,13 @@
                  '(setf (jrpg-value "kiy-did-dys") t))
 
 (dialog-text "jrpg/dys-out"
-             "you stand, and the ruins are a city square again, the lit doors where the lane was. your foot still drags from the bite. the glove is in your coat now, warm as the Sign and just as unasked-for."
+             "you leave the shrine by a stone path. it ends in the city square, with the lit doors ahead. your foot still drags from the bite. the glove is in your coat now, warm as the Sign."
              :next "jrpg/city-hub")
 
 
 ;;; THE FOUR PARIS STREETS - an old quarter the Sign has reached the way it
-;;; reaches everything: by keeping it. Four small human stories, each held in
-;;; its last good minute. Discoverable, then left to its keeping.
+;;; reaches everything: by keeping it. Four small human stories, each stopped
+;;; before loss. Discoverable, then left alone.
 
 (dialog-particles "jrpg/old-quarter" :snow :fade-seconds 3.0)
 
@@ -536,11 +536,11 @@
                  '(jrpg-spend-composure 1))
 
 (dialog-text "jrpg/old-quarter"
-             "the old quarter, where the gas still burns warm and yellow. students, lovers, small lives - and none of it moves on. each corner is a life held in its last good minute. four streets; you walk them."
+             "the old quarter, where the gas still burns warm and yellow. students crowd the cafes. lovers stand under doors. four streets repeat the hour before loss; you walk them."
              :next "jrpg/old-quarter-streets")
 
 (dialog-interrogation "jrpg/old-quarter-streets"
-                      "four corners, four held moments. walk each, or leave them be."
+                      "four corners, four stories. walk each, or leave them be."
                       (:next "jrpg/old-quarter-out")
                       (:continue-label "leave the quarter")
                       ("the Street of the Four Winds"
@@ -550,7 +550,7 @@
                       ("the Street of the First Shell"
                        :id "shell"
                        :speaker "the quarter"
-                       "a plaque reads HERE FELL THE FIRST SHELL. the siege of '70: a girl at a window, and the shell in the air the instant before it strikes, and never striking. the quarter's loudest moment, held silent.")
+                       "a plaque reads HERE FELL THE FIRST SHELL. the siege of '70: a girl at a window, and the shell in the air above her, not falling.")
                       ("the Street of Our Lady of the Fields"
                        :id "lady"
                        :speaker "the quarter"
@@ -558,13 +558,13 @@
                       ("Rue Barree"
                        :id "rue"
                        :speaker "the quarter"
-                       "the students named a girl Rue Barree - street closed - because none could reach her. one, Selby, loves her and never says it. she passes with a chilling smile; he is forever one breath from speaking."))
+                       "the students named a girl Rue Barree - street closed - because none could reach her. Selby loves her and never says it. she passes with a cold smile. he opens his mouth and stops."))
 
 (dialog-on-enter "jrpg/old-quarter-out"
                  '(setf (jrpg-value "kiy-did-quarter") t))
 
 (dialog-text "jrpg/old-quarter-out"
-             "you leave them their last good minute. the warm gas dims behind you, going nowhere, and you climb back to the square."
+             "you leave the four streets. the warm gas dims behind you. the square is ahead."
              :next "jrpg/city-hub")
 
 
@@ -580,7 +580,7 @@
                  '(jrpg-lean-class :reader 1))
 
 (dialog-interrogation "jrpg/prophets"
-                      "the middle pages - not the first act, not the second. eight short visions, each a snake that eats its tail. you read them; they read you back."
+                      "the middle pages - not the first act, not the second. eight short visions, each a snake that eats its tail. you read until the same page returns."
                       (:next "jrpg/read-choice")
                       (:continue-label "shut the middle pages")
                       ("The Studio"
