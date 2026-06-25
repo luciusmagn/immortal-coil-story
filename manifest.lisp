@@ -47,5 +47,4 @@
            "campaign/armistice.lisp"
            "editor-drafts.lisp")
  :assets "../assets/"
- :title-logo "logo/title-logo.png"
  :start "base/awake")
