@@ -401,7 +401,8 @@ one guaranteed route from the lower west side to the destination."
   (encounter-cool   6)
   (message          "arrows or wasd move.")
   ;; :city is an orthogonal street grid whose lettered doors each lead to their
-  ;; own target (the DOORS alist); :road is the winding inter-place road.
+  ;; own target (the DOORS alist); :streets is an in-city walk; :road is the
+  ;; winding inter-place road.
   (mode             :road)
   (doors            nil)
   (door-names       nil)
@@ -487,6 +488,7 @@ one guaranteed route from the lower west side to the destination."
                       "= bridge  + sign  T tower  $ Hours  o tonic  ^~ block")
              :store-prefix (minigame-config-value node :store-prefix
                                                   "jrpg-overworld")
+             :mode (if (eq terrain :streets) :streets :road)
              :x start-x
              :y start-y
              :encounter-target (minigame-config-value node :encounter-target)
@@ -765,6 +767,12 @@ clamped to the map edges."
   (jrpg-ow-fill (- cx 1) (+ cy 3) 2 9 155)
   (jrpg-ow-fill (- cx 5) (+ cy 11) 10 2 115))
 
+(defun draw-jrpg-road-sign (cx cy)
+  (jrpg-ow-fill (- cx 1) (- cy 4) 2 13 150)
+  (jrpg-ow-fill (- cx 8) (- cy 8) 16 7 220)
+  (jrpg-ow-fill-black (- cx 6) (- cy 6) 12 3 255)
+  (jrpg-ow-fill (- cx 6) (+ cy 9) 12 2 100))
+
 (defun jrpg-overworld-cell-screen (col row)
   "Screen x,y of the top-left of a viewport tile."
   (values (+ +jrpg-overworld-left+ (* col +jrpg-overworld-tile-size+))
@@ -854,7 +862,7 @@ TINT defaults to solid white; pass a cached colour to avoid per-tile allocation.
             (multiple-value-bind (sx sy) (jrpg-overworld-cell-screen col row)
               (jrpg-ow-fill (+ sx (/ s 2) -1) (+ sy (/ s 2) -1) 3 3 30))))))))
 
-(defun draw-jrpg-overworld-cell (cell screen-x screen-y)
+(defun draw-jrpg-overworld-cell (game cell screen-x screen-y)
   "Coherent terrain, no grid: plains clean dark, the road a faint worn track,
 mountains peaks, forest little trees, water a glinting pool; landmarks bold."
   (let* ((s  +jrpg-overworld-tile-size+)
@@ -867,6 +875,11 @@ mountains peaks, forest little trees, water a glinting pool; landmarks bold."
       (#\+                               ; lamp beside the street
        (jrpg-ow-fill (+ screen-x 4) (+ screen-y 4) (- s 8) (- s 8) 24)
        (draw-jrpg-lamp cx cy))
+      (#\R
+       (jrpg-ow-fill (+ screen-x 4) (+ screen-y 4) (- s 8) (- s 8) 24)
+       (if (eq (jrpg-overworld-mode game) :streets)
+           (draw-jrpg-lamp cx cy)
+           (draw-jrpg-road-sign cx cy)))
       (#\^                               ; mountain: a peak (narrow up, wide down)
        (loop for r from 0 below 5
              for ww = (max 2 (round (* (- s 6) (/ (+ r 1) 5.0))))
@@ -923,6 +936,7 @@ rectangles with a short arm in the heading so the facing reads at a glance."
                      do (multiple-value-bind (sx sy)
                             (jrpg-overworld-cell-screen col row)
                           (draw-jrpg-overworld-cell
+                           game
                            (jrpg-overworld-effective-cell game mx my)
                            sx sy))))))
 
