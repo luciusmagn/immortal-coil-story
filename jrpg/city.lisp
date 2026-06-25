@@ -129,8 +129,8 @@ truly random."
 
 (defun jrpg-city-front-door-slot-p (grid w h x y)
   "A building entrance is the walkable cell directly below a south-facing wall.
-If the cell above is the top roof edge, the atlas draws a roof tile and the
-entrance reads as a roof door, so require another building cell above it."
+Require another building cell above the wall so the doorway reads as a front
+entrance instead of a roof-edge mark."
   (and (< 1 x (- w 2))
        (< 2 y (- h 2))
        (char= (aref grid y x) #\.)
@@ -363,28 +363,29 @@ stable building-front door slots. The seed only nudges nonessential details."
   (and (< y (1- (jrpg-overworld-height game)))
        (jrpg-city-door-cell-p game x (1+ y))))
 
-(defun jrpg-city-tile (atlas role sx sy &optional tint)
-  "Draw the tile bound to ROLE (see *jrpg-tile-map* in jrpg/tiles.lisp) into the
-cell at SX,SY. Editing the tile map repoints these without touching code."
-  (multiple-value-bind (col row) (jrpg-tile-coords role)
-    (jrpg-draw-tile atlas col row sx sy +jrpg-overworld-tile-size+ tint)))
+(defun jrpg-city-tile (tiles role sx sy &optional tint)
+  "Draw the tile bound to ROLE (see *jrpg-tile-roles* in jrpg/tiles.lisp) into the
+cell at SX,SY. Editing the role table or Hexany labels repoints these without
+touching city renderer code."
+  (multiple-value-bind (sheet col row) (jrpg-tile-coords role)
+    (jrpg-draw-tile tiles sheet col row sx sy +jrpg-overworld-tile-size+ tint)))
 
-(defun draw-jrpg-city-building-tile (game atlas sx sy mx my)
+(defun draw-jrpg-city-building-tile (game tiles sx sy mx my)
   "A building cell: the top edge is roofed - left/middle/right pieces chosen by
 where the roof run ends, exactly as the roofs are laid out in the scenes - a
 cell whose front faces the street gets a window, the rest is brick wall."
   (cond
     ((not (jrpg-city-building-p game mx (1- my)))
-     (jrpg-city-tile atlas
+     (jrpg-city-tile tiles
                      (cond ((not (jrpg-city-building-p game (1- mx) my)) :roof-left)
                            ((not (jrpg-city-building-p game (1+ mx) my)) :roof-right)
                            (t :roof-middle))
                      sx sy))
     ((jrpg-city-building-door-below-p game mx my)
-     (jrpg-city-tile atlas :doorway sx sy))
+     (jrpg-city-tile tiles :doorway sx sy))
     ((not (jrpg-city-building-p game mx (1+ my)))
-     (jrpg-city-tile atlas :window sx sy))
-    (t (jrpg-city-tile atlas :wall sx sy))))
+     (jrpg-city-tile tiles :window sx sy))
+    (t (jrpg-city-tile tiles :wall sx sy))))
 
 (defun draw-jrpg-city-lamp (cx cy)
   (draw-jrpg-lamp cx cy))
@@ -397,25 +398,25 @@ face of the building cell above, so the player walks onto this tile to enter."
     (jrpg-ow-fill (- cx 6) (+ sy 2) 12 2 210)
     (jrpg-ow-fill (- cx 4) (+ sy 5) 8 2 90)))
 
-(defun draw-jrpg-city-cell-tile (game atlas cell sx sy mx my)
+(defun draw-jrpg-city-cell-tile (game tiles cell sx sy mx my)
   (cond
-    ((char= cell #\#) (draw-jrpg-city-building-tile game atlas sx sy mx my))
+    ((char= cell #\#) (draw-jrpg-city-building-tile game tiles sx sy mx my))
     ((char= cell #\+)
-     (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*)
+     (jrpg-city-tile tiles :floor sx sy *jrpg-city-floor-tint*)
      (draw-jrpg-city-lamp (+ sx (/ +jrpg-overworld-tile-size+ 2))
                            (+ sy (/ +jrpg-overworld-tile-size+ 2))))
     ((char= cell #\.)
-     (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*))
+     (jrpg-city-tile tiles :floor sx sy *jrpg-city-floor-tint*))
     (t                                                  ; a door glyph
      (let ((edge (or (= mx 0) (= my 0)
                      (= mx (1- (jrpg-overworld-width game)))
                      (= my (1- (jrpg-overworld-height game))))))
        (if edge
            (progn
-             (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*)
-             (jrpg-city-tile atlas :gate sx sy))
+             (jrpg-city-tile tiles :floor sx sy *jrpg-city-floor-tint*)
+             (jrpg-city-tile tiles :gate sx sy))
            (progn
-             (jrpg-city-tile atlas :floor sx sy *jrpg-city-floor-tint*)
+             (jrpg-city-tile tiles :floor sx sy *jrpg-city-floor-tint*)
              (draw-jrpg-city-door-threshold sx sy)))))))
 
 (defun draw-jrpg-city-house-cell (game sx sy mx my)
@@ -501,7 +502,7 @@ the house behind it (the bug where a dodged sign read as bare text on a roof)."
                                  (jrpg-overworld-cell game mx my))))))
 
 (defun draw-jrpg-city-cell-shape (game cell sx sy mx my)
-  "The fallback renderer (no tile atlas): the original drawn rectangles."
+  "The fallback renderer when Hexany sheets are unavailable."
   (let ((cx (+ sx (/ +jrpg-overworld-tile-size+ 2)))
         (cy (+ sy (/ +jrpg-overworld-tile-size+ 2))))
     (cond
@@ -513,15 +514,15 @@ the house behind it (the bug where a dodged sign read as bare text on a roof)."
 (defun draw-jrpg-city-map (game)
   (multiple-value-bind (cam-x cam-y) (jrpg-overworld-camera game)
     (jrpg-overworld-draw-trail game cam-x cam-y))
-  (let ((atlas (jrpg-tile-atlas)))
-    ;; pass 1: the ground - streets, buildings, lamps, doors (tiles if the atlas
+  (let ((tiles (jrpg-tile-atlas)))
+    ;; pass 1: the ground - streets, buildings, lamps, doors (tiles if Hexany
     ;; loaded, else the drawn shapes)
     (jrpg-city-visible-cells
      game
      (lambda (col row mx my cell)
        (multiple-value-bind (sx sy) (jrpg-overworld-cell-screen col row)
-         (if atlas
-             (draw-jrpg-city-cell-tile game atlas cell sx sy mx my)
+         (if tiles
+             (draw-jrpg-city-cell-tile game tiles cell sx sy mx my)
              (draw-jrpg-city-cell-shape game cell sx sy mx my)))))
     ;; pass 2: the name plates, on top of every tile so a dodged sign keeps its
     ;; solid background
