@@ -48,7 +48,7 @@
              :next "carcosa/causeway-intro-s2")
 
 (dialog-text "carcosa/causeway-intro-s2"
-             "you are alone on the stone, which is more than the lake usually allows."
+             "the causeway is empty. water knocks below the stones."
              :next "carcosa/causeway")
 
 (dialog-minigame "carcosa/causeway"
@@ -76,7 +76,7 @@
                                :enemy-attack-max 7
                                :victory-xp 10
                                :victory-gold 0
-                               :message "the courtier lifts a hand to its mask, as if to offer it to you."))
+                               :message "the courtier lifts one hand to its mask and holds it there."))
 
 (dialog-on-enter "carcosa/courtier-limp"
                  '(jrpg-heal 7))

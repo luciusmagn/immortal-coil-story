@@ -194,7 +194,7 @@
              :next "jrpg/watchman-comes")
 
 (dialog-text "jrpg/watchman-comes"
-             "a step on the stair. then another, wet and heavy. the door, which Scott bolted, is opening."
+             "a step on the stair. then another, wet and heavy. Scott bolted the door. it is opening."
              :next "jrpg/watchman-comes-s2")
 
 (dialog-text "jrpg/watchman-comes-s2"

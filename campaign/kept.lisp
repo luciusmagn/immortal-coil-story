@@ -117,7 +117,7 @@
             :next "kept/sill-doors")
 
 (dialog-text "kept/sill-doors"
-             "the door seedlings take to the sill. by the end of the season there are four small doors leaning into the light, none of them taller than the water glass, their painted numbers still wet. they do not open. they lean. it is company."
+             "the door seedlings take to the sill. by the end of the season there are four small doors leaning into the light. none is taller than the water glass. their painted numbers are still wet."
              :next "kept/weather")
 
 (dialog-text "kept/weather"
@@ -184,7 +184,7 @@
              :next "kept/frames-read")
 
 (dialog-text "kept/frames-read"
-             "on the appeal walks you learn the corridor by heart. eleven verdicts, eleven hands. the early ones are florid, all whereases. the late ones get shorter, as if the court were learning what mattered."
+             "on the appeal walks you learn the corridor by heart. eleven verdicts, eleven hands. the early ones are florid, all whereases. the late ones are short. the last three fill half a page."
              :next "kept/frames-read-2")
 
 (dialog-text "kept/frames-read-2"

@@ -535,7 +535,7 @@
 
 (dialog-say "war/brandt-last"
             "Brandt"
-            "the pencil copy is filed, chancellor. filed where things are found again, which is not the same cabinet as filed."
+            "the pencil copy is filed, chancellor. not in the cabinet. in Sorel's bottom drawer."
             :next "war/brandt-last-2")
 
 (dialog-say "war/brandt-last-2"

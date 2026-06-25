@@ -71,7 +71,7 @@
              :next "winter/routine-2")
 
 (dialog-text "winter/routine-2"
-             "all of them know where you slept the first night, and none of them ask a second question, which out here is not incuriosity. it is custom, observed around something."
+             "all of them know where you slept the first night. no one asks a second question. out here that is manners."
              :next "winter/salt")
 
 (dialog-text "winter/salt"
@@ -79,7 +79,7 @@
              :next "winter/salt-2")
 
 (dialog-text "winter/salt-2"
-             "you know him for hill folk before the door finishes ringing: the coat, the unhurry, the way the room arranges itself around him without anyone moving."
+             "you know him for hill folk before the door finishes ringing: the coat, the slow hands, the mud high on his boots."
              :next "winter/salt-3")
 
 (dialog-text "winter/salt-3"

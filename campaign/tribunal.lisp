@@ -395,7 +395,7 @@
              :next "tribunal/brandt-3")
 
 (dialog-text "tribunal/brandt-3"
-             "the deposition ends: the pencil copy is filed where things are found again. signed, dated, and found as filed."
+             "the deposition ends: the pencil copy was in the bottom drawer. signed, dated, and found as filed."
              :next "tribunal/brandt-4")
 
 (dialog-text "tribunal/brandt-4"

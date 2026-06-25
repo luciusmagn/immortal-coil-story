@@ -163,7 +163,7 @@
 
 (dialog-say "district/counting-3"
             "Brandt"
-            "to whoever keeps the big list. which is kept where lists are kept. one floor under your office, i would think. i have never checked. checking is on the list of things that get a man rerouted."
+            "to whoever keeps the big list. one floor under your office, i would think. i have never checked. checking is how a man gets rerouted."
             :next "district/siding-choice")
 
 (dialog-pick "district/siding-choice"
@@ -395,7 +395,7 @@
                  '(setf (dialog-value "district-decision") "record"))
 
 (dialog-text "district/to-record"
-             "you copy the carbon in pencil, in the small even hand, and Sorel files it where things are found again."
+             "you copy the carbon in pencil, in the small even hand. Sorel files it in her bottom drawer."
              :next "district/to-record-s2")
 
 (dialog-text "district/to-record-s2"
