@@ -9,7 +9,10 @@
   ((selected  :initform 0   :accessor jrpg-char-selected)
    (message   :initform ""  :accessor jrpg-char-message)
    (leveling  :initform nil :accessor jrpg-char-leveling)
-   (level-sel :initform 0   :accessor jrpg-char-level-sel)))
+   (level-sel :initform 0   :accessor jrpg-char-level-sel)
+   (close-requested-p
+    :initform nil
+    :accessor jrpg-char-close-requested-p)))
 
 (defun jrpg-character-items ()
   "Carried items, de-duplicated for the list (consumables show a count)."
@@ -59,10 +62,12 @@
                     (if lv (format nil "you give up ~d Hours and grow - level ~d." cost lv)
                         "you cannot afford it after all.")))))))
       ((or (is-key-pressed-p +key-escape+) (is-key-pressed-p +key-backspace+))
-       ;; return to wherever it was opened from (an overworld via C, or the hub)
-       (let ((target (or (jrpg-value "jrpg-char-return") (node-success-target node))))
-         (setf (jrpg-value "jrpg-char-return") nil)
-         (finish-minigame-node node target)))
+       (if (eq (node-minigame node) :jrpg-character)
+           (let ((target (or (jrpg-value "jrpg-char-return")
+                             (node-success-target node))))
+             (setf (jrpg-value "jrpg-char-return") nil)
+             (finish-minigame-node node target))
+           (setf (jrpg-char-close-requested-p s) t)))
       ((is-key-pressed-p +key-l+)
        (if (>= (jrpg-hours) (jrpg-level-cost))
            (setf (jrpg-char-leveling s) t (jrpg-char-level-sel s) 0)

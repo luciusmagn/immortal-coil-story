@@ -410,7 +410,15 @@ one guaranteed route from the lower west side to the destination."
   (facing           1)
   (visited          nil)
   ;; the read-only stat card, toggled with C (pauses movement while up)
-  (show-card        nil))
+  (show-card        nil)
+  ;; Full character/inventory screen opened as an overlay from a map. Keeping
+  ;; it here avoids a graph jump and preserves map state exactly on close.
+  (character-session nil))
+
+(defun jrpg-character-overlay-active-p ()
+  (and *jrpg-overworld*
+       (jrpg-overworld-character-session *jrpg-overworld*)
+       t))
 
 (defun jrpg-overworld-width (game)
   (length (aref (jrpg-overworld-map game) 0)))
@@ -706,9 +714,17 @@ steps and the steps just after a fight safe."
   "One frame of walking input; shared by the road and the city. C opens the
 full character screen and returns here, like the menu key in a JRPG."
   (cond
+    ((jrpg-overworld-character-session game)
+     (let ((session (jrpg-overworld-character-session game)))
+       (minigame-session-update session node 0.0)
+       (when (jrpg-char-close-requested-p session)
+         (setf (jrpg-overworld-character-session game) nil))))
     ((is-key-pressed-p +key-c+)
-     (setf (jrpg-value "jrpg-char-return") (jrpg-overworld-node-id game))
-     (jump-to-dialog-target "jrpg/character"))
+     (setf (jrpg-overworld-character-session game)
+           (make-instance 'jrpg-character-session
+                          :node-id (node-id node)
+                          :config nil))
+     (play-choice-switch))
     (t
      (let ((direction (jrpg-overworld-input-direction)))
        (when direction
@@ -969,9 +985,12 @@ rectangles with a short arm in the heading so the facing reads at a glance."
                   782 444 15))
 
 (defun draw-jrpg-overworld-minigame (node color)
-  (declare (ignore color))
-  (jrpg-overworld-render-frame (ensure-jrpg-overworld node)
-                               #'draw-jrpg-overworld-map))
+  (let ((game (ensure-jrpg-overworld node)))
+    (jrpg-overworld-render-frame game #'draw-jrpg-overworld-map)
+    (when (jrpg-overworld-character-session game)
+      (minigame-session-draw (jrpg-overworld-character-session game)
+                             node
+                             color))))
 
 (dialog-minigame-kind :jrpg-overworld
                       :update #'update-jrpg-overworld-minigame
