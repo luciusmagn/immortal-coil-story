@@ -749,6 +749,22 @@ clamped to the map edges."
                              (max 1 (round w)) (max 1 (round h))
                              (claylib::c-ptr (make-color 255 255 255 alpha))))
 
+(defun jrpg-ow-fill-black (x y w h alpha)
+  (claylib/ll:draw-rectangle (round x) (round y)
+                             (max 1 (round w)) (max 1 (round h))
+                             (claylib::c-ptr (make-color 0 0 0 alpha))))
+
+(defun draw-jrpg-lamp (cx cy)
+  "Small old-RPG street lamp drawn from primitives, not from the torch tile."
+  (jrpg-ow-fill (- cx 7) (- cy 8) 14 14 22)
+  (jrpg-ow-fill (- cx 4) (- cy 7) 8 2 220)
+  (jrpg-ow-fill (- cx 5) (- cy 5) 10 8 235)
+  (jrpg-ow-fill-black (- cx 3) (- cy 3) 6 4 255)
+  (jrpg-ow-fill (- cx 1) (- cy 5) 2 8 210)
+  (jrpg-ow-fill (- cx 4) (- cy 1) 8 1 210)
+  (jrpg-ow-fill (- cx 1) (+ cy 3) 2 9 155)
+  (jrpg-ow-fill (- cx 5) (+ cy 11) 10 2 115))
+
 (defun jrpg-overworld-cell-screen (col row)
   "Screen x,y of the top-left of a viewport tile."
   (values (+ +jrpg-overworld-left+ (* col +jrpg-overworld-tile-size+))
@@ -848,6 +864,9 @@ mountains peaks, forest little trees, water a glinting pool; landmarks bold."
       (#\.)                              ; plains: clean
       (#\,                               ; road: a faint worn track
        (jrpg-ow-fill (+ screen-x 4) (+ screen-y 4) (- s 8) (- s 8) 24))
+      (#\+                               ; lamp beside the street
+       (jrpg-ow-fill (+ screen-x 4) (+ screen-y 4) (- s 8) (- s 8) 24)
+       (draw-jrpg-lamp cx cy))
       (#\^                               ; mountain: a peak (narrow up, wide down)
        (loop for r from 0 below 5
              for ww = (max 2 (round (* (- s 6) (/ (+ r 1) 5.0))))

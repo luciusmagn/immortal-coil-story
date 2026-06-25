@@ -127,17 +127,19 @@ truly random."
 (defun jrpg-city-street-cell-p (grid x y)
   (member (aref grid y x) '(#\. #\+) :test #'char=))
 
-(defun jrpg-city-building-neighbor-p (grid x y)
-  (or (char= (aref grid (1+ y) x) #\#)
-      (char= (aref grid (1- y) x) #\#)
-      (char= (aref grid y (1+ x)) #\#)
-      (char= (aref grid y (1- x)) #\#)))
-
-(defun jrpg-city-street-neighbor-p (grid x y)
-  (or (jrpg-city-street-cell-p grid x (1+ y))
-      (jrpg-city-street-cell-p grid x (1- y))
-      (jrpg-city-street-cell-p grid (1+ x) y)
-      (jrpg-city-street-cell-p grid (1- x) y)))
+(defun jrpg-city-front-door-slot-p (grid w h x y)
+  "A building entrance is the walkable cell directly below a south-facing wall.
+If the cell above is the top roof edge, the atlas draws a roof tile and the
+entrance reads as a roof door, so require another building cell above it."
+  (and (< 1 x (- w 2))
+       (< 2 y (- h 2))
+       (char= (aref grid y x) #\.)
+       (char= (aref grid (1- y) x) #\#)
+       (char= (aref grid (- y 2) x) #\#)
+       (jrpg-city-street-cell-p grid x (1+ y))
+       (not (char= (aref grid y (1- x)) #\#))
+       (not (char= (aref grid y (1+ x)) #\#))
+       (not (char= (aref grid (1+ y) x) #\#))))
 
 (defun jrpg-city-door-slot-spaced-p (slot used)
   "Keep signed doors from crowding each other on one frontage. Adjacent glyphs
@@ -159,8 +161,7 @@ make the city hard to read, and their labels overlap in the renderer."
               (char= (aref grid y x) #\.)
               (not (member slot used :test #'equal))
               (jrpg-city-door-slot-spaced-p slot used)
-              (jrpg-city-building-neighbor-p grid x y)
-              (jrpg-city-street-neighbor-p grid x y)))))
+              (jrpg-city-front-door-slot-p grid w h x y)))))
 
 (defun jrpg-city-extra-door-slots (grid w h used)
   (let ((slots nil))
@@ -386,11 +387,7 @@ cell whose front faces the street gets a window, the rest is brick wall."
     (t (jrpg-city-tile atlas :wall sx sy))))
 
 (defun draw-jrpg-city-lamp (cx cy)
-  (jrpg-ow-fill (- cx 6) (- cy 7) 12 12 28)             ; small bloom
-  (jrpg-ow-fill (- cx 4) (- cy 6) 8 2 225)              ; cap
-  (jrpg-ow-fill (- cx 3) (- cy 4) 6 5 240)              ; lamp head
-  (jrpg-ow-fill (- cx 1) (+ cy 1) 2 9 170)              ; post
-  (jrpg-ow-fill (- cx 4) (+ cy 9) 8 2 120))             ; base
+  (draw-jrpg-lamp cx cy))
 
 (defun draw-jrpg-city-door-threshold (sx sy)
   "Small passable marker under a doorway. The actual door is drawn on the lower
